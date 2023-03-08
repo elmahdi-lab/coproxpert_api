@@ -1,4 +1,4 @@
-namespace CoproXpert;
+namespace CoproXpert.Sources.Models;
 
 public class WeatherForecast
 {
