@@ -1,4 +1,5 @@
-﻿using System;
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
+
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 

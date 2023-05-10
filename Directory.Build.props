@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <RepositoryType>git</RepositoryType>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>10</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

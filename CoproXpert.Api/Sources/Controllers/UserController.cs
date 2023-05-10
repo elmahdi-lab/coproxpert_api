@@ -1,15 +1,22 @@
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
+
 using CoproXpert.Database.Models;
 using CoproXpert.Database.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoproXpert.Api.Sources.Controllers;
 
+/// <summary>
+/// </summary>
 [ApiController]
 [Route("[controller]", Name = "UserRoute")]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
 
+    /// <summary>
+    /// </summary>
+    /// <param name="userService"></param>
     public UserController(UserService userService)
     {
         _userService = userService;
@@ -28,7 +35,10 @@ public class UserController : ControllerBase
     {
         var user = _userService.GetById(id);
 
-        if (user == null) return NotFound();
+        if (user == null)
+        {
+            return NotFound();
+        }
 
         return user;
     }
@@ -45,11 +55,17 @@ public class UserController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult Update(int id, User user)
     {
-        if (id != user.Id) return BadRequest();
+        if (id != user.Id)
+        {
+            return BadRequest();
+        }
 
         var success = _userService.Update(user);
 
-        if (!success) return NotFound();
+        if (!success)
+        {
+            return NotFound();
+        }
 
         return NoContent();
     }
@@ -60,7 +76,10 @@ public class UserController : ControllerBase
     {
         var success = _userService.Delete(id);
 
-        if (!success) return NotFound();
+        if (!success)
+        {
+            return NotFound();
+        }
 
         return NoContent();
     }

@@ -1,30 +1,32 @@
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
+
 using Microsoft.EntityFrameworkCore;
 
 namespace CoproXpert.Database.Services;
 
 public abstract class BaseService<T> where T : class
 {
-    private readonly DataContext _context;
+    protected readonly DataContext Context;
 
     protected BaseService(DataContext context)
     {
-        _context = context;
+        Context = context;
     }
 
     public virtual IEnumerable<T> GetAll()
     {
-        return _context.Set<T>().ToList();
+        return Context.Set<T>().ToList();
     }
 
     public virtual T? GetById(int id)
     {
-        return _context.Set<T>().Find(id);
+        return Context.Set<T>().Find(id);
     }
 
     public virtual T Create(T entity)
     {
-        _context.Set<T>().Add(entity);
-        _context.SaveChanges();
+        Context.Set<T>().Add(entity);
+        Context.SaveChanges();
         return entity;
     }
 
@@ -32,8 +34,8 @@ public abstract class BaseService<T> where T : class
     {
         try
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            Context.Entry(entity).State = EntityState.Modified;
+            Context.SaveChanges();
             return true;
         }
         catch (DbUpdateConcurrencyException)
@@ -44,10 +46,14 @@ public abstract class BaseService<T> where T : class
 
     public virtual bool Delete(int id)
     {
-        var entity = _context.Set<T>().Find(id);
-        if (entity == null) return false;
-        _context.Set<T>().Remove(entity);
-        _context.SaveChanges();
+        var entity = Context.Set<T>().Find(id);
+        if (entity == null)
+        {
+            return false;
+        }
+
+        Context.Set<T>().Remove(entity);
+        Context.SaveChanges();
         return true;
     }
 }

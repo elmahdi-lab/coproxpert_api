@@ -2,6 +2,7 @@
 
 namespace CoProXpert.Database.Attribute;
 
-public sealed class Encrypted : System.Attribute
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class DbCollection : System.Attribute
 {
 }

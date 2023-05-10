@@ -2,32 +2,30 @@ version: '3.9'
 
 services:
   api:
-    build: .
+    image: mcr.microsoft.com/dotnet/sdk:7.0
     ports:
-      - "8080:80"
+      - "8888:5081"
     depends_on:
       - db
       - redis
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-    restart: always
+      - ConnectionStrings__Default=Host=db;Port=5436;Database=mydatabase;Username=myuser;Password=mypassword
+      - Redis__ConnectionString=redis:6379
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ../:/app
+      - ~/.nuget/packages:/root/.nuget/packages
+    working_dir: /app/CoproXpert.Api
+    command: dotnet watch run
 
   db:
-    image: postgres:latest
+    image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: copro_xpert_db
-      POSTGRES_PORT: 5432
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
+      - "5436:5432"
 
   redis:
-    image: redis:latest
-    restart: always
-
-volumes:
-  postgres_data:
+    image: redis

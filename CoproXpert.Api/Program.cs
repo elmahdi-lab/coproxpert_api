@@ -1,5 +1,9 @@
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
+
 using CoproXpert.Api.Sources.Helpers;
+using CoproXpert.Api.Sources.Services.Security;
 using CoproXpert.Database;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -25,7 +29,6 @@ var configuration = new ConfigurationBuilder()
 
 // builder.Services.Configure<Settings>(configuration.GetSection("Settings"));
 
-
 builder.Services.AddDbContext<DataContext>();
 // Create a list of services to be injected
 
@@ -41,6 +44,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

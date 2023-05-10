@@ -1,9 +1,19 @@
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
+
 using System.Security.Cryptography;
 
-namespace CoproXpert.Api.Sources.Security;
+namespace CoproXpert.Api.Sources.Services.Security;
 
+/// <summary>
+///   Salt generator
+/// </summary>
 public static class SaltGenerator
 {
+    /// <summary>
+    ///  Generate a random salt
+    /// </summary>
+    /// <param name="length"></param>
+    /// <returns></returns>
     public static byte[] GenerateBytes(int length = 32)
     {
         // Create a byte array to store the salt bytes
@@ -16,7 +26,11 @@ public static class SaltGenerator
         return saltBytes;
     }
 
-
+    /// <summary>
+    /// Generate a random salt
+    /// </summary>
+    /// <param name="length"></param>
+    /// <returns></returns>
     public static string GenerateString(int length = 32)
     {
         var saltBytes = GenerateBytes(length);

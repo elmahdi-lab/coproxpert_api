@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoProXpert.Test", "CoProXpe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoProXpert.Database", "CoProXpert.Database\CoProXpert.Database.csproj", "{694FBC02-924B-4931-8073-9973754BD766}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoproXpert.Core", "CoproXpert.Core\CoproXpert.Core.csproj", "{51DB1AFD-F10A-4541-B489-C83AD71C0E46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{694FBC02-924B-4931-8073-9973754BD766}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{694FBC02-924B-4931-8073-9973754BD766}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{694FBC02-924B-4931-8073-9973754BD766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
