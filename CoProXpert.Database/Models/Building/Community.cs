@@ -5,7 +5,7 @@ using CoproXpert.Database.Models;
 
 namespace CoProXpert.Database.Models.Building;
 
-public class Community : BaseModel, IModel
+public class Community : BaseModel
 {
     [Key] public Guid Id { get; set; }
 

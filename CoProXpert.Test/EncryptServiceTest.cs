@@ -1,7 +1,6 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using CoproXpert.Api.Sources.Services.Encryption;
-using CoproXpert.Api.Sources.Services.Security;
 
 namespace CoproXpert.Test;
 

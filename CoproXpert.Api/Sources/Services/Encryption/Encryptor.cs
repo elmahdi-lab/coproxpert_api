@@ -1,3 +1,5 @@
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
+
 using System.Security.Cryptography;
 using System.Text;
 

@@ -1,7 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using CoproXpert.Database.Models;
-using CoproXpert.Database.Services;
+using CoProXpert.Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoproXpert.Api.Sources.Controllers;
@@ -53,7 +53,7 @@ public class UserController : ControllerBase
 
     // PUT /user/1
     [HttpPut("{id}")]
-    public IActionResult Update(int id, User user)
+    public IActionResult Update(Guid id, User user)
     {
         if (id != user.Id)
         {

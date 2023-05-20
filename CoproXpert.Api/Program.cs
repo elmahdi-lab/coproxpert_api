@@ -1,9 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using CoproXpert.Api.Sources.Helpers;
-using CoproXpert.Api.Sources.Services.Security;
 using CoproXpert.Database;
-using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.

@@ -44,4 +44,9 @@
       <ProjectReference Include="..\CoProXpert.Database\CoProXpert.Database.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Sources\Localization\en-US\" />
+      <Folder Include="Sources\Localization\fr-CA\" />
+    </ItemGroup>
+
 </Project>

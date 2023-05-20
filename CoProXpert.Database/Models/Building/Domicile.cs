@@ -5,7 +5,7 @@ using CoproXpert.Database.Models;
 
 namespace CoProXpert.Database.Models.Building;
 
-public class Domicile : BaseModel, IModel
+public class Domicile : BaseModel
 {
     [Key] public Guid Id { get; set; }
 

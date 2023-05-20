@@ -1,8 +1,9 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoproXpert.Database.Services;
+namespace CoProXpert.Database.Repositories;
 
 public abstract class BaseService<T> where T : class
 {

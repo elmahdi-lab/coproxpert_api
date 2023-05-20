@@ -3,6 +3,8 @@
 using System.Reflection;
 using CoproXpert.Database.Models;
 using CoProXpert.Database.Attribute;
+using CoproXpert.Database.EntityConfiguration;
+using CoProXpert.Database.Models.Security.Type;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -14,38 +16,21 @@ public class DataContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        const string connection = "Host=localhost;Database=copro_xpert_db;Username=postgres;Password=postgres";
-        if (connection.GetType() != typeof(string))
+        const string Connection =
+            "Host=localhost;Port=5532;Database=cx_db;Username=cx_user;Password=Password";
+        if (Connection.GetType() != typeof(string))
         {
             throw new Exception("Connection string is not a string.");
         }
 
-        options.UseNpgsql(connection);
+        options.UseNpgsql(Connection);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            foreach (var property in entityType.GetProperties())
-            {
-                var propertyInfo = property.PropertyInfo;
-                if (propertyInfo == null || propertyInfo.GetCustomAttribute<DbCollection>() == null)
-                {
-                    continue;
-                }
-
-                if (propertyInfo.PropertyType.GenericTypeArguments[0] == typeof(string))
-                {
-                    property.SetValueConverter(
-                        new ValueConverter<ICollection<string>, string>(
-                            topics => string.Join(',', topics),
-                            topics => topics.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-                        )
-                    );
-                }
-                // Add more cases for other data types if needed
-            }
-        }
+        modelBuilder.HasPostgresEnum<SocialProvider>();
+        CollectionToString.ApplyCustomConfigurations(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); // This may not be necessary
+        base.OnModelCreating(modelBuilder);
     }
 }

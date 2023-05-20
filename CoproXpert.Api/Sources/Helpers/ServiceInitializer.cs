@@ -1,8 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using CoproXpert.Database.Models;
-using CoproXpert.Database.Services;
-using CoProXpert.Database.Models;
+using CoProXpert.Database.Repositories;
 
 namespace CoproXpert.Api.Sources.Helpers;
 
@@ -13,10 +12,7 @@ public static class ServiceInitializer
 {
     private static readonly List<string> s_targetNamespaces = new() { "CoproXpert.Database.Repositories" };
 
-    private static readonly List<Type> s_excludedTypes = new()
-    {
-        typeof(BaseModel), typeof(BaseService<>), typeof(IModel)
-    };
+    private static readonly List<Type> s_excludedTypes = new() { typeof(BaseModel), typeof(BaseService<>) };
 
     /// <summary>
     ///    Initializes the services in the specified service collection
