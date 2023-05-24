@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoproXpert.Database.EntityConfiguration;
 
-public class CollectionToString
+public static class CollectionToString
 {
     public static void ApplyCustomConfigurations(ModelBuilder modelBuilder)
     {

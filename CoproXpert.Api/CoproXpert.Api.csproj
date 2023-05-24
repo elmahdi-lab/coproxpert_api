@@ -9,11 +9,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="GetText.NET" Version="1.8.7" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
@@ -45,8 +47,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Sources\Localization\en-US\" />
-      <Folder Include="Sources\Localization\fr-CA\" />
+      <Reference Include="Newtonsoft.Json">
+        <HintPath>..\..\..\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

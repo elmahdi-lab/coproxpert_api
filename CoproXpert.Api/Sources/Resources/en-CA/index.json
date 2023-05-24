@@ -1,0 +1,17 @@
+{
+  "index": {
+    "welcome": "Welcome",
+    "greeting": "Hello, %name%!"
+  },
+  "errors": {
+    "backend": {
+      "unauthorized": "Unauthorized"
+    },
+    "frontend": {
+      "browser": "Browser"
+    }
+  },
+  "apples": "{0} There are no apples|[20,Inf] There are many apples|There is one apple|a_few: There are %count% apples"
+}
+
+

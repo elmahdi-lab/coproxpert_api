@@ -1,12 +1,10 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using System.Reflection;
-using CoproXpert.Database.Models;
-using CoProXpert.Database.Attribute;
 using CoproXpert.Database.EntityConfiguration;
+using CoproXpert.Database.Models;
 using CoProXpert.Database.Models.Security.Type;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoproXpert.Database;
 

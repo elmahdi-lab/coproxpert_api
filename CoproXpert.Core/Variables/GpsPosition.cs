@@ -2,7 +2,7 @@
 
 namespace CoproXpert.Core.Variables;
 
-public readonly struct GpsPosition
+public readonly struct GpsPosition : IEquatable<GpsPosition>
 {
     private double Latitude { get; }
     private double Longitude { get; }
@@ -42,5 +42,10 @@ public readonly struct GpsPosition
     public static bool operator !=(GpsPosition left, GpsPosition right)
     {
         return !(left == right);
+    }
+
+    public bool Equals(GpsPosition other)
+    {
+        throw new NotImplementedException();
     }
 }

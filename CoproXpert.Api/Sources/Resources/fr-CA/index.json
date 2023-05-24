@@ -1,0 +1,16 @@
+{
+  "index": {
+    "welcome": "Bienvenue",
+    "greeting": "Bonjour, %name%!"
+  },
+  "errors": {
+    "backend": {
+      "unauthorized": "Non autorisé"
+    },
+    "frontend": {
+      "browser": "Navigateur"
+    }
+  },
+  "apples": "{0} Il y a aucune pomme|[20,Inf] Il y a beaucoup de pommes|Il y a une pomme|a_few: Il y a %count% pommes"
+}
+

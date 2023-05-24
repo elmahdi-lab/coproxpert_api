@@ -7,12 +7,15 @@ namespace CoProXpert.Database.Models.Security.Type;
 
 public enum SocialProvider
 {
-    [Display(Name = "Facebook")] [PgName("provider_type_facebook")]
+    [Display(Name = "Facebook")]
+    [PgName("provider_type_facebook")]
     Facebook,
 
-    [Display(Name = "Twitter")] [PgName("provider_type_twitter")]
+    [Display(Name = "Twitter")]
+    [PgName("provider_type_twitter")]
     Twitter,
 
-    [Display(Name = "Instagram")] [PgName("provider_type_instagram")]
+    [Display(Name = "Instagram")]
+    [PgName("provider_type_instagram")]
     Instagram
 }
