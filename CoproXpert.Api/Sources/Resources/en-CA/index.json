@@ -1,7 +1,7 @@
 {
   "index": {
     "welcome": "Welcome",
-    "greeting": "Hello, %name%!"
+    "greeting": "Hello, %name% %age%!"
   },
   "errors": {
     "backend": {
@@ -11,7 +11,7 @@
       "browser": "Browser"
     }
   },
-  "apples": "{0} There are no apples|[20,Inf] There are many apples|There is one apple|a_few: There are %count% apples"
+  "apples": "{0}There are no apples|{1}There is one apple|{5}There are %count% apples"
 }
 
 

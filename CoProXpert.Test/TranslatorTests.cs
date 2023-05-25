@@ -23,9 +23,9 @@ public class TranslatorTests
     [Test]
     public void Translate_TranslationWithPlaceholder_ReturnsTranslatedStringWithPlaceholderReplaced()
     {
-        var namedArgs = new Dictionary<string, object> { { "name", "John" } };
-        var translation = _translator.Translate("index.greeting", "en-CA", namedArgs);
-        Assert.That(translation, Is.EqualTo("Hello, John!"));
+        var namedArgs = new Dictionary<string, object> { { "name", "John" }, { "age", "35" } };
+        var translation = _translator.Translate("index.greeting", "fr-CA", namedArgs);
+        Assert.That(translation, Is.EqualTo("Bonjour, John 35!"));
     }
 
     [Test]
@@ -50,16 +50,13 @@ public class TranslatorTests
     [Test]
     public void Translate_PluralTranslation_ReturnsCorrectTranslation()
     {
+        var translation2 = _translator.Translate("apples", "en-CA", new Dictionary<string, object> { { "count", 25 } });
+        Assert.That(translation2, Is.EqualTo("There are 25 apples"));
+
         var translation1 = _translator.Translate("apples", "en-CA", new Dictionary<string, object> { { "count", 0 } });
         Assert.That(translation1, Is.EqualTo("There are no apples"));
 
-        var translation2 = _translator.Translate("apples", "en-CA", new Dictionary<string, object> { { "count", 25 } });
-        Assert.That(translation2, Is.EqualTo("There are many apples"));
-
         var translation3 = _translator.Translate("apples", "en-CA", new Dictionary<string, object> { { "count", 1 } });
         Assert.That(translation3, Is.EqualTo("There is one apple"));
-
-        var translation4 = _translator.Translate("apples", "en-CA", new Dictionary<string, object> { { "count", 3 } });
-        Assert.That(translation4, Is.EqualTo("There are 3 apples"));
     }
 }

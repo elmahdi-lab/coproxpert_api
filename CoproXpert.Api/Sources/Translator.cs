@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
 namespace CoproXpert.Api.Sources;
@@ -78,13 +79,58 @@ public class Translator
         var translationObject = _translations[cultureCode];
         var translation = GetTranslation(key, translationObject);
 
-        if (namedArgs is { Count: > 0 })
+        // check if translation has pluralization
+        if (namedArgs is { Count: > 0 } && translation.Contains("|"))
+        {
+            translation = ReplacePluralization(translation, namedArgs);
+        }
+
+        if (namedArgs is not null)
         {
             translation = ReplaceNamedPlaceholders(translation, namedArgs);
         }
 
         return translation;
     }
+
+    private string ReplacePluralization(string translation, Dictionary<string, object> namedArgs)
+    {
+        var rules = translation.Split('|');
+        var count = int.Parse(namedArgs["count"].ToString() ?? string.Empty);
+
+        var noItemsRule = rules.FirstOrDefault(r => r.Contains("{0}"));
+        rules = rules.Where(r => !r.Contains("{0}")).ToArray();
+
+        var oneItemRule = rules.FirstOrDefault(r => r.Contains("{1}"));
+        rules = rules.Where(r => !r.Contains("{1}")).ToArray();
+
+        var manyItemsRuleRegex = new Regex(@"^\{(\d+)\}");
+        var manyItemsRule = rules.FirstOrDefault(r =>
+        {
+            var match = manyItemsRuleRegex.Match(r);
+            if (!match.Success)
+            {
+                return false;
+            }
+
+            var ruleCount = int.Parse(match.Groups[1].Value);
+            return count >= ruleCount;
+        });
+
+        noItemsRule = noItemsRule?.Replace("{0}", "");
+        oneItemRule = oneItemRule?.Replace("{1}", "");
+
+        manyItemsRule = manyItemsRule?.Replace(manyItemsRuleRegex.Match(manyItemsRule).Value, "");
+
+        return count switch
+        {
+            0 when noItemsRule != null => ReplaceNamedPlaceholders(noItemsRule, namedArgs),
+            1 when oneItemRule != null => ReplaceNamedPlaceholders(oneItemRule, namedArgs),
+            > 1 when manyItemsRule != null => ReplaceNamedPlaceholders(manyItemsRule, namedArgs),
+            _ => translation
+        };
+    }
+
 
     private static string ReplaceNamedPlaceholders(string translation, Dictionary<string, object> namedArgs)
     {
