@@ -1,7 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using CoproXpert.Database.Models;
-using CoProXpert.Database.Repositories;
+using CoproXpert.Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoproXpert.Api.Sources.Controllers;

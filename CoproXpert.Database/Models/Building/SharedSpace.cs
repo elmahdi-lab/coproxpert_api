@@ -2,9 +2,9 @@
 
 using System.ComponentModel.DataAnnotations;
 using CoproXpert.Database.Models;
-using CoProXpert.Database.Models.Building.Enum;
+using CoproXpert.Database.Models.Building.Enum;
 
-namespace CoProXpert.Database.Models.Building;
+namespace CoproXpert.Database.Models.Building;
 
 public class SharedSpace : BaseModel
 {

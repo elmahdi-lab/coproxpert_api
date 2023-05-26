@@ -4,7 +4,7 @@ using CoproXpert.Database;
 using CoproXpert.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoProXpert.Database.Repositories;
+namespace CoproXpert.Database.Repositories;
 
 public class UserRepository : BaseRepository<User>
 {

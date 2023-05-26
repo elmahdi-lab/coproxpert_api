@@ -3,7 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using CoproXpert.Database.Models;
 
-namespace CoProXpert.Database.Models.Building;
+namespace CoproXpert.Database.Models.Building;
 
 public class Community : BaseModel
 {

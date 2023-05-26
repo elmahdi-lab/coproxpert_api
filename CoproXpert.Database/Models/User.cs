@@ -1,7 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using System.ComponentModel.DataAnnotations;
-using CoProXpert.Database.Models.Security;
+using CoproXpert.Database.Models.Security;
 
 namespace CoproXpert.Database.Models;
 

@@ -2,7 +2,7 @@
 
 using CoproXpert.Database.Models;
 
-namespace CoProXpert.Database.Models.Information;
+namespace CoproXpert.Database.Models.Information;
 
 /// <summary>
 /// Represents an address with street number, street address, country, city, state and postal code.

@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace CoProXpert.Database.Migrations
+namespace CoproXpert.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -23,7 +23,7 @@ namespace CoProXpert.Database.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "social_provider", new[] { "provider_type_facebook", "provider_type_twitter", "provider_type_instagram" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CoProXpert.Database.Models.Security.Permission", b =>
+            modelBuilder.Entity("CoproXpert.Database.Models.Security.Permission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace CoProXpert.Database.Migrations
                     b.ToTable("Permission");
                 });
 
-            modelBuilder.Entity("CoProXpert.Database.Models.Security.Social", b =>
+            modelBuilder.Entity("CoproXpert.Database.Models.Security.Social", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,7 +127,7 @@ namespace CoProXpert.Database.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CoProXpert.Database.Models.Security.Permission", b =>
+            modelBuilder.Entity("CoproXpert.Database.Models.Security.Permission", b =>
                 {
                     b.HasOne("CoproXpert.Database.Models.User", "User")
                         .WithMany("Permissions")
@@ -138,7 +138,7 @@ namespace CoProXpert.Database.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CoProXpert.Database.Models.Security.Social", b =>
+            modelBuilder.Entity("CoproXpert.Database.Models.Security.Social", b =>
                 {
                     b.HasOne("CoproXpert.Database.Models.User", null)
                         .WithMany("Socials")

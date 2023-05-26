@@ -3,7 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using NpgsqlTypes;
 
-namespace CoProXpert.Database.Models.Security.Type;
+namespace CoproXpert.Database.Models.Security.Type;
 
 public enum SocialProvider
 {

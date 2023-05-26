@@ -2,9 +2,9 @@
 
 using System.ComponentModel.DataAnnotations;
 using CoproXpert.Database.Models;
-using CoProXpert.Database.Models.Security.Type;
+using CoproXpert.Database.Models.Security.Type;
 
-namespace CoProXpert.Database.Models.Security;
+namespace CoproXpert.Database.Models.Security;
 
 public class Social : BaseModel
 {

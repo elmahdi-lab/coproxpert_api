@@ -3,7 +3,7 @@
 using CoproXpert.Core.Variables;
 using CoproXpert.Database.Models;
 
-namespace CoProXpert.Database.Models.Information;
+namespace CoproXpert.Database.Models.Information;
 
 /// <summary>
 ///     Represents a contact.

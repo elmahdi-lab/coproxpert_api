@@ -3,7 +3,7 @@
 using CoproXpert.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoProXpert.Database.Repositories;
+namespace CoproXpert.Database.Repositories;
 
 public abstract class BaseRepository<T> where T : class
 {

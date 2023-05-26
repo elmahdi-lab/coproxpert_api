@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using CoproXpert.Database.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace CoProXpert.Database.Models.Security;
+namespace CoproXpert.Database.Models.Security;
 
 public class Permission : BaseModel
 {

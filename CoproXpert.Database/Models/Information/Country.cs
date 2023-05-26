@@ -3,7 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using CoproXpert.Database.Models;
 
-namespace CoProXpert.Database.Models.Information;
+namespace CoproXpert.Database.Models.Information;
 
 public class Country : BaseModel
 {

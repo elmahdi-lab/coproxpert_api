@@ -3,7 +3,7 @@
 using CoproXpert.Database;
 using CoproXpert.Database.Models;
 
-namespace CoProXpert.Database.Repositories;
+namespace CoproXpert.Database.Repositories;
 
 public class OrganizationRepository : BaseRepository<Organization>
 {

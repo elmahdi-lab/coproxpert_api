@@ -1,5 +1,4 @@
-// Copyright (c) COPRO XPERT - IT HUMANS All Rights Reserved.
-
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 namespace CoproXpert.Core.Variables;
 

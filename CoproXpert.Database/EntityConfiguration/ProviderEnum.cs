@@ -1,7 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
-using CoProXpert.Database.Models.Security;
-using CoProXpert.Database.Models.Security.Type;
+using CoproXpert.Database.Models.Security;
+using CoproXpert.Database.Models.Security.Type;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

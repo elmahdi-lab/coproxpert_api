@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoproXpert.Api\CoproXpert.Api.csproj" />
+    <ProjectReference Include="..\CoproXpert.Core\CoproXpert.Core.csproj" />
+    <ProjectReference Include="..\CoproXpert.Database\CoproXpert.Database.csproj" />
   </ItemGroup>
 
 </Project>

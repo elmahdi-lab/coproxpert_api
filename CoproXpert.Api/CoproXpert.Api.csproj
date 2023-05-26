@@ -16,6 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
@@ -41,17 +42,10 @@
     <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.assets.json" />
     <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.packagespec.json" />
   </ItemGroup>
-  
+
 
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
-
-  <ItemGroup>
-    <ProjectReference Include="..\CoproXpert.Database\CoProXpert.Database.csproj" />
+    <ProjectReference Include="..\CoproXpert.Database\CoproXpert.Database.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
 using CoproXpert.Api.Sources;
 
-namespace CoProXpert.Test;
+namespace CoproXpert.Test;
 
 [TestFixture]
 public class TranslatorTests

@@ -3,9 +3,9 @@
 using System.Reflection;
 using CoproXpert.Database.EntityConfiguration;
 using CoproXpert.Database.Models;
-using CoProXpert.Database.Models.Building;
-using CoProXpert.Database.Models.Information;
-using CoProXpert.Database.Models.Security.Type;
+using CoproXpert.Database.Models.Building;
+using CoproXpert.Database.Models.Information;
+using CoproXpert.Database.Models.Security.Type;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoproXpert.Database;
