@@ -27,6 +27,7 @@ public class HomeController : ControllerBase
     [HttpGet]
     public ActionResult Index()
     {
-        return Ok("ok");
+        var message = _translator.Translate("index.welcome");
+        return Ok(message);
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoproXpert.Api.Sources.Controllers;
 
+/// <summary>
+/// </summary>
 [ApiController]
 [Route("[controller]", Name = "SecurityRoute")]
 public class SecurityController : ControllerBase

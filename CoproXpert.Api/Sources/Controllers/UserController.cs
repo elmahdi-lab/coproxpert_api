@@ -7,33 +7,42 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoproXpert.Api.Sources.Controllers;
 
 /// <summary>
+///     Controller for managing users.
 /// </summary>
 [ApiController]
 [Route("[controller]", Name = "UserRoute")]
 public class UserController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly UserRepository _userRepository;
 
     /// <summary>
+    ///     Initializes a new instance of the <see cref="UserController" /> class.
     /// </summary>
-    /// <param name="userService"></param>
-    public UserController(UserService userService)
+    /// <param name="userRepository">The user repository.</param>
+    public UserController(UserRepository userRepository)
     {
-        _userService = userService;
+        _userRepository = userRepository;
     }
 
-    // GET /user
+    /// <summary>
+    ///     Gets all users.
+    /// </summary>
+    /// <returns>The list of users.</returns>
     [HttpGet]
     public ActionResult<IEnumerable<User>> GetAll()
     {
-        return _userService.GetAll().ToList();
+        return _userRepository.GetAll().ToList();
     }
 
-    // GET /user/1
+    /// <summary>
+    ///     Gets a user by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the user.</param>
+    /// <returns>The user with the specified ID.</returns>
     [HttpGet("{id}")]
     public ActionResult<User> Get(int id)
     {
-        var user = _userService.GetById(id);
+        var user = _userRepository.GetById(id);
 
         if (user == null)
         {
@@ -43,15 +52,27 @@ public class UserController : ControllerBase
         return user;
     }
 
-    // POST /user
+    /// <summary>
+    ///     Creates a new user.
+    /// </summary>
+    /// <param name="user">The user to create.</param>
+    /// <returns>The created user.</returns>
     [HttpPost]
     public ActionResult<User> Create(User user)
     {
-        _userService.Create(user);
+        _userRepository.Create(user);
         return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
     }
 
-    // PUT /user/1
+    /// <summary>
+    ///     Updates an existing user.
+    /// </summary>
+    /// <param name="id">The ID of the user to update.</param>
+    /// <param name="user">The updated user.</param>
+    /// <returns>
+    ///     No content if the update is successful, bad request if the IDs do not match, or not found if the user does not
+    ///     exist.
+    /// </returns>
     [HttpPut("{id}")]
     public IActionResult Update(Guid id, User user)
     {
@@ -60,7 +81,7 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        var success = _userService.Update(user);
+        var success = _userRepository.Update(user);
 
         if (!success)
         {
@@ -70,11 +91,15 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
-    // DELETE /user/1
+    /// <summary>
+    ///     Deletes a user.
+    /// </summary>
+    /// <param name="id">The ID of the user to delete.</param>
+    /// <returns>No content if the deletion is successful, or not found if the user does not exist.</returns>
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var success = _userService.Delete(id);
+        var success = _userRepository.Delete(id);
 
         if (!success)
         {

@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoProXpert.Database.Repositories;
 
-public class UserService : BaseService<User>
+public class UserRepository : BaseRepository<User>
 {
-    public UserService(DataContext context) : base(context)
+    public UserRepository(DataContext context) : base(context)
     {
     }
 

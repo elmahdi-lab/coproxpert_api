@@ -3,6 +3,8 @@
 using System.Reflection;
 using CoproXpert.Database.EntityConfiguration;
 using CoproXpert.Database.Models;
+using CoProXpert.Database.Models.Building;
+using CoProXpert.Database.Models.Information;
 using CoProXpert.Database.Models.Security.Type;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +13,17 @@ namespace CoproXpert.Database;
 public class DataContext : DbContext
 {
     public DbSet<User>? Users { get; set; }
+    public DbSet<Organization>? Organizations { get; set; }
+
+    public DbSet<Contact>? Contacts { get; set; }
+    public DbSet<Address>? Addresses { get; set; }
+    public DbSet<City>? Cities { get; set; }
+    public DbSet<Country>? Countries { get; set; }
+
+    public DbSet<Community>? Communities { get; set; }
+    public DbSet<Domicile>? Domiciles { get; set; }
+    public DbSet<SharedFeature>? SharedFeatures { get; set; }
+    public DbSet<SharedSpace>? SharedSpaces { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {

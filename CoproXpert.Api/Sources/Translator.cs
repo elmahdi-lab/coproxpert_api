@@ -1,3 +1,5 @@
+// Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
+
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -93,7 +95,7 @@ public class Translator
         return translation;
     }
 
-    private string ReplacePluralization(string translation, Dictionary<string, object> namedArgs)
+    private static string ReplacePluralization(string translation, Dictionary<string, object> namedArgs)
     {
         var rules = translation.Split('|');
         var count = int.Parse(namedArgs["count"].ToString() ?? string.Empty);
@@ -130,7 +132,6 @@ public class Translator
             _ => translation
         };
     }
-
 
     private static string ReplaceNamedPlaceholders(string translation, Dictionary<string, object> namedArgs)
     {

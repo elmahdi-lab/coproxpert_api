@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoProXpert.Database.Repositories;
 
-public abstract class BaseService<T> where T : class
+public abstract class BaseRepository<T> where T : class
 {
     protected readonly DataContext Context;
 
-    protected BaseService(DataContext context)
+    protected BaseRepository(DataContext context)
     {
         Context = context;
     }

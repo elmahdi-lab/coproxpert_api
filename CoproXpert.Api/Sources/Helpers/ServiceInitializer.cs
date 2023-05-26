@@ -6,16 +6,16 @@ using CoProXpert.Database.Repositories;
 namespace CoproXpert.Api.Sources.Helpers;
 
 /// <summary>
-///   Initializes the services
+///     Initializes the services
 /// </summary>
 public static class ServiceInitializer
 {
     private static readonly List<string> s_targetNamespaces = new() { "CoproXpert.Database.Repositories" };
 
-    private static readonly List<Type> s_excludedTypes = new() { typeof(BaseModel), typeof(BaseService<>) };
+    private static readonly List<Type> s_excludedTypes = new() { typeof(BaseModel), typeof(BaseRepository<>) };
 
     /// <summary>
-    ///    Initializes the services in the specified service collection
+    ///     Initializes the services in the specified service collection
     /// </summary>
     /// <param name="serviceCollection"></param>
     public static void Init(IServiceCollection serviceCollection)
