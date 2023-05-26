@@ -2,11 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoproXpert.Api", "CoproXpert.Api\CoproXpert.Api.csproj", "{0DB37013-6B3F-4445-9286-4FFF19462D4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoProXpert.Test", "CoProXpert.Test\CoProXpert.Test.csproj", "{BA791955-504B-42F6-B32D-399A65C7B082}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoProXpert.Database", "CoProXpert.Database\CoProXpert.Database.csproj", "{694FBC02-924B-4931-8073-9973754BD766}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoproXpert.Core", "CoproXpert.Core\CoproXpert.Core.csproj", "{51DB1AFD-F10A-4541-B489-C83AD71C0E46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoProXpert.Database", "CoproXpert.Database\CoProXpert.Database.csproj", "{C70F2595-89A6-4B68-A1DB-EB5A40013E12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoProXpert.Test", "CoproXpert.Test\CoProXpert.Test.csproj", "{36357A28-8185-46F1-B14D-7D19F21F9C00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,17 +18,17 @@ Global
 		{0DB37013-6B3F-4445-9286-4FFF19462D4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DB37013-6B3F-4445-9286-4FFF19462D4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DB37013-6B3F-4445-9286-4FFF19462D4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA791955-504B-42F6-B32D-399A65C7B082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA791955-504B-42F6-B32D-399A65C7B082}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA791955-504B-42F6-B32D-399A65C7B082}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BA791955-504B-42F6-B32D-399A65C7B082}.Release|Any CPU.Build.0 = Release|Any CPU
-		{694FBC02-924B-4931-8073-9973754BD766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{694FBC02-924B-4931-8073-9973754BD766}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{694FBC02-924B-4931-8073-9973754BD766}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{694FBC02-924B-4931-8073-9973754BD766}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51DB1AFD-F10A-4541-B489-C83AD71C0E46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70F2595-89A6-4B68-A1DB-EB5A40013E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70F2595-89A6-4B68-A1DB-EB5A40013E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70F2595-89A6-4B68-A1DB-EB5A40013E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70F2595-89A6-4B68-A1DB-EB5A40013E12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36357A28-8185-46F1-B14D-7D19F21F9C00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36357A28-8185-46F1-B14D-7D19F21F9C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36357A28-8185-46F1-B14D-7D19F21F9C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36357A28-8185-46F1-B14D-7D19F21F9C00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

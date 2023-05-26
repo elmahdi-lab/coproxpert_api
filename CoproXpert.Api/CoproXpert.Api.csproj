@@ -1,55 +1,55 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Wibbi.Api.xml</DocumentationFile>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Wibbi.Api.xml</DocumentationFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="GetText.NET" Version="1.8.7" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="GetText.NET" Version="1.8.7"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="CoProXpert.Test\**" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="CoproXpert.Test\**"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <EmbeddedResource Remove="CoProXpert.Test\**" />
-    </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="CoproXpert.Test\**"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="CoProXpert.Test\**" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="CoproXpert.Test\**"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <Content Remove="CoProXpert.Test\**" />
-    </ItemGroup>
+  <ItemGroup>
+    <Content Remove="CoproXpert.Test\**"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="CoProXpert.Test\obj\CoProXpert.Test.csproj.nuget.dgspec.json" />
-      <_ContentIncludedByDefault Remove="CoProXpert.Test\obj\project.assets.json" />
-      <_ContentIncludedByDefault Remove="CoProXpert.Test\obj\project.packagespec.json" />
-    </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\CoproXpert.Test.csproj.nuget.dgspec.json"/>
+    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.assets.json"/>
+    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.packagespec.json"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\CoProXpert.Database\CoProXpert.Database.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoproXpert.Database\CoproXpert.Database.csproj"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Newtonsoft.Json">
-        <HintPath>..\..\..\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>
