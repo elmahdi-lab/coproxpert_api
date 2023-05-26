@@ -9,47 +9,49 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GetText.NET" Version="1.8.7"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2"/>
+    <PackageReference Include="GetText.NET" Version="1.8.7" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5"/>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="CoproXpert.Test\**"/>
+    <Compile Remove="CoproXpert.Test\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="CoproXpert.Test\**"/>
+    <EmbeddedResource Remove="CoproXpert.Test\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="CoproXpert.Test\**"/>
+    <None Remove="CoproXpert.Test\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="CoproXpert.Test\**"/>
+    <Content Remove="CoproXpert.Test\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\CoproXpert.Test.csproj.nuget.dgspec.json"/>
-    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.assets.json"/>
-    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.packagespec.json"/>
+    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\CoproXpert.Test.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="CoproXpert.Test\obj\project.packagespec.json" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CoproXpert.Database\CoproXpert.Database.csproj"/>
-  </ItemGroup>
+  
 
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoproXpert.Database\CoProXpert.Database.csproj" />
   </ItemGroup>
 
 </Project>
