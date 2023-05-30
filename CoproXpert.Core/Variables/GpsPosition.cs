@@ -5,27 +5,42 @@ namespace CoproXpert.Core.Variables;
 /// <summary>
 ///     Represents a GPS position with latitude and longitude coordinates.
 /// </summary>
-public readonly struct GpsPosition : IEquatable<GpsPosition>
+public class GpsPosition : IEquatable<GpsPosition>
 {
-    /// <summary>
-    ///     Gets the latitude coordinate of the GPS position.
-    /// </summary>
-    private double Latitude { get; }
-
-    /// <summary>
-    ///     Gets the longitude coordinate of the GPS position.
-    /// </summary>
-    private double Longitude { get; }
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="GpsPosition" /> struct.
     /// </summary>
     /// <param name="latitude">The latitude coordinate.</param>
     /// <param name="longitude">The longitude coordinate.</param>
-    private GpsPosition(double latitude, double longitude)
+    public GpsPosition(double latitude, double longitude)
     {
         Latitude = latitude;
         Longitude = longitude;
+    }
+
+    /// <summary>
+    ///     Gets the latitude coordinate of the GPS position.
+    /// </summary>
+    public double Latitude { get; set; }
+
+    /// <summary>
+    ///     Gets the longitude coordinate of the GPS position.
+    /// </summary>
+    public double Longitude { get; set; }
+
+    /// <summary>
+    ///     Determines whether the current <see cref="GpsPosition" /> is equal to another <see cref="GpsPosition" /> object.
+    /// </summary>
+    /// <param name="other">The <see cref="GpsPosition" /> to compare with the current <see cref="GpsPosition" />.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified <see cref="GpsPosition" /> is equal to the current <see cref="GpsPosition" />;
+    ///     otherwise, <c>false</c>.
+    /// </returns>
+    public bool Equals(GpsPosition other)
+    {
+        const double Tolerance = 0.000001; // Define a tolerance value for comparing floating-point numbers
+        return Math.Abs(Latitude - other.Latitude) < Tolerance &&
+               Math.Abs(Longitude - other.Longitude) < Tolerance;
     }
 
     /// <summary>
@@ -41,11 +56,19 @@ public readonly struct GpsPosition : IEquatable<GpsPosition>
     ///     Parses a string representation of a GPS position into a <see cref="GpsPosition" /> object.
     /// </summary>
     /// <param name="value">The string representation of the GPS position in the format "latitude,longitude".</param>
+    /// <param name="position"></param>
     /// <returns>A <see cref="GpsPosition" /> object representing the parsed GPS position.</returns>
-    public static GpsPosition Parse(string value)
+    public static bool Parse(string? value, out GpsPosition? position)
     {
+        if (string.IsNullOrEmpty(value))
+        {
+            position = null;
+            return false;
+        }
+
         var split = value.Split(',');
-        return new GpsPosition(double.Parse(split[0]), double.Parse(split[1]));
+        position = new GpsPosition(double.Parse(split[0]), double.Parse(split[1]));
+        return true;
     }
 
     /// <summary>
@@ -71,21 +94,6 @@ public readonly struct GpsPosition : IEquatable<GpsPosition>
     public override int GetHashCode()
     {
         return HashCode.Combine(Latitude, Longitude);
-    }
-
-    /// <summary>
-    ///     Determines whether the current <see cref="GpsPosition" /> is equal to another <see cref="GpsPosition" /> object.
-    /// </summary>
-    /// <param name="other">The <see cref="GpsPosition" /> to compare with the current <see cref="GpsPosition" />.</param>
-    /// <returns>
-    ///     <c>true</c> if the specified <see cref="GpsPosition" /> is equal to the current <see cref="GpsPosition" />;
-    ///     otherwise, <c>false</c>.
-    /// </returns>
-    public bool Equals(GpsPosition other)
-    {
-        const double Tolerance = 0.000001; // Define a tolerance value for comparing floating-point numbers
-        return Math.Abs(Latitude - other.Latitude) < Tolerance &&
-               Math.Abs(Longitude - other.Longitude) < Tolerance;
     }
 
     /// <summary>

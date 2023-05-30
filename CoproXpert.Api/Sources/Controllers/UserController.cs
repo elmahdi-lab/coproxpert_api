@@ -40,7 +40,7 @@ public class UserController : ControllerBase
     /// <param name="id">The ID of the user.</param>
     /// <returns>The user with the specified ID.</returns>
     [HttpGet("{id}")]
-    public ActionResult<User> Get(int id)
+    public ActionResult<User> Get(Guid id)
     {
         var user = _userRepository.GetById(id);
 

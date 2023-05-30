@@ -1,6 +1,5 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
-using CoproXpert.Database;
 using CoproXpert.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,5 +15,10 @@ public class UserRepository : BaseRepository<User>
     {
         // Find User by UserName
         return Context.Users?.FirstOrDefaultAsync(u => u.Username == userName);
+    }
+
+    public Task<User?>? GetByForgotPasswordToken(string token)
+    {
+        return Context.Users?.FirstOrDefaultAsync(u => u.PasswordForgetToken == token);
     }
 }

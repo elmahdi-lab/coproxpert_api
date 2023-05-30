@@ -1,8 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using System.ComponentModel.DataAnnotations;
-using CoproXpert.Database.Models;
-using CoproXpert.Database.Models.Building.Enum;
+using CoproXpert.Database.Models.Building.Enums;
 
 namespace CoproXpert.Database.Models.Building;
 

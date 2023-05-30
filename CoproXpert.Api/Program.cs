@@ -1,10 +1,16 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Api.Sources.Authentication;
 using CoproXpert.Api.Sources.Helpers;
 using CoproXpert.Database;
 
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<ApiKeyAuthenticator>();
+builder.Services.AddScoped<ApiKeyAuthFilter>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -20,16 +26,8 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile(appSettingsFileName, false, true)
     .Build();
 
-// // Use Settings class to access appsettings.json
-// var settings = new Settings();
-// configuration.Bind(settings);
-// builder.Services.AddSingleton<Settings>();
-
-// builder.Services.Configure<Settings>(configuration.GetSection("Settings"));
-
 builder.Services.AddDbContext<DataContext>();
 // Create a list of services to be injected
-
 ServiceInitializer.Init(builder.Services);
 
 var app = builder.Build();

@@ -2,39 +2,40 @@
 
 using System.Security.Cryptography;
 
-namespace CoproXpert.Api.Sources.Services.Security;
+namespace CoproXpert.Core.Security;
 
 /// <summary>
-///   Salt generator
+///     Salt generator
 /// </summary>
-public static class SaltGenerator
+public static class KeyGenerator
 {
     /// <summary>
-    ///  Generate a random salt
+    ///     Generate a random key
     /// </summary>
     /// <param name="length"></param>
     /// <returns></returns>
     public static byte[] GenerateBytes(int length = 32)
     {
-        // Create a byte array to store the salt bytes
-        var saltBytes = new byte[length];
+        // Create a byte array to store the key bytes
+        var keyBytes = new byte[length];
         // Create a new instance of the RandomNumberGenerator class
-        var rng = RandomNumberGenerator.Create();
+        using var rng = RandomNumberGenerator.Create();
         // Fill the array with a random value
-        rng.GetBytes(saltBytes);
+        rng.GetBytes(keyBytes);
         // Return a Base64 string representation of the random value
-        return saltBytes;
+
+        return keyBytes;
     }
 
     /// <summary>
-    /// Generate a random salt
+    ///     Generate a random key
     /// </summary>
     /// <param name="length"></param>
     /// <returns></returns>
     public static string GenerateString(int length = 32)
     {
-        var saltBytes = GenerateBytes(length);
-        var generated = Convert.ToBase64String(saltBytes);
+        var keyBytes = GenerateBytes(length);
+        var generated = Convert.ToBase64String(keyBytes);
         return generated[..length];
     }
 }

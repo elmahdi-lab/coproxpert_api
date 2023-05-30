@@ -40,7 +40,7 @@ public class OrganizationController : ControllerBase
     /// <param name="id">The ID of the organization.</param>
     /// <returns>The organization with the specified ID.</returns>
     [HttpGet("{id}")]
-    public ActionResult<Organization> Get(int id)
+    public ActionResult<Organization> Get(Guid id)
     {
         var organization = _organizationRepository.GetById(id);
 

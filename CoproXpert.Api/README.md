@@ -37,3 +37,17 @@ Renter: can manage the residential unit.
 ## access_to_table
 
 id, user_id, entity, entity_id, role, expiring_at, created_at, updated_at
+
+## Credentials user stories
+
+1. Front end login form: fill username and password.
+2. Back end: check if user exists, and if password is correct.
+3. Back end: create a token, and return it to the front end.
+4. Front end: store the token in the local storage.
+5. Front end: redirect to the home page.
+
+## Back end login
+
+1. Login route: check if user exists, and if password is correct.
+2. 
+

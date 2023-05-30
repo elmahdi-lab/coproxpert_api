@@ -1,34 +1,59 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using System.ComponentModel.DataAnnotations;
+using CoproXpert.Core.Security;
+using CoproXpert.Database.Models.Information;
 using CoproXpert.Database.Models.Security;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoproXpert.Database.Models;
 
+[Index(nameof(Username), IsUnique = true)]
 public class User : BaseModel
 {
+    private const int MaxFailedAttempts = 5;
+    private const int LockTime = 5; // in minutes
+    private const int TokenLength = 100;
+
+    public User()
+    {
+        Token = new Token();
+    }
+
     [Key] public Guid Id { get; set; }
 
     public ICollection<Social> Socials { get; set; } = null!;
-    public ICollection<Permission> Permissions { get; set; } = null!;
+    public ICollection<Claim> Claims { get; set; } = null!;
+
+    public Contact Contact { get; set; } = null!;
+    public Token Token { get; set; } = null!;
 
     public string Username { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string HashedPassword { get; set; } = null!;
 
-    public int FailedAttempts { get; set; } = 0;
+    public int FailedAttempts { get; set; }
 
-    public string? ResetToken { get; set; } = null!;
+    public string? PasswordForgetToken { get; set; }
 
-    public DateTime? LockedUntil { get; set; } = null;
+    public DateTime? LockedUntil { get; set; }
 
     public bool IsLocked => LockedUntil > DateTime.Now;
+    public bool IsFailedAttemptsExceeded => FailedAttempts >= MaxFailedAttempts;
+    public DateTime? ResetTokenExpiration { get; set; }
 
-    public DateTime? ResetTokenExpiration { get; set; } = null;
-
-    public void GenerateResetToken()
+    public void RefreshPasswordForgetToken()
     {
-        ResetToken = Guid.NewGuid().ToString().Replace("-", "");
-        ResetTokenExpiration = DateTime.Now.AddMinutes(30);
+        PasswordForgetToken = KeyGenerator.GenerateString(TokenLength);
+        ResetTokenExpiration = DateTime.Now.AddMinutes(LockTime);
+    }
+
+    public void IncrementFailedAttempts()
+    {
+        FailedAttempts++;
+        if (IsFailedAttemptsExceeded)
+        {
+            LockedUntil = DateTime.Now.AddMinutes(LockTime);
+        }
     }
 }

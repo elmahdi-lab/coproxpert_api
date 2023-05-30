@@ -1,7 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using System.Reflection;
-using CoproXpert.Database.Attribute;
+using CoproXpert.Database.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -11,12 +11,17 @@ public static class CollectionToString
 {
     public static void ApplyCustomConfigurations(ModelBuilder modelBuilder)
     {
+        if (modelBuilder == null)
+        {
+            throw new ArgumentNullException(nameof(modelBuilder));
+        }
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             foreach (var property in entityType.GetProperties())
             {
                 var propertyInfo = property.PropertyInfo;
-                if (propertyInfo == null || propertyInfo.GetCustomAttribute<DbCollection>() == null)
+                if (propertyInfo == null || propertyInfo.GetCustomAttribute<DbCollectionAttribute>() == null)
                 {
                     continue;
                 }

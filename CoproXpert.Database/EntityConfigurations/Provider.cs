@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoproXpert.Database.EntityConfiguration;
 
-public class ProviderEnum : IEntityTypeConfiguration<Social>
+public class Provider : IEntityTypeConfiguration<Social>
 {
-    public void Configure(EntityTypeBuilder<Social> builder)
+    public void Configure(EntityTypeBuilder<Social>? builder)
     {
-        builder.Property(e => e.Provider)
+        builder?.Property(e => e.Provider)
             .HasConversion(
                 v => v.ToString(),
                 v => (SocialProvider)Enum.Parse(typeof(SocialProvider), v))

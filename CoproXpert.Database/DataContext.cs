@@ -5,6 +5,7 @@ using CoproXpert.Database.EntityConfiguration;
 using CoproXpert.Database.Models;
 using CoproXpert.Database.Models.Building;
 using CoproXpert.Database.Models.Information;
+using CoproXpert.Database.Models.Security;
 using CoproXpert.Database.Models.Security.Type;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,9 @@ namespace CoproXpert.Database;
 public class DataContext : DbContext
 {
     public DbSet<User>? Users { get; set; }
+    public DbSet<Token>? Tokens { get; set; }
+    public DbSet<Claim>? Claims { get; set; }
+
     public DbSet<Organization>? Organizations { get; set; }
 
     public DbSet<Contact>? Contacts { get; set; }
@@ -25,20 +29,26 @@ public class DataContext : DbContext
     public DbSet<SharedFeature>? SharedFeatures { get; set; }
     public DbSet<SharedSpace>? SharedSpaces { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        // TODO change this to be automatic
         const string Connection =
             "Host=localhost;Port=5532;Database=cx_db;Username=cx_user;Password=Password";
         if (Connection.GetType() != typeof(string))
         {
-            throw new Exception("Connection string is not a string.");
+            throw new InvalidCastException("Connection string is not a string.");
         }
 
-        options.UseNpgsql(Connection);
+        optionsBuilder.UseNpgsql(Connection);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        if (modelBuilder == null)
+        {
+            throw new ArgumentNullException(nameof(modelBuilder));
+        }
+
         modelBuilder.HasPostgresEnum<SocialProvider>();
         CollectionToString.ApplyCustomConfigurations(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); // This may not be necessary

@@ -1,6 +1,5 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
-using CoproXpert.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoproXpert.Database.Repositories;
@@ -19,7 +18,7 @@ public abstract class BaseRepository<T> where T : class
         return Context.Set<T>().ToList();
     }
 
-    public virtual T? GetById(int id)
+    public virtual T? GetById(Guid id)
     {
         return Context.Set<T>().Find(id);
     }

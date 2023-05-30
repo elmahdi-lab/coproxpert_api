@@ -1,7 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using System.ComponentModel.DataAnnotations.Schema;
 using CoproXpert.Core.Variables;
-using CoproXpert.Database.Models;
 
 namespace CoproXpert.Database.Models.Information;
 
@@ -30,7 +30,14 @@ public class Contact : BaseModel
     /// </summary>
     public string? Phone { get; set; }
 
-    public GpsPosition? Location { get; set; }
+    [NotMapped]
+    public GpsPosition? Location
+    {
+        get => GpsPosition.Parse(LocationString, out var position) ? position : null;
+        set => LocationString = value?.ToString();
+    }
+
+    private string? LocationString { get; set; }
 
     /// <summary>
     ///     Gets or sets any notes about the contact.
