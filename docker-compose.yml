@@ -12,6 +12,7 @@ services:
       - ConnectionStrings__Default=Host=db;Port=5532;Database=cx_db;Username=cx_user;Password=Password
       - Redis__ConnectionString=redis:6379
       - ASPNETCORE_ENVIRONMENT=Development
+      - TZ=UTC
     volumes:
       - ./:/app
       - ~/.nuget/packages:/root/.nuget/packages
@@ -25,6 +26,7 @@ services:
       - POSTGRES_DB=cx_db
       - POSTGRES_USER=cx_user
       - POSTGRES_PASSWORD=Password
+      - TZ=UTC
     ports:
       - "5532:5432"
     volumes:
@@ -32,3 +34,6 @@ services:
 
   redis:
     image: redis:alpine
+    environment:
+      - TZ=UTC
+# 

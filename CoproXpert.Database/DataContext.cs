@@ -40,6 +40,7 @@ public class DataContext : DbContext
         }
 
         optionsBuilder.UseNpgsql(Connection);
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,5 +54,6 @@ public class DataContext : DbContext
         CollectionToString.ApplyCustomConfigurations(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); // This may not be necessary
         base.OnModelCreating(modelBuilder);
+
     }
 }

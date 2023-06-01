@@ -7,8 +7,8 @@ public class FixtureLoader
     public FixtureLoader(DataContext dataContext)
     {
         Fixtures = new List<IFixture>();
-        // Fixtures.Add(new UserFixture(dataContext));
-        Fixtures.Add(new CountryFixture(dataContext));
+        Fixtures.Add(new UserFixture(dataContext));
+        //Fixtures.Add(new CountryFixture(dataContext));
     }
 
     private ICollection<IFixture> Fixtures { get; }

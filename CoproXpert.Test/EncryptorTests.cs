@@ -15,7 +15,7 @@ public class EncryptorTests
     {
         // Arrange
         var encryptor = new Encryptor(_key, _iv);
-        var plainText = "Hello, world!";
+        const string plainText = "Hello, world!";
 
         // Act
         var cipherText = encryptor.Encrypt(plainText);

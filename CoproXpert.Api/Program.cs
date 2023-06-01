@@ -2,6 +2,7 @@
 
 using CoproXpert.Api.Sources.Authentication;
 using CoproXpert.Api.Sources.Helpers;
+using CoproXpert.Core.Security;
 using CoproXpert.Database;
 using CoproXpert.Database.Fixtures;
 
@@ -14,6 +15,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ApiKeyAuthenticator>();
 builder.Services.AddScoped<ApiKeyAuthFilter>();
+
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

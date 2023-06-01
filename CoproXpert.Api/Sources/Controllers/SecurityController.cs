@@ -2,9 +2,8 @@
 
 using CoproXpert.Database.Models;
 using CoproXpert.Database.Repositories;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using CoproXpert.Core.Security;
 namespace CoproXpert.Api.Sources.Controllers;
 
 /// <summary>
@@ -14,7 +13,7 @@ namespace CoproXpert.Api.Sources.Controllers;
 public class SecurityController : ControllerBase
 {
     private readonly ILogger<SecurityController> _logger;
-    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IPasswordHasher _passwordHasher;
     private readonly UserRepository _userRepository;
 
     /// <summary>
@@ -22,7 +21,7 @@ public class SecurityController : ControllerBase
     /// <param name="userRepository"></param>
     /// <param name="passwordHasher"></param>
     /// <param name="logger"></param>
-    public SecurityController(UserRepository userRepository, IPasswordHasher<User> passwordHasher,
+    public SecurityController(UserRepository userRepository, IPasswordHasher passwordHasher,
         ILogger<SecurityController> logger)
     {
         _userRepository = userRepository;
@@ -38,7 +37,7 @@ public class SecurityController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Login(string username, string password)
     {
-        var user = await _userRepository.GetByUserName(username).ConfigureAwait(false)!;
+        var user = await _userRepository.GetByUserName(username)!.ConfigureAwait(false)!;
         if (user is null)
         {
             return NotFound();
@@ -50,13 +49,13 @@ public class SecurityController : ControllerBase
             return Unauthorized();
         }
 
-        var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, password);
-        if (passwordVerificationResult != PasswordVerificationResult.Success)
+        var passwordVerificationResult = _passwordHasher.Verify(user.HashedPassword, password);
+        if (passwordVerificationResult != true)
         {
             user.IncrementFailedAttempts();
             return Unauthorized();
         }
-
+        // TODO: refresh does not save to db, so the value returned is not correct.
         user.Token.RefreshToken();
         return Ok(user.Token.Value);
     }
@@ -81,7 +80,7 @@ public class SecurityController : ControllerBase
             return Unauthorized();
         }
 
-        user.HashedPassword = _passwordHasher.HashPassword(user, password);
+        user.HashedPassword = _passwordHasher.Hash(password);
         var isUpdated = _userRepository.Update(user);
         if (isUpdated)
         {
@@ -89,5 +88,17 @@ public class SecurityController : ControllerBase
         }
 
         return Ok();
+    }
+
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="password"></param>
+    /// <returns></returns>
+    [HttpGet("hash-password")]
+    public Task<ActionResult> HashPassword(string password)
+    {
+        return Task.FromResult<ActionResult>(Ok(_passwordHasher.Hash(password)));
     }
 }

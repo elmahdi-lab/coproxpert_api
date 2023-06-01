@@ -1,5 +1,6 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Core.Security;
 using CoproXpert.Database.Fixtures.Fakers;
 
 namespace CoproXpert.Database.Fixtures;
