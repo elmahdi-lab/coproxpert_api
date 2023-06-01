@@ -11,7 +11,7 @@ namespace CoproXpert.Database.Models.Security;
 public class Token : BaseModel
 {
     private const int TokenLength = 256;
-    private const int ExpirationTime = 30; // in minutes
+    public const int ExpirationTime = 30; // in minutes
     private const int MaxDuplicateValueAttempts = 3;
     private int _duplicateValueAttempts;
 
@@ -19,17 +19,17 @@ public class Token : BaseModel
     public Token()
     {
         CreateUniqueValue();
-        ExpirationDate = DateTime.Now.AddMinutes(ExpirationTime);
+        ExpirationDate = DateTime.UtcNow.AddMinutes(ExpirationTime);
     }
 
     public Guid Id { get; set; }
 
     public string Value { get; set; } = null!;
-    private DateTime ExpirationDate { get; set; }
+    public DateTime ExpirationDate { get; set; }
 
     public bool IsExpired()
     {
-        return ExpirationDate < DateTime.Now;
+        return ExpirationDate < DateTime.UtcNow;
     }
 
     [Obsolete("This method is only used for testing purposes.")]
@@ -57,11 +57,11 @@ public class Token : BaseModel
     public void RefreshToken()
     {
         CreateUniqueValue();
-        ExpirationDate = DateTime.Now.AddMinutes(ExpirationTime);
+        ExpirationDate = DateTime.UtcNow.AddMinutes(ExpirationTime);
     }
 
     public void ExtendExpirationDate()
     {
-        ExpirationDate = DateTime.Now.AddMinutes(ExpirationTime);
+        ExpirationDate = DateTime.UtcNow.AddMinutes(ExpirationTime);
     }
 }

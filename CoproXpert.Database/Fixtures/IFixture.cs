@@ -2,15 +2,9 @@
 
 namespace CoproXpert.Database.Fixtures;
 
-public class IFixture
+internal interface IFixture
 {
-    public void Initialize()
-    {
-        throw new NotImplementedException();
-    }
+    Task Initialize();
 
-    public void Execute()
-    {
-        throw new NotImplementedException();
-    }
+    Task Execute();
 }

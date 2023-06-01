@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoproXpert.Database.Repositories;
 
-public abstract class TokenRepository : BaseRepository<Token>
+public class TokenRepository : BaseRepository<Token>
 {
-    protected TokenRepository(DataContext context) : base(context)
+    public TokenRepository(DataContext context) : base(context)
     {
     }
 

@@ -1,5 +1,6 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using System.Reflection;
 using CoproXpert.Database.Models;
 using CoproXpert.Database.Repositories;
 
@@ -20,8 +21,8 @@ public static class ServiceInitializer
     /// <param name="serviceCollection"></param>
     public static void Init(IServiceCollection serviceCollection)
     {
-        // Get all the services in the target namespace
-        var services = GetServicesInNamespace(s_targetNamespaces, s_excludedTypes);
+        // Get all the services in the target namespaces and their subfolders
+        var services = GetServicesInNamespaces(s_targetNamespaces, s_excludedTypes);
 
         // Loop through the services and add them to the service collection
         foreach (var service in services)
@@ -30,20 +31,39 @@ public static class ServiceInitializer
         }
     }
 
-    private static List<Type> GetServicesInNamespace(ICollection<string> targetNamespaces,
+    private static List<Type> GetServicesInNamespaces(ICollection<string> targetNamespaces,
         ICollection<Type> excludedTypes)
     {
         // Get all the currently loaded assemblies
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        // Get all the types in the assemblies that match any of the target namespaces and exclude the specified types
+        // Get all the types in the assemblies that match any of the target namespaces and their subfolders,
+        // and exclude the specified types
         var services = assemblies
-            .SelectMany(assembly => assembly.GetTypes())
-            .Where(type => type.Namespace != null
-                           && targetNamespaces.Any(targetNamespace => type.Namespace.Equals(targetNamespace))
-                           && !excludedTypes.Contains(type))
+            .SelectMany(assembly => GetTypesInNamespaces(assembly, targetNamespaces))
+            .Where(type => !excludedTypes.Contains(type))
             .ToList();
 
         return services;
+    }
+
+    private static IEnumerable<Type> GetTypesInNamespaces(Assembly assembly, ICollection<string> targetNamespaces)
+    {
+        // Get all the types in the assembly
+        var assemblyTypes = assembly.GetTypes();
+
+        // Loop through the target namespaces and their subfolders
+        foreach (var targetNamespace in targetNamespaces)
+        {
+            // Get all the types in the assembly that match the target namespace and its subfolders
+            var types = assemblyTypes
+                .Where(type => type.Namespace != null && type.Namespace.StartsWith(targetNamespace))
+                .ToList();
+
+            foreach (var type in types)
+            {
+                yield return type;
+            }
+        }
     }
 }

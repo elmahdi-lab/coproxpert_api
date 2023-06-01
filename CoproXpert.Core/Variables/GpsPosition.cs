@@ -18,15 +18,19 @@ public class GpsPosition : IEquatable<GpsPosition>
         Longitude = longitude;
     }
 
+    public GpsPosition()
+    {
+    }
+
     /// <summary>
     ///     Gets the latitude coordinate of the GPS position.
     /// </summary>
-    public double Latitude { get; set; }
+    public double Latitude { get; }
 
     /// <summary>
     ///     Gets the longitude coordinate of the GPS position.
     /// </summary>
-    public double Longitude { get; set; }
+    public double Longitude { get; }
 
     /// <summary>
     ///     Determines whether the current <see cref="GpsPosition" /> is equal to another <see cref="GpsPosition" /> object.
@@ -36,10 +40,10 @@ public class GpsPosition : IEquatable<GpsPosition>
     ///     <c>true</c> if the specified <see cref="GpsPosition" /> is equal to the current <see cref="GpsPosition" />;
     ///     otherwise, <c>false</c>.
     /// </returns>
-    public bool Equals(GpsPosition other)
+    public bool Equals(GpsPosition? other)
     {
         const double Tolerance = 0.000001; // Define a tolerance value for comparing floating-point numbers
-        return Math.Abs(Latitude - other.Latitude) < Tolerance &&
+        return Math.Abs(Latitude - other!.Latitude) < Tolerance &&
                Math.Abs(Longitude - other.Longitude) < Tolerance;
     }
 

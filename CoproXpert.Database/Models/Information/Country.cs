@@ -12,5 +12,10 @@ public class Country : BaseModel
 
     public string? Name { get; set; }
 
-    public string? Code { get; set; }
+    public string Code { get; set; } = null!;
+
+    public string? Currency { get; set; } = null!;
+    public string? Extention { get; set; } = null!;
+
+    public string? Timezone { get; set; }
 }

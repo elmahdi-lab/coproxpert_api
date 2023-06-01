@@ -4,14 +4,13 @@ namespace CoproXpert.Database.Fixtures;
 
 public abstract class FixtureBase : IFixture
 {
-    private readonly DataContext _dataContext;
-
-    protected FixtureBase(DataContext dataContext)
+    public virtual Task Initialize()
     {
-        _dataContext = dataContext;
+        throw new NotImplementedException();
     }
 
-    protected new abstract void Initialize();
-
-    protected new abstract void Execute();
+    public virtual Task Execute()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -13,7 +13,7 @@ public sealed class UserFaker : Faker<User>
         RuleFor(u => u.Socials, f => new List<Social>());
         RuleFor(u => u.Claims, f => new List<Claim>());
         RuleFor(u => u.Contact, f => new ContactFaker().Generate());
-        RuleFor(u => u.Token, f => new Token());
+        RuleFor(u => u.Token, f => new TokenFaker().Generate());
         RuleFor(u => u.Username, f => f.Person.UserName);
         RuleFor(u => u.HashedPassword, f => "Password");
         RuleFor(u => u.FailedAttempts, f => f.Random.Int(0, 5));
@@ -24,7 +24,6 @@ public sealed class UserFaker : Faker<User>
         FinishWith((f, u) =>
         {
             u.Id = Guid.NewGuid();
-            u.Token = new Token();
             u.RefreshPasswordForgetToken();
         });
     }

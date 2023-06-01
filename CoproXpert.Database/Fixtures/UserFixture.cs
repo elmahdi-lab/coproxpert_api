@@ -1,22 +1,41 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
-using CoproXpert.Core.Variables;
+using CoproXpert.Database.Fixtures.Fakers;
 
 namespace CoproXpert.Database.Fixtures;
 
 public class UserFixture : FixtureBase
 {
-    public UserFixture(DataContext dataContext) : base(dataContext)
+    private readonly DataContext _dataContext;
+
+    public UserFixture(DataContext dataContext)
     {
+        _dataContext = dataContext;
     }
 
-    protected override void Initialize()
+    public override Task Initialize()
     {
+        return Task.CompletedTask;
     }
 
-    protected override void Execute()
+    public override Task Execute()
     {
-        var position1 = new GpsPosition(42.3601, -71.0589);
-        var position2 = new GpsPosition(42.3601, -71.0589);
+        _dataContext.Database.EnsureCreated();
+
+        using var transaction = _dataContext.Database.BeginTransaction();
+        try
+        {
+            var user = new UserFaker().Generate();
+            _dataContext.Users?.Add(user);
+            _dataContext.SaveChanges();
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+
+        return Task.CompletedTask;
     }
 }

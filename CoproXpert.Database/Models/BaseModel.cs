@@ -3,30 +3,31 @@
 namespace CoproXpert.Database.Models;
 
 /// <summary>
-/// Base class for all domain models.
+///     Base class for all domain models.
 /// </summary>
 public abstract class BaseModel
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseModel"/> class.
+    ///     Initializes a new instance of the <see cref="BaseModel" /> class.
     /// </summary>
     protected BaseModel()
     {
         CreatedAt = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     /// <summary>
-    /// Gets or sets the date and time when the model was created.
+    ///     Gets or sets the date and time when the model was created.
     /// </summary>
     public DateTime CreatedAt { get; set; }
 
     /// <summary>
-    /// Gets or sets the date and time when the model was last updated.
+    ///     Gets or sets the date and time when the model was last updated.
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
-    /// Sets the value of <see cref="UpdatedAt"/> to the current UTC date and time.
+    ///     Sets the value of <see cref="UpdatedAt" /> to the current UTC date and time.
     /// </summary>
     public void SetUpdatedAt()
     {

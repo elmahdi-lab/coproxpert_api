@@ -38,14 +38,14 @@ public class User : BaseModel
 
     public DateTime? LockedUntil { get; set; }
 
-    public bool IsLocked => LockedUntil > DateTime.Now;
+    public bool IsLocked => LockedUntil > DateTime.UtcNow;
     public bool IsFailedAttemptsExceeded => FailedAttempts >= MaxFailedAttempts;
     public DateTime? ResetTokenExpiration { get; set; }
 
     public void RefreshPasswordForgetToken()
     {
         PasswordForgetToken = KeyGenerator.GenerateString(TokenLength);
-        ResetTokenExpiration = DateTime.Now.AddMinutes(LockTime);
+        ResetTokenExpiration = DateTime.UtcNow.AddMinutes(LockTime);
     }
 
     public void IncrementFailedAttempts()
@@ -53,7 +53,7 @@ public class User : BaseModel
         FailedAttempts++;
         if (IsFailedAttemptsExceeded)
         {
-            LockedUntil = DateTime.Now.AddMinutes(LockTime);
+            LockedUntil = DateTime.UtcNow.AddMinutes(LockTime);
         }
     }
 }
