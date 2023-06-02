@@ -6,12 +6,12 @@ namespace CoproXpert.Database.Repositories;
 
 public abstract class BaseRepository<T> where T : class
 {
-    protected readonly DataContext Context;
-
     protected BaseRepository(DataContext context)
     {
         Context = context;
     }
+
+    private protected DataContext Context { get; }
 
     public virtual IEnumerable<T> GetAll()
     {
@@ -44,7 +44,7 @@ public abstract class BaseRepository<T> where T : class
         }
     }
 
-    public virtual bool Delete(int id)
+    public virtual bool Delete(Guid id)
     {
         var entity = Context.Set<T>().Find(id);
         if (entity == null)

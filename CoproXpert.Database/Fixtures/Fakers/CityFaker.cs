@@ -10,7 +10,7 @@ public sealed class CityFaker : Faker<City>
     public CityFaker()
     {
         RuleFor(c => c.Name, f => f.Address.City());
-        // TODO: add timezone.
-        RuleFor(c => c.Country, f => new CountryFaker().Generate());
+        RuleFor(c => c.ZipCode, f => f.Address.ZipCode());
+        RuleFor(c => c.Country, _ => new CountryFaker().Generate());
     }
 }

@@ -21,7 +21,7 @@ public class CountryFixture : FixtureBase
         return Task.CompletedTask;
     }
 
-    public override Task Execute()
+    public override async Task<Task> Execute()
     {
         const string Countries = "/home/elmahdi/Downloads/countryInfo.txt"; // Replace with the actual file path
         const string cities = "/home/elmahdi/Downloads/allCountries.txt"; // Replace with the actual file path
@@ -29,7 +29,7 @@ public class CountryFixture : FixtureBase
         if (LoadedCountries)
         {
             using var fileStream = new StreamReader(Countries);
-            while (fileStream.ReadLine() is { } line)
+            while (await fileStream.ReadLineAsync().ConfigureAwait(false) is { } line)
             {
                 var columns = line.Split('\t');
                 if (columns.Length < 19)
@@ -57,7 +57,7 @@ public class CountryFixture : FixtureBase
         }
 
         using var countryStream = new StreamReader(cities);
-        while (countryStream.ReadLine() is { } line)
+        while (await countryStream.ReadLineAsync().ConfigureAwait(false) is { } line)
         {
             var columns = line.Split('\t');
             string[] validFeatureCodes = { "PPLC", "PPLA", "PPLA2", "PPLA3", "PPLA4", "PPLA5" };

@@ -6,5 +6,5 @@ internal interface IFixture
 {
     Task Initialize();
 
-    Task Execute();
+    Task<Task> Execute();
 }

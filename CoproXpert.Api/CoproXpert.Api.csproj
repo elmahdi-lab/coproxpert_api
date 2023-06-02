@@ -48,4 +48,9 @@
     <ProjectReference Include="..\CoproXpert.Database\CoproXpert.Database.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Sources\Filters\" />
+  </ItemGroup>
+
 </Project>

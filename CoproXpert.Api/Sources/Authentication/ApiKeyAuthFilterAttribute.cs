@@ -7,14 +7,15 @@ namespace CoproXpert.Api.Sources.Authentication;
 
 /// <summary>
 /// </summary>
-public sealed class ApiKeyAuthFilter : Attribute, IAsyncAuthorizationFilter
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class ApiKeyAuthFilterAttribute : Attribute, IAsyncAuthorizationFilter
 {
     private readonly ApiKeyAuthenticator _apiKeyAuthenticator;
 
     /// <summary>
     /// </summary>
     /// <param name="apiKeyAuthenticator"></param>
-    public ApiKeyAuthFilter(ApiKeyAuthenticator apiKeyAuthenticator)
+    public ApiKeyAuthFilterAttribute(ApiKeyAuthenticator apiKeyAuthenticator)
     {
         _apiKeyAuthenticator = apiKeyAuthenticator;
     }
@@ -23,10 +24,14 @@ public sealed class ApiKeyAuthFilter : Attribute, IAsyncAuthorizationFilter
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    public Task OnAuthorizationAsync(AuthorizationFilterContext context)
+    public Task OnAuthorizationAsync(AuthorizationFilterContext? context)
     {
         // If configuration is required you can fetch it by:
         // var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+        if (context is null)
+        {
+            return Task.CompletedTask;
+        }
 
         if (!context.HttpContext.Request.Headers.TryGetValue(ApiKeyAuthenticator.ApiKeyHeaderName,
                 out var extractedApiKey))
@@ -43,6 +48,4 @@ public sealed class ApiKeyAuthFilter : Attribute, IAsyncAuthorizationFilter
 
         return Task.CompletedTask;
     }
-
-    public ApiKeyAuthenticator ApiKeyAuthenticator { get; }
 }

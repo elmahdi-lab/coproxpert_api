@@ -60,7 +60,13 @@ public class UserController : ControllerBase
     [HttpPost]
     public ActionResult<User> Create(User user)
     {
-        _userRepository.Create(user);
+        user = _userRepository.Create(user);
+        // make sure we have a valid user.Id before returning it
+        if (user.Id == Guid.Empty)
+        {
+            return BadRequest();
+        }
+
         return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
     }
 
@@ -76,7 +82,7 @@ public class UserController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult Update(Guid id, User user)
     {
-        if (id != user.Id)
+        if (user.Id != Guid.Empty && id != user.Id)
         {
             return BadRequest();
         }
@@ -94,12 +100,12 @@ public class UserController : ControllerBase
     /// <summary>
     ///     Deletes a user.
     /// </summary>
-    /// <param name="id">The ID of the user to delete.</param>
+    /// <param name="userId">The ID of the user to delete.</param>
     /// <returns>No content if the deletion is successful, or not found if the user does not exist.</returns>
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    [HttpDelete("{userId}", Name = "DeleteUser")]
+    public IActionResult Delete(Guid userId)
     {
-        var success = _userRepository.Delete(id);
+        var success = _userRepository.Delete(userId);
 
         if (!success)
         {

@@ -1,14 +1,15 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
-using CoproXpert.Database.Models;
+using CoproXpert.Api.Sources.Models;
+using CoproXpert.Core.Security;
 using CoproXpert.Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using CoproXpert.Core.Security;
+
 namespace CoproXpert.Api.Sources.Controllers;
 
 /// <summary>
+///     Controller for managing security access.
 /// </summary>
-[ApiController]
 [Route("[controller]", Name = "SecurityRoute")]
 public class SecurityController : ControllerBase
 {
@@ -17,6 +18,7 @@ public class SecurityController : ControllerBase
     private readonly UserRepository _userRepository;
 
     /// <summary>
+    ///     Initializes a new instance of the <see cref="SecurityController" /> class.
     /// </summary>
     /// <param name="userRepository"></param>
     /// <param name="passwordHasher"></param>
@@ -30,14 +32,14 @@ public class SecurityController : ControllerBase
     }
 
     /// <summary>
+    ///     Generate a token for a user.
     /// </summary>
-    /// <param name="username"></param>
-    /// <param name="password"></param>
+    /// <param name="login"></param>
     /// <returns></returns>
-    [HttpPost]
-    public async Task<ActionResult> Login(string username, string password)
+    [HttpPost("login", Name = "LoginRoute")]
+    public async Task<ActionResult<string>> Login([FromBody] LoginModel login)
     {
-        var user = await _userRepository.GetByUserName(username)!.ConfigureAwait(false)!;
+        var user = await _userRepository.GetByUserName(login.Username)!.ConfigureAwait(false);
         if (user is null)
         {
             return NotFound();
@@ -49,26 +51,29 @@ public class SecurityController : ControllerBase
             return Unauthorized();
         }
 
-        var passwordVerificationResult = _passwordHasher.Verify(user.HashedPassword, password);
+        var passwordVerificationResult = _passwordHasher.Verify(user.HashedPassword, login.Password);
         if (passwordVerificationResult != true)
         {
             user.IncrementFailedAttempts();
             return Unauthorized();
         }
-        // TODO: refresh does not save to db, so the value returned is not correct.
+
         user.Token.RefreshToken();
+        _userRepository.Update(user);
+
         return Ok(user.Token.Value);
     }
 
     /// <summary>
+    ///     Reset the password of a user.
     /// </summary>
     /// <param name="token"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    [HttpPost("password-reset/{token}")]
+    [HttpPost("password-reset")]
     public async Task<ActionResult> PasswordReset(string token, string password)
     {
-        var user = await _userRepository.GetByForgotPasswordToken(token).ConfigureAwait(false)!;
+        var user = await _userRepository.GetByForgotPasswordToken(token)!.ConfigureAwait(false);
         if (user is null)
         {
             return NotFound();
@@ -88,17 +93,5 @@ public class SecurityController : ControllerBase
         }
 
         return Ok();
-    }
-
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="password"></param>
-    /// <returns></returns>
-    [HttpGet("hash-password")]
-    public Task<ActionResult> HashPassword(string password)
-    {
-        return Task.FromResult<ActionResult>(Ok(_passwordHasher.Hash(password)));
     }
 }

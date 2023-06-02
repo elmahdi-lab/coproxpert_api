@@ -82,7 +82,7 @@ public class Translator
         var translation = GetTranslation(key, translationObject);
 
         // check if translation has pluralization
-        if (namedArgs is { Count: > 0 } && translation.Contains("|"))
+        if (namedArgs is { Count: > 0 } && translation.Contains('|'))
         {
             translation = ReplacePluralization(translation, namedArgs);
         }
@@ -138,11 +138,13 @@ public class Translator
         foreach (var namedArg in namedArgs)
         {
             var placeholder = $"%{namedArg.Key}%";
-            translation = translation.Replace(placeholder, namedArg.Value.ToString());
+            translation =
+                translation.Replace(placeholder, namedArg.Value.ToString(), StringComparison.InvariantCulture);
         }
 
         return translation;
     }
+
 
     private static string GetTranslation(string key, JObject translationObject)
     {

@@ -1,5 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using System.Globalization;
+
 namespace CoproXpert.Core.Variables;
 
 /// <summary>
@@ -42,8 +44,13 @@ public class GpsPosition : IEquatable<GpsPosition>
     /// </returns>
     public bool Equals(GpsPosition? other)
     {
+        if (ReferenceEquals(other, null))
+        {
+            return false;
+        }
+
         const double Tolerance = 0.000001; // Define a tolerance value for comparing floating-point numbers
-        return Math.Abs(Latitude - other!.Latitude) < Tolerance &&
+        return Math.Abs(Latitude - other.Latitude) < Tolerance &&
                Math.Abs(Longitude - other.Longitude) < Tolerance;
     }
 
@@ -71,7 +78,11 @@ public class GpsPosition : IEquatable<GpsPosition>
         }
 
         var split = value.Split(',');
-        position = new GpsPosition(double.Parse(split[0]), double.Parse(split[1]));
+        var numberFormat = CultureInfo.InvariantCulture.NumberFormat;
+        position = new GpsPosition(
+            double.Parse(split[0], numberFormat),
+            double.Parse(split[1], numberFormat)
+        );
         return true;
     }
 
@@ -106,9 +117,9 @@ public class GpsPosition : IEquatable<GpsPosition>
     /// <param name="left">The first <see cref="GpsPosition" /> object to compare.</param>
     /// <param name="right">The second <see cref="GpsPosition" /> object to compare.</param>
     /// <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
-    public static bool operator ==(GpsPosition left, GpsPosition right)
+    public static bool operator ==(GpsPosition? left, GpsPosition right)
     {
-        return left.Equals(right);
+        return left?.Equals(right) ?? ReferenceEquals(right, null);
     }
 
     /// <summary>

@@ -1,6 +1,5 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
-using CoproXpert.Core.Security;
 using CoproXpert.Database.Fixtures.Fakers;
 
 namespace CoproXpert.Database.Fixtures;
@@ -19,7 +18,7 @@ public class UserFixture : FixtureBase
         return Task.CompletedTask;
     }
 
-    public override Task Execute()
+    public override Task<Task> Execute()
     {
         _dataContext.Database.EnsureCreated();
 
@@ -37,6 +36,6 @@ public class UserFixture : FixtureBase
             throw;
         }
 
-        return Task.CompletedTask;
+        return Task.FromResult(Task.CompletedTask);
     }
 }

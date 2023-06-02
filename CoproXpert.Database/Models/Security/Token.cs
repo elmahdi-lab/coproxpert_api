@@ -5,20 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoproXpert.Database.Models.Security;
 
-// TODO: find a way to map user to token to add unique constraint user + value.
+// TODO: Confirm that this is work, we have unique values for token so each user would be able to have only one token
+//      but the case where we have a duplicate token is not handled.
 
 [Index(nameof(Value), IsUnique = true)]
 public class Token : BaseModel
 {
     private const int TokenLength = 256;
     public const int ExpirationTime = 30; // in minutes
-    private const int MaxDuplicateValueAttempts = 3;
-    private int _duplicateValueAttempts;
 
-    [Obsolete("Has an obsolete attribute because it is only used for testing purposes.")]
     public Token()
     {
-        CreateUniqueValue();
         ExpirationDate = DateTime.UtcNow.AddMinutes(ExpirationTime);
     }
 
@@ -32,32 +29,10 @@ public class Token : BaseModel
         return ExpirationDate < DateTime.UtcNow;
     }
 
-    [Obsolete("This method is only used for testing purposes.")]
-    public void CreateUniqueValue()
-    {
-        while (_duplicateValueAttempts < MaxDuplicateValueAttempts)
-        {
-            Value = KeyGenerator.GenerateString(TokenLength);
-
-            try
-            {
-                using var context = new DataContext();
-                context.Tokens?.Add(this);
-                context.SaveChanges();
-                break;
-            }
-            catch (DbUpdateException)
-            {
-                _duplicateValueAttempts++;
-                CreateUniqueValue();
-            }
-        }
-    }
-
     public void RefreshToken()
     {
-        CreateUniqueValue();
-        ExpirationDate = DateTime.UtcNow.AddMinutes(ExpirationTime);
+        Value = KeyGenerator.GenerateString(TokenLength);
+        ExtendExpirationDate();
     }
 
     public void ExtendExpirationDate()

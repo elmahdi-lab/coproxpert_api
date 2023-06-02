@@ -8,5 +8,5 @@ public class Community : BaseModel
 {
     [Key] public Guid Id { get; set; }
 
-    public ICollection<Domicile>? Domiciles { get; set; } = null!;
+    public ICollection<Domicile>? Domiciles { get; } = new List<Domicile>();
 }

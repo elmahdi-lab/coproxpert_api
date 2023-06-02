@@ -28,7 +28,7 @@ public class OrganizationController : ControllerBase
     ///     Gets all organizations.
     /// </summary>
     /// <returns>The list of organizations.</returns>
-    [HttpGet]
+    [HttpGet(Name = "GetAllOrganizations")]
     public ActionResult<IEnumerable<Organization>> GetAll()
     {
         return _organizationRepository.GetAll().ToList();
@@ -37,12 +37,12 @@ public class OrganizationController : ControllerBase
     /// <summary>
     ///     Gets an organization by its ID.
     /// </summary>
-    /// <param name="id">The ID of the organization.</param>
+    /// <param name="organizationId">The ID of the organization.</param>
     /// <returns>The organization with the specified ID.</returns>
-    [HttpGet("{id}")]
-    public ActionResult<Organization> Get(Guid id)
+    [HttpGet("{organizationId}", Name = "GetOrganizationById")]
+    public ActionResult<Organization> Get(Guid organizationId)
     {
-        var organization = _organizationRepository.GetById(id);
+        var organization = _organizationRepository.GetById(organizationId);
 
         if (organization == null)
         {
@@ -57,30 +57,29 @@ public class OrganizationController : ControllerBase
     /// </summary>
     /// <param name="organization">The organization to create.</param>
     /// <returns>The created organization.</returns>
-    [HttpPost]
+    [HttpPost("{organization}", Name = "CreateOrganization")]
     public ActionResult<Organization> Create(Organization organization)
     {
-        _organizationRepository.Create(organization);
+        organization = _organizationRepository.Create(organization);
+        if (organization.Id == Guid.Empty)
+        {
+            return BadRequest();
+        }
+
         return CreatedAtAction(nameof(Get), new { id = organization.Id }, organization);
     }
 
     /// <summary>
     ///     Updates an existing organization.
     /// </summary>
-    /// <param name="id">The ID of the organization to update.</param>
     /// <param name="organization">The updated organization.</param>
     /// <returns>
     ///     No content if the update is successful, bad request if the IDs do not match, or not found if the organization
     ///     does not exist.
     /// </returns>
-    [HttpPut("{id}")]
-    public IActionResult Update(Guid id, Organization organization)
+    [HttpPut("{organization}", Name = "UpdateOrganization")]
+    public IActionResult Update(Organization organization)
     {
-        if (id != organization.Id)
-        {
-            return BadRequest();
-        }
-
         var success = _organizationRepository.Update(organization);
 
         if (!success)
@@ -94,12 +93,12 @@ public class OrganizationController : ControllerBase
     /// <summary>
     ///     Deletes an organization.
     /// </summary>
-    /// <param name="id">The ID of the organization to delete.</param>
+    /// <param name="organizationId">The ID of the organization to delete.</param>
     /// <returns>No content if the deletion is successful, or not found if the organization does not exist.</returns>
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    [HttpDelete("{organizationId}", Name = "DeleteOrganization")]
+    public IActionResult Delete(Guid organizationId)
     {
-        var success = _organizationRepository.Delete(id);
+        var success = _organizationRepository.Delete(organizationId);
 
         if (!success)
         {

@@ -5,6 +5,7 @@ using CoproXpert.Api.Sources.Helpers;
 using CoproXpert.Core.Security;
 using CoproXpert.Database;
 using CoproXpert.Database.Fixtures;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 // Create a list of services to be injected
@@ -14,7 +15,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ApiKeyAuthenticator>();
-builder.Services.AddScoped<ApiKeyAuthFilter>();
+builder.Services.AddScoped<ApiKeyAuthFilterAttribute>();
 
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
@@ -23,20 +24,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// define appsettings file name with the environment
-var appSettingsFileName = $"appsettings.{builder.Environment.EnvironmentName}.json";
-
-// Load appsettings.json
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile(appSettingsFileName, false, true)
-    .Build();
-
 builder.Services.AddDbContext<DataContext>();
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddTransient<UserFixture>();
     builder.Services.AddScoped<FixtureLoader>();
+
+    builder.Services.AddSwaggerGen(c =>
+    {
+        // Add the security definition for the custom API key
+        c.AddSecurityDefinition("ApiKey",
+            new OpenApiSecurityScheme
+            {
+                Description = "API Key",
+                Name = ApiKeyAuthenticator.ApiKeyHeaderName,
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey
+            });
+
+        c.OperationFilter<SecurityRequirementsOperationFilter>();
+    });
 }
 
 var app = builder.Build();

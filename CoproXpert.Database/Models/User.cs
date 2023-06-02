@@ -22,11 +22,11 @@ public class User : BaseModel
 
     [Key] public Guid Id { get; set; }
 
-    public ICollection<Social> Socials { get; set; } = null!;
-    public ICollection<Claim> Claims { get; set; } = null!;
+    public ICollection<Social> Socials { get; } = new List<Social>();
+    public ICollection<Claim> Claims { get; } = new List<Claim>();
 
     public Contact Contact { get; set; } = null!;
-    public Token Token { get; set; } = null!;
+    public Token Token { get; set; }
 
     public string Username { get; set; } = null!;
 

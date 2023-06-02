@@ -12,7 +12,7 @@ public class Organization : BaseModel
     public string? Description { get; set; }
     public string? Logo { get; set; }
     public string? Website { get; set; }
-    public Contact? Contact { get; set; } = null!;
+    public Contact? Contact { get; set; }
 
-    public ICollection<Community>? Communities { get; set; }
+    public ICollection<Community>? Communities { get; } = new List<Community>();
 }

@@ -9,7 +9,7 @@ public abstract class FixtureBase : IFixture
         throw new NotImplementedException();
     }
 
-    public virtual Task Execute()
+    public virtual Task<Task> Execute()
     {
         throw new NotImplementedException();
     }

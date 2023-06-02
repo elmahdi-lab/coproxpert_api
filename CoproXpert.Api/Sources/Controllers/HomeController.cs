@@ -1,6 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using CoproXpert.Api.Sources.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoproXpert.Api.Sources.Controllers;
@@ -27,8 +28,9 @@ public class HomeController : ControllerBase
     ///     Retrieves a welcome message.
     /// </summary>
     /// <returns>The welcome message.</returns>
-    [HttpGet]
-    [ServiceFilter(typeof(ApiKeyAuthFilter))]
+    [HttpGet("index")]
+    [ServiceFilter(typeof(ApiKeyAuthFilterAttribute))]
+    [Authorize]
     public ActionResult Index()
     {
         var message = _translator.Translate("index.welcome");
