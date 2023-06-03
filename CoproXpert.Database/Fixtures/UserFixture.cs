@@ -1,9 +1,12 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Core.Attributes;
+using CoproXpert.Core.Enums;
 using CoproXpert.Database.Fixtures.Fakers;
 
 namespace CoproXpert.Database.Fixtures;
 
+[Autowire(Lifetime.Transient)]
 public class UserFixture : FixtureBase
 {
     private readonly DataContext _dataContext;

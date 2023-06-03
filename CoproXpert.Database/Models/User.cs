@@ -30,7 +30,7 @@ public class User : BaseModel
 
     public string Username { get; set; } = null!;
 
-    public string HashedPassword { get; set; } = null!;
+    [DataType(DataType.Password)] public string HashedPassword { get; set; } = null!;
 
     public int FailedAttempts { get; set; }
 

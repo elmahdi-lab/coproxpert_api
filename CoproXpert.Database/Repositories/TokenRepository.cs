@@ -1,10 +1,13 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Core.Attributes;
+using CoproXpert.Core.Enums;
 using CoproXpert.Database.Models.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoproXpert.Database.Repositories;
 
+[Autowire(Lifetime.Scoped)]
 public class TokenRepository : BaseRepository<Token>
 {
     public TokenRepository(DataContext context) : base(context)

@@ -1,5 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Core.Attributes;
+using CoproXpert.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -9,6 +11,7 @@ namespace CoproXpert.Api.Sources.Authentication;
 /// <summary>
 ///     Security requirements operation filter, used to add security requirements to swagger.
 /// </summary>
+[Autowire(Lifetime.Singleton)]
 public class SecurityRequirementsOperationFilter : IOperationFilter
 {
     /// <summary>

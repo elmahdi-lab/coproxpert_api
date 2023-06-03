@@ -1,11 +1,14 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Core.Attributes;
+using CoproXpert.Core.Enums;
 using CoproXpert.Database.Repositories;
 
 namespace CoproXpert.Api.Sources.Authentication;
 
 /// <summary>
 /// </summary>
+[Autowire(Lifetime.Transient)]
 public class ApiKeyAuthenticator
 {
     /// <summary>

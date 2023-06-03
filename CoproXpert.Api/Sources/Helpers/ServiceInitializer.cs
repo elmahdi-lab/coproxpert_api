@@ -1,38 +1,50 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
 using System.Reflection;
-using CoproXpert.Database.Models;
-using CoproXpert.Database.Repositories;
+using CoproXpert.Core.Attributes;
+using CoproXpert.Core.Enums;
 
 namespace CoproXpert.Api.Sources.Helpers;
 
 /// <summary>
 ///     Initializes the services
 /// </summary>
-public static class ServiceInitializer
+public class ServiceInitializer
 {
-    private static readonly List<string> s_targetNamespaces = new() { "CoproXpert.Database.Repositories" };
-
-    private static readonly List<Type> s_excludedTypes = new() { typeof(BaseModel), typeof(BaseRepository<>) };
+    private readonly List<string> _targetNamespaces = new() { "CoproXpert" };
 
     /// <summary>
     ///     Initializes the services in the specified service collection
     /// </summary>
     /// <param name="serviceCollection"></param>
-    public static void Init(IServiceCollection serviceCollection)
+    public void Init(IServiceCollection serviceCollection)
     {
         // Get all the services in the target namespaces and their subfolders
-        var services = GetServicesInNamespaces(s_targetNamespaces, s_excludedTypes);
+        var services = GetServicesInNamespaces(_targetNamespaces);
 
         // Loop through the services and add them to the service collection
         foreach (var service in services)
         {
-            serviceCollection.AddScoped(service);
+            // Retrieve the service attribute
+            var serviceAttribute = service.GetCustomAttribute<AutowireAttribute>();
+            switch (serviceAttribute?.Lifetime)
+            {
+                case Lifetime.Scoped:
+                    serviceCollection.AddScoped(service);
+                    break;
+                case Lifetime.Transient:
+                    serviceCollection.AddTransient(service);
+                    break;
+                case Lifetime.Singleton:
+                    serviceCollection.AddSingleton(service);
+                    break;
+                case null:
+                    break;
+            }
         }
     }
 
-    private static List<Type> GetServicesInNamespaces(ICollection<string> targetNamespaces,
-        ICollection<Type> excludedTypes)
+    private List<Type> GetServicesInNamespaces(ICollection<string> targetNamespaces)
     {
         // Get all the currently loaded assemblies
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -41,13 +53,13 @@ public static class ServiceInitializer
         // and exclude the specified types
         var services = assemblies
             .SelectMany(assembly => GetTypesInNamespaces(assembly, targetNamespaces))
-            .Where(type => !excludedTypes.Contains(type))
+            .Where(type => type.GetCustomAttribute<AutowireAttribute>() != null)
             .ToList();
 
         return services;
     }
 
-    private static IEnumerable<Type> GetTypesInNamespaces(Assembly assembly, ICollection<string> targetNamespaces)
+    private IEnumerable<Type> GetTypesInNamespaces(Assembly assembly, IEnumerable<string> targetNamespaces)
     {
         // Get all the types in the assembly
         var assemblyTypes = assembly.GetTypes();

@@ -1,5 +1,7 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Core.Attributes;
+using CoproXpert.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,6 +10,7 @@ namespace CoproXpert.Api.Sources.Authentication;
 /// <summary>
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
+[Autowire(Lifetime.Transient)]
 public sealed class ApiKeyAuthFilterAttribute : Attribute, IAsyncAuthorizationFilter
 {
     private readonly ApiKeyAuthenticator _apiKeyAuthenticator;

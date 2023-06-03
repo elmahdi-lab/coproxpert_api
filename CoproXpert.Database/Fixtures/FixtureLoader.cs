@@ -1,7 +1,11 @@
 // Copyright (c) COPRO XPERT - IT HUMANS  All Rights Reserved.
 
+using CoproXpert.Core.Attributes;
+using CoproXpert.Core.Enums;
+
 namespace CoproXpert.Database.Fixtures;
 
+[Autowire(Lifetime.Transient)]
 public class FixtureLoader
 {
     public FixtureLoader(DataContext dataContext)

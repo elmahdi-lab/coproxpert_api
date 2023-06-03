@@ -14,7 +14,7 @@ namespace CoproXpert.Api.Sources.Controllers;
 public class SecurityController : ControllerBase
 {
     private readonly ILogger<SecurityController> _logger;
-    private readonly IPasswordHasher _passwordHasher;
+    private readonly PasswordHasher _passwordHasher;
     private readonly UserRepository _userRepository;
 
     /// <summary>
@@ -23,7 +23,7 @@ public class SecurityController : ControllerBase
     /// <param name="userRepository"></param>
     /// <param name="passwordHasher"></param>
     /// <param name="logger"></param>
-    public SecurityController(UserRepository userRepository, IPasswordHasher passwordHasher,
+    public SecurityController(UserRepository userRepository, PasswordHasher passwordHasher,
         ILogger<SecurityController> logger)
     {
         _userRepository = userRepository;
