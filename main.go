@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"ithumans.com/coproxpert/config"
@@ -30,7 +29,6 @@ func main() {
 	if err != nil {
 		logger := logging.GetLogger()
 		logger.LogError("Failed to connect to database")
-		fmt.Printf("Failed to connect to database %s\n", err)
 	}
 
 	server.Start()
