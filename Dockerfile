@@ -1,29 +1,34 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
-WORKDIR /App
+# Start from the official Golang base image for the build stage
+FROM golang:1.21-alpine as builder
 
-# Disable ipv6
-RUN echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf
-RUN echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf 
+# Set the Current Working Directory inside the container
+WORKDIR /app
 
-# Copy everything
-COPY . ./
+# Copy go.mod and go.sum files
+COPY go.mod go.sum ./
 
-# Restore as distinct layers
-RUN dotnet restore
-RUN dotnet build
-RUN dotnet test
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
 
+# Copy the source from the current directory to the Working Directory inside the container
+COPY . .
 
-# Build and publish a release
-RUN dotnet publish -c Release -o out
+# Build the Go app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /App
-COPY --from=build-env /App/out .
+# Start a new stage from scratch for a smaller final image
+FROM alpine:latest
 
-ENV ASPNETCORE_URLS=http://localhost:80
+RUN apk --no-cache add ca-certificates
 
-EXPOSE 80
-ENTRYPOINT ["dotnet", "CoproXpert.dll"]
+WORKDIR /root/
 
+# Copy the pre-built binary file from the previous stage
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .
+
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
+# Command to run the executable
+CMD ["./main"]
