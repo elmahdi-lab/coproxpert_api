@@ -1,10 +1,14 @@
 package config
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 )
 
-func RegisterRoutes(r *gin.Engine) {
+func RegisterRoutes(app *fiber.App) {
 	// Define your routes here
-	r.GET("/", func(c *gin.Context) { c.JSON(200, gin.H{"message": "pong"}) })
+	app.Get("/", func(c *fiber.Ctx) error {
+		log.Info("Hello world!")
+		return c.JSON(fiber.Map{"message": "pong"})
+	})
 }

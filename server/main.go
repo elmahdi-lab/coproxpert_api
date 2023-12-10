@@ -2,40 +2,30 @@ package server
 
 import (
 	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"ithumans.com/coproxpert/config"
-	"ithumans.com/coproxpert/services/logging"
 	"os"
-
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
-func setupServer() *gin.Engine {
-	err := godotenv.Load()
-	if err != nil {
-		logger := logging.GetLogger()
-		logger.LogError("Error loading .env file")
-	}
-
-	r := gin.Default()
-	config.RegisterRoutes(r)
-
-	return r
+// setupServer initializes and returns a new Fiber app.
+func setupServer() *fiber.App {
+	app := fiber.New()
+	config.RegisterRoutes(app)
+	return app
 }
 
 func Start() {
-	r := setupServer()
+
+	app := setupServer()
 
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 
-	// Print the server start message before calling r.Run()
-	fmt.Printf("Server is starting on %s:%s\n", host, port)
+	address := host + ":" + port
+	fmt.Printf("Server is starting on %s\n", address)
 
-	err := r.Run(host + ":" + port)
+	err := app.Listen(address)
 	if err != nil {
-		logger := logging.GetLogger()
-		logger.LogError("Error loading .env file")
 		fmt.Printf("Failed to start the server: %s\n", err)
 		return
 	}

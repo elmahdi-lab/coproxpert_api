@@ -1,36 +1,22 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"github.com/joho/godotenv"
-	"ithumans.com/coproxpert/config"
-	"ithumans.com/coproxpert/database"
 	"ithumans.com/coproxpert/server"
-	"ithumans.com/coproxpert/services/logging"
-	"log"
-	"os"
 )
 
 func main() {
 
-	err := godotenv.Load(".env")
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
+		fmt.Printf("Failed to load .env file: %s\n", err)
 	}
 
-	env := os.Getenv("ENV")
-	if env == config.Development {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
-
-	err = database.SetupDatabase()
+	err = server.ConnectDatabase()
 	if err != nil {
-		logger := logging.GetLogger()
-		logger.LogError("Failed to connect to database")
+		return
 	}
-
 	server.Start()
 
 }

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    image: golang:latest  # Use the latest Go image
+    environment:
+      - ENV=DEVELOPMENT
+      - HOST=0.0.0.0  # Bind to all network interfaces to be accessible from outside the container
+      - PORT=8080
+      - DB_HOST=db  # This should refer to the service name of the database in docker-compose
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=coproxpert_db
+      - DB_TIMEZONE=UTC
+      - LOG_FILE_PATH=/app/temp/main.log
+    volumes:
+      - .:/app  # Mount your Go application code to the container
+    working_dir: /app
+    ports:
+      - "8080:8080"  # Map the port to the host
+    depends_on:
+      - db
+    command: go run .  # Replace with the command to start your Go application
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: coproxpert_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent data storage for PostgreSQL
+
+volumes:
+  postgres_data:
