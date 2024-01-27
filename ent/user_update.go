@@ -28,26 +28,6 @@ func (uu *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return uu
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (uu *UserUpdate) SetCreatedAt(t time.Time) *UserUpdate {
-	uu.mutation.SetCreatedAt(t)
-	return uu
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableCreatedAt(t *time.Time) *UserUpdate {
-	if t != nil {
-		uu.SetCreatedAt(*t)
-	}
-	return uu
-}
-
-// SetUpdatedAt sets the "updated_at" field.
-func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
-	uu.mutation.SetUpdatedAt(t)
-	return uu
-}
-
 // SetUsername sets the "username" field.
 func (uu *UserUpdate) SetUsername(s string) *UserUpdate {
 	uu.mutation.SetUsername(s)
@@ -76,12 +56,6 @@ func (uu *UserUpdate) SetNillableFirstName(s *string) *UserUpdate {
 	return uu
 }
 
-// ClearFirstName clears the value of the "first_name" field.
-func (uu *UserUpdate) ClearFirstName() *UserUpdate {
-	uu.mutation.ClearFirstName()
-	return uu
-}
-
 // SetLastName sets the "last_name" field.
 func (uu *UserUpdate) SetLastName(s string) *UserUpdate {
 	uu.mutation.SetLastName(s)
@@ -96,9 +70,37 @@ func (uu *UserUpdate) SetNillableLastName(s *string) *UserUpdate {
 	return uu
 }
 
-// ClearLastName clears the value of the "last_name" field.
-func (uu *UserUpdate) ClearLastName() *UserUpdate {
-	uu.mutation.ClearLastName()
+// SetPassword sets the "password" field.
+func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
+	uu.mutation.SetPassword(s)
+	return uu
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetPassword(*s)
+	}
+	return uu
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (uu *UserUpdate) SetCreatedAt(t time.Time) *UserUpdate {
+	uu.mutation.SetCreatedAt(t)
+	return uu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableCreatedAt(t *time.Time) *UserUpdate {
+	if t != nil {
+		uu.SetCreatedAt(*t)
+	}
+	return uu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
+	uu.mutation.SetUpdatedAt(t)
 	return uu
 }
 
@@ -152,26 +154,23 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := uu.mutation.CreatedAt(); ok {
-		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
-	}
-	if value, ok := uu.mutation.UpdatedAt(); ok {
-		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
-	}
 	if value, ok := uu.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.FirstName(); ok {
 		_spec.SetField(user.FieldFirstName, field.TypeString, value)
 	}
-	if uu.mutation.FirstNameCleared() {
-		_spec.ClearField(user.FieldFirstName, field.TypeString)
-	}
 	if value, ok := uu.mutation.LastName(); ok {
 		_spec.SetField(user.FieldLastName, field.TypeString, value)
 	}
-	if uu.mutation.LastNameCleared() {
-		_spec.ClearField(user.FieldLastName, field.TypeString)
+	if value, ok := uu.mutation.Password(); ok {
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.CreatedAt(); ok {
+		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := uu.mutation.UpdatedAt(); ok {
+		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -191,26 +190,6 @@ type UserUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *UserMutation
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (uuo *UserUpdateOne) SetCreatedAt(t time.Time) *UserUpdateOne {
-	uuo.mutation.SetCreatedAt(t)
-	return uuo
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableCreatedAt(t *time.Time) *UserUpdateOne {
-	if t != nil {
-		uuo.SetCreatedAt(*t)
-	}
-	return uuo
-}
-
-// SetUpdatedAt sets the "updated_at" field.
-func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
-	uuo.mutation.SetUpdatedAt(t)
-	return uuo
 }
 
 // SetUsername sets the "username" field.
@@ -241,12 +220,6 @@ func (uuo *UserUpdateOne) SetNillableFirstName(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// ClearFirstName clears the value of the "first_name" field.
-func (uuo *UserUpdateOne) ClearFirstName() *UserUpdateOne {
-	uuo.mutation.ClearFirstName()
-	return uuo
-}
-
 // SetLastName sets the "last_name" field.
 func (uuo *UserUpdateOne) SetLastName(s string) *UserUpdateOne {
 	uuo.mutation.SetLastName(s)
@@ -261,9 +234,37 @@ func (uuo *UserUpdateOne) SetNillableLastName(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// ClearLastName clears the value of the "last_name" field.
-func (uuo *UserUpdateOne) ClearLastName() *UserUpdateOne {
-	uuo.mutation.ClearLastName()
+// SetPassword sets the "password" field.
+func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
+	uuo.mutation.SetPassword(s)
+	return uuo
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetPassword(*s)
+	}
+	return uuo
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (uuo *UserUpdateOne) SetCreatedAt(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetCreatedAt(t)
+	return uuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableCreatedAt(t *time.Time) *UserUpdateOne {
+	if t != nil {
+		uuo.SetCreatedAt(*t)
+	}
+	return uuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetUpdatedAt(t)
 	return uuo
 }
 
@@ -347,26 +348,23 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			}
 		}
 	}
-	if value, ok := uuo.mutation.CreatedAt(); ok {
-		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
-	}
-	if value, ok := uuo.mutation.UpdatedAt(); ok {
-		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
-	}
 	if value, ok := uuo.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.FirstName(); ok {
 		_spec.SetField(user.FieldFirstName, field.TypeString, value)
 	}
-	if uuo.mutation.FirstNameCleared() {
-		_spec.ClearField(user.FieldFirstName, field.TypeString)
-	}
 	if value, ok := uuo.mutation.LastName(); ok {
 		_spec.SetField(user.FieldLastName, field.TypeString, value)
 	}
-	if uuo.mutation.LastNameCleared() {
-		_spec.ClearField(user.FieldLastName, field.TypeString)
+	if value, ok := uuo.mutation.Password(); ok {
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.CreatedAt(); ok {
+		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := uuo.mutation.UpdatedAt(); ok {
+		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues

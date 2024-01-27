@@ -2,13 +2,19 @@ package config
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
+	"ithumans.com/coproxpert/controllers"
+	"ithumans.com/coproxpert/middleware/security"
 )
 
 func RegisterRoutes(app *fiber.App) {
-	// Define your routes here
-	app.Get("/", func(c *fiber.Ctx) error {
-		log.Info("Hello world!")
-		return c.JSON(fiber.Map{"message": "pong"})
-	})
+	publicApi := app.Group("/public")
+	publicApi.Get("/login", controllers.Login)
+	publicApi.Get("/logout", controllers.Logout)
+	publicApi.Get("/register", controllers.Register)
+	publicApi.Get("/password-forget", controllers.PasswordForget)
+
+	// Group with authentication middleware for secure routes
+	secureApi := app.Group("/api", security.AuthMiddleware)
+	secureApi.Get("/", controllers.UserGreeting)
+
 }

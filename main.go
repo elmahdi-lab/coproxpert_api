@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/joho/godotenv"
-	"ithumans.com/coproxpert/server"
+	"ithumans.com/coproxpert/cmd"
 )
 
 func main() {
@@ -13,10 +13,10 @@ func main() {
 		fmt.Printf("Failed to load .env file: %s\n", err)
 	}
 
-	err = server.ConnectDatabase()
+	err = cmd.ConnectDatabase()
 	if err != nil {
 		return
 	}
-	server.Start()
+	cmd.Start()
 
 }

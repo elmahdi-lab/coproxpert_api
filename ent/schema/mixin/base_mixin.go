@@ -12,12 +12,18 @@ type BaseMixin struct {
 	mixin.Schema
 }
 
-func (BaseMixin) Fields() []ent.Field {
-	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
-			Default(uuid.New).
-			StorageKey("id"),
-		field.Time("created_at").Default(time.Now),
-		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),
-	}
+func (BaseMixin) AddUuid() ent.Field {
+	return field.UUID("id", uuid.UUID{}).
+		Default(uuid.New).
+		StorageKey("id")
+}
+
+// AddCreatedAt adds the created_at field to the schema.
+func (BaseMixin) AddCreatedAt() ent.Field {
+	return field.Time("created_at").Default(time.Now)
+}
+
+// AddUpdatedAt adds the updated_at field to the schema.
+func (BaseMixin) AddUpdatedAt() ent.Field {
+	return field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now)
 }

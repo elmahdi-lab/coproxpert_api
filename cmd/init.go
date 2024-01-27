@@ -1,4 +1,4 @@
-package server
+package cmd
 
 import (
 	"fmt"
@@ -7,16 +7,9 @@ import (
 	"os"
 )
 
-// setupServer initializes and returns a new Fiber app.
-func setupServer() *fiber.App {
+func Start() {
 	app := fiber.New()
 	config.RegisterRoutes(app)
-	return app
-}
-
-func Start() {
-
-	app := setupServer()
 
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")

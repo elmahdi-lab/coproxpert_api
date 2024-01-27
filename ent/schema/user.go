@@ -20,12 +20,12 @@ func (User) Mixin() []ent.Mixin {
 
 func (User) Fields() []ent.Field {
 	return []ent.Field{
+		mixin.BaseMixin{}.AddUuid(),
 		field.String("username").Unique(),
-		field.String("first_name").Optional(),
-		field.String("last_name").Optional(),
+		field.String("first_name"),
+		field.String("last_name"),
+		field.String("password").Sensitive(),
+		mixin.BaseMixin{}.AddCreatedAt(),
+		mixin.BaseMixin{}.AddUpdatedAt(),
 	}
-}
-
-func (User) Edges() []ent.Edge {
-	return nil
 }

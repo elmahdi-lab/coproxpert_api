@@ -18,16 +18,18 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Username holds the value of the "username" field.
 	Username string `json:"username,omitempty"`
 	// FirstName holds the value of the "first_name" field.
 	FirstName string `json:"first_name,omitempty"`
 	// LastName holds the value of the "last_name" field.
-	LastName     string `json:"last_name,omitempty"`
+	LastName string `json:"last_name,omitempty"`
+	// Password holds the value of the "password" field.
+	Password string `json:"-"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt    time.Time `json:"updated_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -36,7 +38,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldUsername, user.FieldFirstName, user.FieldLastName:
+		case user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldPassword:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -63,18 +65,6 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				u.ID = *value
 			}
-		case user.FieldCreatedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field created_at", values[i])
-			} else if value.Valid {
-				u.CreatedAt = value.Time
-			}
-		case user.FieldUpdatedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
-			} else if value.Valid {
-				u.UpdatedAt = value.Time
-			}
 		case user.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field username", values[i])
@@ -92,6 +82,24 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field last_name", values[i])
 			} else if value.Valid {
 				u.LastName = value.String
+			}
+		case user.FieldPassword:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field password", values[i])
+			} else if value.Valid {
+				u.Password = value.String
+			}
+		case user.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				u.CreatedAt = value.Time
+			}
+		case user.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				u.UpdatedAt = value.Time
 			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
@@ -129,12 +137,6 @@ func (u *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
-	builder.WriteString("created_at=")
-	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("updated_at=")
-	builder.WriteString(u.UpdatedAt.Format(time.ANSIC))
-	builder.WriteString(", ")
 	builder.WriteString("username=")
 	builder.WriteString(u.Username)
 	builder.WriteString(", ")
@@ -143,6 +145,14 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("last_name=")
 	builder.WriteString(u.LastName)
+	builder.WriteString(", ")
+	builder.WriteString("password=<sensitive>")
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("updated_at=")
+	builder.WriteString(u.UpdatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }
