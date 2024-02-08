@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/ent/credential"
 	"ithumans.com/coproxpert/ent/user"
 )
 
@@ -24,13 +25,36 @@ type User struct {
 	FirstName string `json:"first_name,omitempty"`
 	// LastName holds the value of the "last_name" field.
 	LastName string `json:"last_name,omitempty"`
-	// Password holds the value of the "password" field.
-	Password string `json:"-"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges        UserEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// Credential holds the value of the credential edge.
+	Credential *Credential `json:"credential,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// CredentialOrErr returns the Credential value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) CredentialOrErr() (*Credential, error) {
+	if e.loadedTypes[0] {
+		if e.Credential == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: credential.Label}
+		}
+		return e.Credential, nil
+	}
+	return nil, &NotLoadedError{edge: "credential"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -38,7 +62,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldPassword:
+		case user.FieldUsername, user.FieldFirstName, user.FieldLastName:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -83,12 +107,6 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.LastName = value.String
 			}
-		case user.FieldPassword:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field password", values[i])
-			} else if value.Valid {
-				u.Password = value.String
-			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -112,6 +130,11 @@ func (u *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (u *User) Value(name string) (ent.Value, error) {
 	return u.selectValues.Get(name)
+}
+
+// QueryCredential queries the "credential" edge of the User entity.
+func (u *User) QueryCredential() *CredentialQuery {
+	return NewUserClient(u.config).QueryCredential(u)
 }
 
 // Update returns a builder for updating this User.
@@ -145,8 +168,6 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("last_name=")
 	builder.WriteString(u.LastName)
-	builder.WriteString(", ")
-	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))

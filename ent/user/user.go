@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -20,14 +21,21 @@ const (
 	FieldFirstName = "first_name"
 	// FieldLastName holds the string denoting the last_name field in the database.
 	FieldLastName = "last_name"
-	// FieldPassword holds the string denoting the password field in the database.
-	FieldPassword = "password"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
+	// EdgeCredential holds the string denoting the credential edge name in mutations.
+	EdgeCredential = "credential"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// CredentialTable is the table that holds the credential relation/edge.
+	CredentialTable = "credentials"
+	// CredentialInverseTable is the table name for the Credential entity.
+	// It exists in this package in order to avoid circular dependency with the "credential" package.
+	CredentialInverseTable = "credentials"
+	// CredentialColumn is the table column denoting the credential relation/edge.
+	CredentialColumn = "user_credential"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -36,7 +44,6 @@ var Columns = []string{
 	FieldUsername,
 	FieldFirstName,
 	FieldLastName,
-	FieldPassword,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -85,11 +92,6 @@ func ByLastName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLastName, opts...).ToFunc()
 }
 
-// ByPassword orders the results by the password field.
-func ByPassword(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPassword, opts...).ToFunc()
-}
-
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
@@ -98,4 +100,18 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByCredentialField orders the results by credential field.
+func ByCredentialField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newCredentialStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newCredentialStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(CredentialInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, CredentialTable, CredentialColumn),
+	)
 }

@@ -12,9 +12,9 @@ func RegisterRoutes(app *fiber.App) {
 	publicApi.Get("/logout", controllers.Logout)
 	publicApi.Get("/register", controllers.Register)
 	publicApi.Get("/password-forget", controllers.PasswordForget)
+	publicApi.Get("/healthcheck", controllers.HealthCheck)
 
 	// Group with authentication middleware for secure routes
 	secureApi := app.Group("/api", security.AuthMiddleware)
 	secureApi.Get("/", controllers.UserGreeting)
-
 }

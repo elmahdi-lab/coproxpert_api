@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/ent/credential"
 	"ithumans.com/coproxpert/ent/user"
 )
 
@@ -36,12 +37,6 @@ func (uc *UserCreate) SetFirstName(s string) *UserCreate {
 // SetLastName sets the "last_name" field.
 func (uc *UserCreate) SetLastName(s string) *UserCreate {
 	uc.mutation.SetLastName(s)
-	return uc
-}
-
-// SetPassword sets the "password" field.
-func (uc *UserCreate) SetPassword(s string) *UserCreate {
-	uc.mutation.SetPassword(s)
 	return uc
 }
 
@@ -85,6 +80,25 @@ func (uc *UserCreate) SetNillableID(u *uuid.UUID) *UserCreate {
 		uc.SetID(*u)
 	}
 	return uc
+}
+
+// SetCredentialID sets the "credential" edge to the Credential entity by ID.
+func (uc *UserCreate) SetCredentialID(id uuid.UUID) *UserCreate {
+	uc.mutation.SetCredentialID(id)
+	return uc
+}
+
+// SetNillableCredentialID sets the "credential" edge to the Credential entity by ID if the given value is not nil.
+func (uc *UserCreate) SetNillableCredentialID(id *uuid.UUID) *UserCreate {
+	if id != nil {
+		uc = uc.SetCredentialID(*id)
+	}
+	return uc
+}
+
+// SetCredential sets the "credential" edge to the Credential entity.
+func (uc *UserCreate) SetCredential(c *Credential) *UserCreate {
+	return uc.SetCredentialID(c.ID)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -147,9 +161,6 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.LastName(); !ok {
 		return &ValidationError{Name: "last_name", err: errors.New(`ent: missing required field "User.last_name"`)}
 	}
-	if _, ok := uc.mutation.Password(); !ok {
-		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "User.password"`)}
-	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "User.created_at"`)}
 	}
@@ -203,10 +214,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldLastName, field.TypeString, value)
 		_node.LastName = value
 	}
-	if value, ok := uc.mutation.Password(); ok {
-		_spec.SetField(user.FieldPassword, field.TypeString, value)
-		_node.Password = value
-	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
@@ -214,6 +221,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if nodes := uc.mutation.CredentialIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.CredentialTable,
+			Columns: []string{user.CredentialColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(credential.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

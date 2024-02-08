@@ -11,6 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
+	"ithumans.com/coproxpert/ent/credential"
 	"ithumans.com/coproxpert/ent/predicate"
 	"ithumans.com/coproxpert/ent/user"
 )
@@ -70,20 +72,6 @@ func (uu *UserUpdate) SetNillableLastName(s *string) *UserUpdate {
 	return uu
 }
 
-// SetPassword sets the "password" field.
-func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
-	uu.mutation.SetPassword(s)
-	return uu
-}
-
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetPassword(*s)
-	}
-	return uu
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (uu *UserUpdate) SetCreatedAt(t time.Time) *UserUpdate {
 	uu.mutation.SetCreatedAt(t)
@@ -104,9 +92,34 @@ func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
 	return uu
 }
 
+// SetCredentialID sets the "credential" edge to the Credential entity by ID.
+func (uu *UserUpdate) SetCredentialID(id uuid.UUID) *UserUpdate {
+	uu.mutation.SetCredentialID(id)
+	return uu
+}
+
+// SetNillableCredentialID sets the "credential" edge to the Credential entity by ID if the given value is not nil.
+func (uu *UserUpdate) SetNillableCredentialID(id *uuid.UUID) *UserUpdate {
+	if id != nil {
+		uu = uu.SetCredentialID(*id)
+	}
+	return uu
+}
+
+// SetCredential sets the "credential" edge to the Credential entity.
+func (uu *UserUpdate) SetCredential(c *Credential) *UserUpdate {
+	return uu.SetCredentialID(c.ID)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
+}
+
+// ClearCredential clears the "credential" edge to the Credential entity.
+func (uu *UserUpdate) ClearCredential() *UserUpdate {
+	uu.mutation.ClearCredential()
+	return uu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -163,14 +176,40 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.LastName(); ok {
 		_spec.SetField(user.FieldLastName, field.TypeString, value)
 	}
-	if value, ok := uu.mutation.Password(); ok {
-		_spec.SetField(user.FieldPassword, field.TypeString, value)
-	}
 	if value, ok := uu.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := uu.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if uu.mutation.CredentialCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.CredentialTable,
+			Columns: []string{user.CredentialColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(credential.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.CredentialIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.CredentialTable,
+			Columns: []string{user.CredentialColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(credential.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -234,20 +273,6 @@ func (uuo *UserUpdateOne) SetNillableLastName(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// SetPassword sets the "password" field.
-func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
-	uuo.mutation.SetPassword(s)
-	return uuo
-}
-
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetPassword(*s)
-	}
-	return uuo
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (uuo *UserUpdateOne) SetCreatedAt(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetCreatedAt(t)
@@ -268,9 +293,34 @@ func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
 	return uuo
 }
 
+// SetCredentialID sets the "credential" edge to the Credential entity by ID.
+func (uuo *UserUpdateOne) SetCredentialID(id uuid.UUID) *UserUpdateOne {
+	uuo.mutation.SetCredentialID(id)
+	return uuo
+}
+
+// SetNillableCredentialID sets the "credential" edge to the Credential entity by ID if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableCredentialID(id *uuid.UUID) *UserUpdateOne {
+	if id != nil {
+		uuo = uuo.SetCredentialID(*id)
+	}
+	return uuo
+}
+
+// SetCredential sets the "credential" edge to the Credential entity.
+func (uuo *UserUpdateOne) SetCredential(c *Credential) *UserUpdateOne {
+	return uuo.SetCredentialID(c.ID)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
+}
+
+// ClearCredential clears the "credential" edge to the Credential entity.
+func (uuo *UserUpdateOne) ClearCredential() *UserUpdateOne {
+	uuo.mutation.ClearCredential()
+	return uuo
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -357,14 +407,40 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.LastName(); ok {
 		_spec.SetField(user.FieldLastName, field.TypeString, value)
 	}
-	if value, ok := uuo.mutation.Password(); ok {
-		_spec.SetField(user.FieldPassword, field.TypeString, value)
-	}
 	if value, ok := uuo.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := uuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if uuo.mutation.CredentialCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.CredentialTable,
+			Columns: []string{user.CredentialColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(credential.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.CredentialIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.CredentialTable,
+			Columns: []string{user.CredentialColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(credential.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues

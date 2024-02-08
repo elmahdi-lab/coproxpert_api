@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/ent/credential"
 	"ithumans.com/coproxpert/ent/schema"
 	"ithumans.com/coproxpert/ent/user"
 )
@@ -14,14 +15,30 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	credentialFields := schema.Credential{}.Fields()
+	_ = credentialFields
+	// credentialDescCreatedAt is the schema descriptor for created_at field.
+	credentialDescCreatedAt := credentialFields[4].Descriptor()
+	// credential.DefaultCreatedAt holds the default value on creation for the created_at field.
+	credential.DefaultCreatedAt = credentialDescCreatedAt.Default.(func() time.Time)
+	// credentialDescUpdatedAt is the schema descriptor for updated_at field.
+	credentialDescUpdatedAt := credentialFields[5].Descriptor()
+	// credential.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	credential.DefaultUpdatedAt = credentialDescUpdatedAt.Default.(func() time.Time)
+	// credential.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	credential.UpdateDefaultUpdatedAt = credentialDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// credentialDescID is the schema descriptor for id field.
+	credentialDescID := credentialFields[0].Descriptor()
+	// credential.DefaultID holds the default value on creation for the id field.
+	credential.DefaultID = credentialDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
-	userDescCreatedAt := userFields[5].Descriptor()
+	userDescCreatedAt := userFields[4].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 	// userDescUpdatedAt is the schema descriptor for updated_at field.
-	userDescUpdatedAt := userFields[6].Descriptor()
+	userDescUpdatedAt := userFields[5].Descriptor()
 	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

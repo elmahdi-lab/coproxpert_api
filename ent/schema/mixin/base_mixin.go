@@ -15,7 +15,8 @@ type BaseMixin struct {
 func (BaseMixin) AddUuid() ent.Field {
 	return field.UUID("id", uuid.UUID{}).
 		Default(uuid.New).
-		StorageKey("id")
+		StorageKey("id").
+		Unique()
 }
 
 // AddCreatedAt adds the created_at field to the schema.

@@ -30,5 +30,9 @@ COPY --from=builder /app/.env .
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:8080/public/healthcheck || exit 1
+
+
 # Command to run the executable
 CMD ["./main"]
