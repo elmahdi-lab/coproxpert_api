@@ -1,35 +1,23 @@
 package controllers
 
 import (
-	"context"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"ithumans.com/coproxpert/cmd"
 )
 
-func HealthCheck(c *fiber.Ctx) error {
-	ctx := context.Background()
+func HealthCheck(ctx *fiber.Ctx) error {
 
-	client, err := cmd.GetClient(ctx)
-	if err != nil {
-		fmt.Printf("Failed to get database client: %s\n", err)
-	}
-
-	tx, err := client.Tx(ctx)
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	_, err := tx.RawQuery(ctx, "SELECT 1").Exec()
-
-	if err != nil {
-		return err
-	}
+	db, err := cmd.GetDB() // Get the database instance
 
 	if err == nil {
-		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{"healthcheck": "FAIL"})
+		var result int
+		db.Raw("SELECT 1").Scan(&result)
+
+		if result == 1 {
+			ctx.Status(fiber.StatusOK)
+			return ctx.JSON(fiber.Map{"healthcheck": "OK"})
+		}
 	}
-	return c.JSON(fiber.Map{"healthcheck": "OK"})
+	ctx.Status(fiber.StatusInternalServerError)
+	return ctx.JSON(fiber.Map{"healthcheck": "FAILED"})
 }
