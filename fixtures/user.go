@@ -5,7 +5,7 @@ import (
 	"ithumans.com/coproxpert/helpers"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
-	"ithumans.com/coproxpert/services"
+	"ithumans.com/coproxpert/services/security"
 )
 
 // CreateUser Create a new user with it's credential, permission, token and contact
@@ -49,7 +49,7 @@ func CreateUser() {
 	tokenRepository, _ := repositories.NewTokenRepository()
 	err = tokenRepository.Create(token)
 
-	hashedPassword, _ := services.HashPassword("password")
+	hashedPassword, _ := security.HashPassword("password")
 
 	credential := &models.Credential{
 		ID:       uuid.New(),

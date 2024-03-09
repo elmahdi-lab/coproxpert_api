@@ -1,6 +1,8 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type PropertyType string
 
@@ -12,5 +14,6 @@ const (
 )
 
 type Property struct {
-	ID uuid.UUID `json:"id" gorm:"primaryKey"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
+	BaseModel
 }

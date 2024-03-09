@@ -8,11 +8,12 @@ import (
 const ValidUntilDuration = 180
 
 type Token struct {
-	ID         uuid.UUID  `json:"id" gorm:"primaryKey"`
+	ID         uuid.UUID  `json:"id" gorm:"type:uuid;primaryKey"`
 	UserID     uuid.UUID  `json:"user_id"`
 	User       *User      `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	Token      *string    `json:"token"`
 	ValidUntil *time.Time `json:"valid_until"`
+	BaseModel
 }
 
 func (t *Token) IsExpired() bool {

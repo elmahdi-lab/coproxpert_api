@@ -5,7 +5,7 @@ import (
 )
 
 type Contact struct {
-	ID          uuid.UUID `json:"id" gorm:"primaryKey"`
+	ID          uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
 	UserID      uuid.UUID
 	User        *User   `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	IsDefault   *bool   `json:"is_default"`
@@ -15,4 +15,5 @@ type Contact struct {
 	Province    *string `json:"province"`
 	ZipCode     *string `json:"zip_code"`
 	Country     *string `json:"country"`
+	BaseModel
 }

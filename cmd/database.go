@@ -51,6 +51,5 @@ func GetDB() (*gorm.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get database instance: %w", err)
 	}
-
 	return db, nil
 }

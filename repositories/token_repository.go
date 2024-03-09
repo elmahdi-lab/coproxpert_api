@@ -19,30 +19,44 @@ func NewTokenRepository() (*TokenRepository, error) {
 	return &TokenRepository{db: db}, nil
 }
 
-func (ur *TokenRepository) FindByID(id uuid.UUID) (*models.Token, error) {
+func (tr *TokenRepository) FindByID(id uuid.UUID) (*models.Token, error) {
 	var Token models.Token
-	if err := ur.db.First(&Token, id).Error; err != nil {
+	if err := tr.db.First(&Token, id).Error; err != nil {
 		return nil, err
 	}
 	return &Token, nil
 }
 
-func (ur *TokenRepository) Create(Token *models.Token) error {
-	return ur.db.Create(Token).Error
-}
+func (tr *TokenRepository) FindByToken(t string, preload bool) (*models.Token, error) {
+	var token models.Token
+	query := tr.db.Where("token = ?", t)
 
-func (ur *TokenRepository) Update(Token *models.Token) error {
-	return ur.db.Save(Token).Error
-}
+	if preload {
+		query = query.Preload("User")
+	}
 
-func (ur *TokenRepository) Delete(Token *models.Token) error {
-	return ur.db.Delete(Token).Error
-}
-
-func (ur *TokenRepository) FindAll() ([]models.Token, error) {
-	var Tokens []models.Token
-	if err := ur.db.Find(&Tokens).Error; err != nil {
+	if err := query.First(&token).Error; err != nil {
 		return nil, err
 	}
-	return Tokens, nil
+	return &token, nil
+}
+
+func (tr *TokenRepository) Create(token *models.Token) error {
+	return tr.db.Create(token).Error
+}
+
+func (tr *TokenRepository) Update(token *models.Token) error {
+	return tr.db.Save(token).Error
+}
+
+func (tr *TokenRepository) Delete(token *models.Token) error {
+	return tr.db.Delete(token).Error
+}
+
+func (tr *TokenRepository) FindAll() ([]models.Token, error) {
+	var tokens []models.Token
+	if err := tr.db.Find(&tokens).Error; err != nil {
+		return nil, err
+	}
+	return tokens, nil
 }
