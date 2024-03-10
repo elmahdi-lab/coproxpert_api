@@ -14,6 +14,14 @@ const (
 )
 
 type Property struct {
-	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
+	ID   uuid.UUID    `json:"id" gorm:"type:uuid;primaryKey"`
+	Name string       `json:"name" gorm:"unique"`
+	Type PropertyType `json:"type"`
+
+	BuildingID uuid.UUID `json:"building_id" gorm:"type:uuid"`
+	Building   *Building `json:"building" gorm:"foreignKey:BuildingID;references:ID;constraint:OnDelete:CASCADE"`
+
+	IsEnabled *bool `json:"is_enabled"`
+
 	BaseModel
 }

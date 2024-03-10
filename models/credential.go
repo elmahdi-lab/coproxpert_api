@@ -8,8 +8,8 @@ import (
 const LockDurationMinutes = 5
 
 type Credential struct {
-	ID            uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	UserID        uuid.UUID
+	ID            uuid.UUID  `json:"id" gorm:"type:uuid;primaryKey"`
+	UserID        uuid.UUID  `json:"user_id" gorm:"type:uuid"`
 	User          *User      `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	Password      *string    `json:"password"`
 	Tries         *int       `json:"tries" gorm:"default:0"`

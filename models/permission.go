@@ -23,7 +23,7 @@ type Permission struct {
 	UserID      uuid.UUID
 	User        *User        `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	AccessLevel *AccessLevel `json:"access_level" gorm:"not null;check:access_level IN ('admin_role', 'user_role')"`
-	Entity      *EntityType  `json:"entity" gorm:"not null;check:entity IN ('property', 'building', 'organization')"`
-	EntityID    *uuid.UUID   `json:"entity_id"`
+	EntityType  *EntityType  `json:"entity" gorm:"not null;check:entity IN ('property', 'building', 'organization')"`
+	EntityID    *uuid.UUID   `json:"entity_id" gorm:"type:uuid"`
 	BaseModel
 }

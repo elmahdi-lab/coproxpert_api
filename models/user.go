@@ -12,3 +12,12 @@ type User struct {
 	IsVerified  *bool         `json:"is_verified" gorm:"default:false"`
 	BaseModel
 }
+
+func (u *User) DefaultContact() *Contact {
+	for _, contact := range *u.Contacts {
+		if *contact.IsDefault == true {
+			return &contact
+		}
+	}
+	return nil
+}

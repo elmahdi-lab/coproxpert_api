@@ -2,6 +2,7 @@ package fixtures
 
 import (
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/cmd"
 	"ithumans.com/coproxpert/helpers"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
@@ -18,10 +19,15 @@ func CreateUser() {
 		IsVerified: helpers.BoolPointer(true),
 	}
 
+	db, _ := cmd.GetDB()
+	db.Begin()
+
 	userRepository, _ := repositories.NewUserRepository()
 
 	err := userRepository.Create(user)
+
 	if err != nil {
+		db.Rollback()
 		return
 	}
 
@@ -40,6 +46,11 @@ func CreateUser() {
 	contactRepository, _ := repositories.NewContactRepository()
 	err = contactRepository.Create(userContact)
 
+	if err != nil {
+		db.Rollback()
+		return
+	}
+
 	token := &models.Token{
 		ID:   uuid.New(),
 		User: user,
@@ -48,6 +59,11 @@ func CreateUser() {
 
 	tokenRepository, _ := repositories.NewTokenRepository()
 	err = tokenRepository.Create(token)
+
+	if err != nil {
+		db.Rollback()
+		return
+	}
 
 	hashedPassword, _ := security.HashPassword("password")
 
@@ -61,8 +77,10 @@ func CreateUser() {
 	credentialRepository, _ := repositories.NewCredentialRepository()
 	err = credentialRepository.Create(credential)
 
-	if userContact == nil {
-		panic("userContact is nil")
+	if err != nil {
+		db.Rollback()
+		return
 	}
 
+	db.Commit()
 }

@@ -6,7 +6,7 @@ import (
 
 type CommonSpace struct {
 	ID         uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	BuildingID uuid.UUID
+	BuildingID uuid.UUID `json:"building_id" gorm:"type:uuid"`
 	Building   *Building `json:"building" gorm:"foreignKey:BuildingID;references:ID;constraint:OnDelete:CASCADE"`
 	BaseModel
 }
