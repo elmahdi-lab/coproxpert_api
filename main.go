@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+	_ "ariga.io/atlas-provider-gorm/gormschema"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -19,7 +19,7 @@ func main() {
 	app := fiber.New()
 	config.RegisterRoutes(app)
 
-	_, err = cmd.GetClient(context.Background())
+	_, err = cmd.GetDB()
 
 	if err != nil {
 		return
@@ -30,6 +30,10 @@ func main() {
 
 	address := host + ":" + port
 	fmt.Printf("Server is starting on %s\n", address)
+
+	if os.Getenv("ENV") == config.Development {
+		//fixtures.CreateUser()
+	}
 
 	err = app.Listen(address)
 	if err != nil {

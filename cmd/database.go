@@ -1,25 +1,23 @@
 package cmd
 
 import (
-	"context"
-	"entgo.io/ent/dialect"
 	"fmt"
-	_ "github.com/lib/pq"
-	"ithumans.com/coproxpert/ent"
-	"ithumans.com/coproxpert/ent/hook"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 	"os"
 	"sync"
 )
 
 // dbClient implements the Singleton pattern for the database client.
 type dbClient struct {
-	client *ent.Client
-	once   sync.Once
+	db   *gorm.DB
+	once sync.Once
+	err  error
 }
 
 var dbInstance = &dbClient{}
 
-func (c *dbClient) getClient(ctx context.Context) (*ent.Client, error) {
+func (c *dbClient) getDB() (*gorm.DB, error) {
 	c.once.Do(func() {
 		host := os.Getenv("DB_HOST")
 		port := os.Getenv("DB_PORT")
@@ -30,27 +28,28 @@ func (c *dbClient) getClient(ctx context.Context) (*ent.Client, error) {
 
 		dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s TimeZone=%s sslmode=disable", host, port, user, password, dbname, timezone)
 
-		var err error
-		c.client, err = ent.Open(dialect.Postgres, dsn)
+		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {
 			fmt.Printf("Failed to connect to database: %s\n", err)
+			return
 		}
 
-		// Run the auto migration tool.
-		if err := c.client.Schema.Create(ctx); err != nil {
-			fmt.Printf("Failed to create schema resources: %s", err)
-		}
-
-		// Register hooks
-		c.client.Use(hook.UpdateTimestamp)
-
+		c.db = db
 		fmt.Printf("Connected to database %s\n", dbname)
+
+		if err != nil {
+			c.err = err
+			return
+		}
 	})
 
-	return c.client, nil
+	return c.db, c.err
 }
 
-// GetClient returns the singleton instance of the database client.
-func GetClient(ctx context.Context) (*ent.Client, error) {
-	return dbInstance.getClient(ctx)
+func GetDB() (*gorm.DB, error) {
+	db, err := dbInstance.getDB()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get database instance: %w", err)
+	}
+	return db, nil
 }
