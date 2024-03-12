@@ -62,3 +62,11 @@ func (ur *ContactRepository) FindAll() ([]models.Contact, error) {
 	}
 	return Contacts, nil
 }
+
+func (ur *ContactRepository) DeleteByID(id uuid.UUID) bool {
+	err := ur.db.Delete(&models.Contact{}, id)
+	if err != nil {
+		return true
+	}
+	return false
+}

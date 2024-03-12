@@ -7,7 +7,6 @@ import (
 	"github.com/joho/godotenv"
 	"ithumans.com/coproxpert/cmd"
 	"ithumans.com/coproxpert/config"
-	"ithumans.com/coproxpert/fixtures"
 	"os"
 )
 
@@ -33,7 +32,7 @@ func main() {
 	fmt.Printf("Server is starting on %s\n", address)
 
 	if os.Getenv("ENV") == config.Development {
-		fixtures.CreateUser()
+		//fixtures.CreateUser()
 	}
 
 	err = app.Listen(address)

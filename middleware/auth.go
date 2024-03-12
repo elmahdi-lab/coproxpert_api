@@ -3,7 +3,7 @@ package middleware
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"ithumans.com/coproxpert/repositories"
+	"ithumans.com/coproxpert/services"
 )
 
 // AuthMiddleware is a middleware function for basic authentication
@@ -17,14 +17,16 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	// find token in db
-	tokenRepository, _ := repositories.NewTokenRepository()
-	token, err := tokenRepository.FindByToken(authHeader, true)
+	user, err := services.GetUserByToken(authHeader)
 
-	if err != nil || token.IsExpired() {
+	if err != nil || user.IsExpired() {
 		return unauthorizedResponse(c)
 	}
 
-	c.Locals("user", token.User)
+	user.ExtendValidity()
+	user, _ = services.UpdateUser(user)
+
+	c.Locals("user", user)
 
 	return c.Next()
 }

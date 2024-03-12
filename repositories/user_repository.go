@@ -27,6 +27,29 @@ func (ur *UserRepository) FindByID(id uuid.UUID) (*models.User, error) {
 	return &user, nil
 }
 
+func (ur *UserRepository) FindByToken(token string) (*models.User, error) {
+	var user models.User
+	if err := ur.db.Where("token = ?", token).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (ur *UserRepository) FindAll() ([]models.User, error) {
+	var users []models.User
+	if err := ur.db.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+func (ur *UserRepository) FindByUsername(username string) (*models.User, error) {
+	var user models.User
+	if err := ur.db.Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (ur *UserRepository) Create(user *models.User) error {
 	return ur.db.Create(user).Error
 }
@@ -39,18 +62,10 @@ func (ur *UserRepository) Delete(user *models.User) error {
 	return ur.db.Delete(user).Error
 }
 
-func (ur *UserRepository) FindAll() ([]models.User, error) {
-	var users []models.User
-	if err := ur.db.Find(&users).Error; err != nil {
-		return nil, err
+func (ur *UserRepository) DeleteByID(id uuid.UUID) bool {
+	err := ur.db.Delete(&models.User{}, id)
+	if err != nil {
+		return false
 	}
-	return users, nil
-}
-
-func (ur *UserRepository) FindByUsername(username string) (*models.User, error) {
-	var user models.User
-	if err := ur.db.Where("username = ?", username).First(&user).Error; err != nil {
-		return nil, err
-	}
-	return &user, nil
+	return true
 }
