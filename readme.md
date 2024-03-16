@@ -1,36 +1,36 @@
-organization
-admin
-user
+authentication is already set by checking each request by the auth.go middleware.
 
-building
-admin
-user
+Levels of Permission: Admin, Manager, User.
 
-property
-admin
-user
+Admin: Can do anything.
+Managers: can edit the building and it's related properties. Also, can close complaints, and publish files to the building.
+Users, can view the building associated with them, their complaints, and the files published to the building.
 
-complaints
-maintenance
-documents
-calendar
-bills
+V1 Core Features:
+- X User Authentication
+- X Organization, Building and properties (or units)
+- X Common Spaces (pool, gym, garden ...)
+- X Complaints
+- X Document sharing
+- X Notifications
+- X Maintenance schedule
+- X Resolutions and votes
+- Admin Subscriptions with licenses
 
-// Can(s)
+V2 Features:
+- Chat
+- Invoice reminders
+- Polls
+- Surveys
+- Events
+- Calendar
 
-SuperAdmin can do anything
-Anyone can sign up
-Anyone can create an organization and become it's admin
-    Admin can add users to the organization
-    Admin can create buildings
-    Admin can create properties
-    Admin can send invitations to join the organization
-User can request to join an organization
-    Admin can accept or reject the request
-User can create a complaint
-    Admin can close the complaint
-User can upload documents
-User can view calendar
-User can view his/her bills
-User can request maintenance
-    Admin can close & update the maintenance request
+V3 Features:
+- Payments
+- Budgets
+- Reports
+- Analytics
+- Integrations
+
+V4 Features:
+- AI

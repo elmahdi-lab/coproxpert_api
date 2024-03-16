@@ -19,7 +19,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	// find token in db
 	user, err := services.GetUserByToken(authHeader)
 
-	if err != nil || user.IsExpired() {
+	if err != nil || user.IsTokenExpired() {
 		return unauthorizedResponse(c)
 	}
 

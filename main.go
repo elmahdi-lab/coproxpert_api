@@ -4,10 +4,12 @@ import (
 	_ "ariga.io/atlas-provider-gorm/gormschema"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	recover2 "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	"ithumans.com/coproxpert/cmd"
 	"ithumans.com/coproxpert/config"
 	"os"
+	"time"
 )
 
 func main() {
@@ -16,7 +18,14 @@ func main() {
 		fmt.Printf("Failed to load .env file: %s\n", err)
 	}
 
+	timezone := os.Getenv("TIMEZONE")
+	_, err = time.LoadLocation(timezone)
+	if err != nil {
+		return
+	}
 	app := fiber.New()
+
+	app.Use(recover2.New())
 	config.RegisterRoutes(app)
 
 	_, err = cmd.GetDB()

@@ -7,24 +7,8 @@ import (
 	"ithumans.com/coproxpert/repositories"
 )
 
-func IsOwnerOrAdmin(c *fiber.Ctx, e *uuid.UUID) bool {
-
-	u := c.Locals("user").(*models.User)
-
-	if u == nil || e == nil {
-		return false
-	}
-
-	// check if
-
-	// Check if the user is an admin
-	for _, p := range u.Permissions {
-		if *p.Role == models.AdminRole && u.ID == *e {
-			return true
-		}
-
-	}
-	return false
+func IsOwner(loggedUserId uuid.UUID, requestedUserId uuid.UUID) bool {
+	return loggedUserId == requestedUserId
 }
 
 func Guard(c *fiber.Ctx, u *models.User, r models.Role, t *models.EntityType, e *uuid.UUID) error {
@@ -50,7 +34,7 @@ func checkPermission(u *models.User, r models.Role, t *models.EntityType, e *uui
 
 	// if the user has r permission with the same access level, entity type and entity id, return true:
 	for _, p := range u.Permissions {
-		if *p.Role == r && *p.EntityType == *t && *p.EntityID == *e {
+		if p.Role == r && p.EntityType == *t && p.EntityID == *e {
 			return true
 		}
 	}
@@ -61,8 +45,8 @@ func checkPermission(u *models.User, r models.Role, t *models.EntityType, e *uui
 		building, _ := buildingRepository.FindByID(*e)
 
 		for _, p := range u.Permissions {
-			if *p.Role == models.ManagerRole && *p.EntityType == models.OrganizationEntity {
-				if *p.EntityID == building.OrganizationID {
+			if p.Role == models.ManagerRole && p.EntityType == models.OrganizationEntity {
+				if p.EntityID == building.OrganizationID {
 					return true
 				}
 			}
@@ -74,8 +58,8 @@ func checkPermission(u *models.User, r models.Role, t *models.EntityType, e *uui
 		propertyRepository, _ := repositories.NewPropertyRepository()
 		property, _ := propertyRepository.FindByID(*e)
 		for _, p := range u.Permissions {
-			if *p.Role == models.ManagerRole && *p.EntityType == models.BuildingEntity {
-				if *p.EntityID == property.BuildingID {
+			if p.Role == models.ManagerRole && p.EntityType == models.BuildingEntity {
+				if p.EntityID == property.BuildingID {
 					return true
 				}
 			}

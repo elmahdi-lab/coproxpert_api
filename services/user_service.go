@@ -43,7 +43,6 @@ func GetUserByToken(token string) (*models.User, error) {
 		return nil, err
 	}
 	return user, nil
-
 }
 
 func UpdateUser(u *models.User) (*models.User, error) {
@@ -75,10 +74,5 @@ func CreatePasswordForgetToken(u *models.User) (*models.User, error) {
 
 func DeleteUser(id uuid.UUID) bool {
 	userRepository, _ := repositories.NewUserRepository()
-
-	deleted := userRepository.DeleteByID(id)
-	if deleted == true {
-		return true
-	}
-	return false
+	return userRepository.DeleteByID(id)
 }
