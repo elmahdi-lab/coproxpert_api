@@ -1,10 +1,6 @@
 authentication is already set by checking each request by the auth.go middleware.
-
 Levels of Permission: Admin, Manager, User.
-
-Admin: Can do anything.
-Managers: can edit the building and it's related properties. Also, can close complaints, and publish files to the building.
-Users, can view the building associated with them, their complaints, and the files published to the building.
+Separate admin/managers from users
 
 V1 Core Features:
 - X User Authentication
@@ -15,7 +11,7 @@ V1 Core Features:
 - X Notifications
 - X Maintenance schedule
 - X Resolutions and votes
-- Admin Subscriptions with licenses
+- X Admin Subscriptions with licenses
 
 V2 Features:
 - Chat

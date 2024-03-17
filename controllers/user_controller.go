@@ -33,7 +33,7 @@ func GetUserAction(c *fiber.Ctx) error {
 	}
 
 	loggedUser := c.Locals("user").(*models.User)
-
+	// TODO: PERMISSIONS
 	if loggedUser.ID != userUuid {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
 	}
@@ -51,6 +51,12 @@ func UpdateUserAction(c *fiber.Ctx) error {
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
+	loggedUser := c.Locals("user").(*models.User)
+	// TODO: PERMISSIONS
+	if loggedUser.ID != user.ID {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+	}
+
 	updatedUser, err := services.UpdateUser(user)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -59,13 +65,15 @@ func UpdateUserAction(c *fiber.Ctx) error {
 }
 
 func DeleteUserAction(c *fiber.Ctx) error {
-	loggedUser := c.Locals("user").(*models.User)
-	err := security.Guard(c, loggedUser, models.AdminRole, nil, nil)
-	if err != nil {
-		return err
-	}
 	id := c.Params("id")
 	userUuid, err := uuid.Parse(id)
+
+	loggedUser := c.Locals("user").(*models.User)
+	// TODO: PERMISSIONS
+	if loggedUser.ID != userUuid {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+	}
+
 	deleted := services.DeleteUser(userUuid)
 	if deleted != true {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -96,6 +104,11 @@ func LoginAction(c *fiber.Ctx) error {
 
 func LogoutAction(c *fiber.Ctx) error {
 	loggedUser := c.Locals("user").(*models.User)
+
+	if loggedUser == nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "User not found"})
+	}
+
 	loggedUser.Token = nil
 	loggedUser.TokenExpiresAt = nil
 	_, err := services.UpdateUser(loggedUser)
@@ -114,13 +127,13 @@ func PasswordForgetAction(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Invalid username"})
 	}
-	updatedUser, err := services.CreatePasswordForgetToken(user)
+	_, err = services.CreatePasswordForgetToken(user)
 	// TODO: add func to make this more reusable
 	// TODO: queue email sending
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-	return c.JSON(fiber.Map{"message": "Password reset token sent successfully", "user": updatedUser})
+	return c.JSON(fiber.Map{"message": "Password reset token sent successfully"})
 }
 
 func PasswordResetAction(c *fiber.Ctx) error {

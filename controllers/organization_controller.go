@@ -8,6 +8,7 @@ import (
 )
 
 func CreateOrganizationAction(c *fiber.Ctx) error {
+
 	organization := new(models.Organization)
 
 	if err := c.BodyParser(organization); err != nil {
@@ -25,9 +26,9 @@ func CreateOrganizationAction(c *fiber.Ctx) error {
 }
 
 func GetOrganizationAction(c *fiber.Ctx) error {
-
 	id := c.Params("id")
 	orgUuid, _ := uuid.Parse(id)
+
 	organization, err := services.GetOrganization(orgUuid)
 
 	if err != nil {
@@ -58,6 +59,7 @@ func DeleteOrganizationAction(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 	orgUuid, _ := uuid.Parse(id)
+
 	deleted := services.DeleteOrganization(orgUuid)
 
 	if deleted == true {
