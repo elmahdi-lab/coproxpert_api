@@ -19,6 +19,16 @@ func NewBuildingRepository() (*BuildingRepository, error) {
 	return &BuildingRepository{db: db}, nil
 }
 
+// TODO: Pagination
+
+func (ur *BuildingRepository) FindAll(page int, pageSize int) ([]models.Building, error) {
+	var buildings []models.Building
+	if err := ur.db.Offset((page - 1) * pageSize).Limit(pageSize).Find(&buildings).Error; err != nil {
+		return nil, err
+	}
+	return buildings, nil
+}
+
 func (ur *BuildingRepository) FindByID(id uuid.UUID) (*models.Building, error) {
 	var building models.Building
 	if err := ur.db.First(&building, id).Error; err != nil {
@@ -37,14 +47,6 @@ func (ur *BuildingRepository) Update(building *models.Building) error {
 
 func (ur *BuildingRepository) Delete(building *models.Building) error {
 	return ur.db.Delete(building).Error
-}
-
-func (ur *BuildingRepository) FindAll() ([]models.Building, error) {
-	var buildings []models.Building
-	if err := ur.db.Find(&buildings).Error; err != nil {
-		return nil, err
-	}
-	return buildings, nil
 }
 
 func (ur *BuildingRepository) DeleteByID(id uuid.UUID) bool {

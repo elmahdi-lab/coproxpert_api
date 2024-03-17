@@ -28,7 +28,7 @@ type User struct {
 	BaseModel
 }
 
-func (u *User) IsExpired() bool {
+func (u *User) IsTokenExpired() bool {
 	if u.TokenExpiresAt != nil && time.Now().After(*u.TokenExpiresAt) {
 		return true
 	}

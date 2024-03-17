@@ -12,6 +12,7 @@ func RegisterRoutes(app *fiber.App) {
 	app.Post("/api/user/login", controllers.LoginAction)
 	app.Post("/api/user/register", controllers.CreateUserAction)
 	app.Post("/api/user/password-forget", controllers.PasswordForgetAction)
+	app.Post("/api/user/password-reset", controllers.PasswordResetAction)
 
 	// Group with authentication middleware for secure routes
 	secureApi := app.Group("/api", middleware.AuthMiddleware)
