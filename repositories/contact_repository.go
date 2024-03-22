@@ -43,6 +43,14 @@ func (ur *ContactRepository) FindByID(id uuid.UUID) (*models.Contact, error) {
 	return &Contact, nil
 }
 
+func (ur *ContactRepository) FindDefaultByUser(user *models.User) (*models.Contact, error) {
+	var Contact models.Contact
+	if err := ur.db.Where("user_id = ? AND is_default = ?", user.ID, true).First(&Contact).Error; err != nil {
+		return nil, err
+	}
+	return &Contact, nil
+}
+
 func (ur *ContactRepository) Create(Contact *models.Contact) error {
 	return ur.db.Create(Contact).Error
 }

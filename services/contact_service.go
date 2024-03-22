@@ -1,18 +1,33 @@
 package services
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
 )
 
-func CreateContact(c *models.Contact) (*models.Contact, error) {
+func CreateContact(contact *models.Contact, ctx *fiber.Ctx) (*models.Contact, error) {
+	user := ctx.Locals("user").(*models.User)
+	contact.UserID = user.ID
+
 	contactRepository, _ := repositories.NewContactRepository()
-	err := contactRepository.Create(c)
+	err := contactRepository.Create(contact)
 	if err != nil {
 		return nil, err
 	}
-	return c, nil
+	return contact, nil
+}
+
+func UpdateContact(contact *models.Contact) (*models.Contact, error) {
+	contactRepository, _ := repositories.NewContactRepository()
+
+	err := contactRepository.Update(contact)
+	if err != nil {
+		return nil, err
+	}
+
+	return contact, nil
 }
 
 func GetContact(id uuid.UUID) (*models.Contact, error) {
@@ -25,23 +40,9 @@ func GetContact(id uuid.UUID) (*models.Contact, error) {
 	return contact, nil
 }
 
-func UpdateContact(c *models.Contact) (*models.Contact, error) {
-	contactRepository, _ := repositories.NewContactRepository()
-
-	err := contactRepository.Update(c)
-	if err != nil {
-		return nil, err
-	}
-
-	return c, nil
-}
-
 func DeleteContact(id uuid.UUID) bool {
 	contactRepository, _ := repositories.NewContactRepository()
 
 	deleted := contactRepository.DeleteByID(id)
-	if deleted == true {
-		return true
-	}
-	return false
+	return deleted
 }

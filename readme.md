@@ -5,13 +5,13 @@ Separate admin/managers from users
 V1 Core Features:
 - X User Authentication
 - X Organization, Building and properties (or units)
-- X Common Spaces (pool, gym, garden ...)
-- X Complaints
-- X Document sharing
-- X Notifications
+-  Common Spaces (pool, gym, garden ...)
+-  Complaints
+-  Document sharing
+-  Notifications
 - X Maintenance schedule
 - X Resolutions and votes
-- X Admin Subscriptions with licenses
+-  Admin Subscriptions with licenses
 
 V2 Features:
 - Chat

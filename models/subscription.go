@@ -8,17 +8,52 @@ import (
 // SubscriptionType defines the type of subscription.
 type SubscriptionType string
 
-const (
-	Paid SubscriptionType = "paid"
-	Free SubscriptionType = "free"
+// SubscriptionTier defines the limits for each subscription type.
+type SubscriptionTier struct {
+	Name           SubscriptionType
+	BuildingsLimit int
+	UnitsLimit     int
+}
+
+var (
+	Free = SubscriptionTier{
+		Name:           "Free",
+		BuildingsLimit: 1,
+		UnitsLimit:     10,
+	}
+	Tier1 = SubscriptionTier{
+		Name:           "Tier1",
+		BuildingsLimit: 10,
+		UnitsLimit:     100,
+	}
+	Tier2 = SubscriptionTier{
+		Name:           "Tier2",
+		BuildingsLimit: 100,
+		UnitsLimit:     1000,
+	}
+	Tier3 = SubscriptionTier{
+		Name:           "Tier3",
+		BuildingsLimit: 1000,
+		UnitsLimit:     10000,
+	}
+	Enterprise = SubscriptionTier{
+		Name:           "Enterprise",
+		BuildingsLimit: -1, // -1 for unlimited
+		UnitsLimit:     -1, // -1 for unlimited
+	}
 )
 
-// Subscription represents a subscription entity.
+type Feature struct {
+	ID   uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
+	Name string    `json:"name"`
+}
+
 type Subscription struct {
 	ID               uuid.UUID         `json:"id" gorm:"type:uuid;primaryKey"`
 	OrganizationID   uuid.UUID         `json:"organizationID" gorm:"type:uuid"`
 	Organization     *Organization     `json:"organization" gorm:"foreignKey:OrganizationID;references:ID;constraint:OnDelete:CASCADE"`
-	SubscriptionType *SubscriptionType `json:"subscriptionType" gorm:"not null;check:subscription_type IN ('paid', 'free')"`
+	SubscriptionType *SubscriptionType `json:"subscriptionType" gorm:"not null, default:'Free'"`
 	ExpiresAt        *time.Time        `json:"expiresAt"`
+	Features         []Feature         `json:"features" gorm:"many2many:subscription_features;"`
 	BaseModel
 }

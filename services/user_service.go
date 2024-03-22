@@ -1,7 +1,9 @@
 package services
 
 import (
+	"errors"
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/helpers/security"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
 	"time"
@@ -26,25 +28,6 @@ func GetUser(id uuid.UUID) (*models.User, error) {
 	return user, nil
 }
 
-func GetUserByUsername(username string) (*models.User, error) {
-	userRepository, _ := repositories.NewUserRepository()
-	user, err := userRepository.FindByUsername(username)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
-
-}
-
-func GetUserByToken(token string) (*models.User, error) {
-	userRepository, _ := repositories.NewUserRepository()
-	user, err := userRepository.FindByToken(token)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
-}
-
 func UpdateUser(u *models.User) (*models.User, error) {
 	userRepository, _ := repositories.NewUserRepository()
 
@@ -56,23 +39,103 @@ func UpdateUser(u *models.User) (*models.User, error) {
 	return u, nil
 }
 
-func CreatePasswordForgetToken(u *models.User) (*models.User, error) {
+func DeleteUser(id uuid.UUID) error {
 	userRepository, _ := repositories.NewUserRepository()
+	if deleted := userRepository.DeleteByID(id); deleted != true {
+		return errors.New("user not found")
+	}
+	return nil
+}
+
+func PasswordForget(username string) error {
+	userRepository, _ := repositories.NewUserRepository()
+	user, err := userRepository.FindByUsername(username)
+	if err != nil {
+		return err
+	}
 
 	token := uuid.New()
-	resetTokenExpiresAt := u.CreatedAt.Add(models.PasswordResetTokenDurationMinutes * time.Minute)
+	resetTokenExpiresAt := time.Now().Add(models.PasswordResetTokenDurationMinutes * time.Minute)
 
-	u.PasswordResetToken = &token
-	u.ResetTokenExpiresAt = &resetTokenExpiresAt
+	user.PasswordResetToken = &token
+	user.ResetTokenExpiresAt = &resetTokenExpiresAt
 
-	err := userRepository.Update(u)
+	if err := userRepository.Update(user); err != nil {
+		return err
+	}
+	return nil
+}
+
+func PasswordReset(u *models.User) error {
+	userRepository, _ := repositories.NewUserRepository()
+	existingUser, err := userRepository.FindByUsername(*u.Username)
+	if err != nil {
+		return err
+	}
+
+	if existingUser.PasswordResetToken == nil || *existingUser.PasswordResetToken != *u.PasswordResetToken {
+		return errors.New("invalid token")
+	}
+
+	if existingUser.IsTokenExpired() {
+		return errors.New("token expired")
+	}
+
+	hashedPassword, err := security.HashPassword(*u.Password)
+	if err != nil {
+		return err
+	}
+
+	existingUser.Password = &hashedPassword
+	existingUser.PasswordResetToken = nil
+	existingUser.ResetTokenExpiresAt = nil
+
+	if err := userRepository.Update(existingUser); err != nil {
+		return err
+	}
+	return nil
+}
+
+func Login(u *models.User) (*models.User, error) {
+	userRepository, _ := repositories.NewUserRepository()
+	user, err := userRepository.FindByUsername(*u.Username)
 	if err != nil {
 		return nil, err
 	}
-	return u, nil
+
+	if user.IsLocked() {
+		return nil, errors.New("user locked")
+	}
+
+	if !security.IsPasswordHashValid(*u.Password, *user.Password) {
+		user.Tries = new(int)
+		*user.Tries++
+		if *user.Tries >= 5 {
+			lockExpiresAt := time.Now().Add(models.LockDurationMinutes * time.Minute)
+			user.LockExpiresAt = &lockExpiresAt
+		}
+		if err := userRepository.Update(user); err != nil {
+			return nil, err
+		}
+		return nil, errors.New("invalid password")
+	}
+
+	user.Tries = new(int)
+	*user.Tries = 0
+	user.RefreshToken()
+	if err := userRepository.Update(user); err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
-func DeleteUser(id uuid.UUID) bool {
+func Logout(u *models.User) error {
 	userRepository, _ := repositories.NewUserRepository()
-	return userRepository.DeleteByID(id)
+	u.Token = nil
+	u.TokenExpiresAt = nil
+	if err := userRepository.Update(u); err != nil {
+		return err
+	}
+	return nil
 }

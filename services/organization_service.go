@@ -1,3 +1,5 @@
+// services/organization_service.go
+
 package services
 
 import (
@@ -38,10 +40,6 @@ func UpdateOrganization(o *models.Organization) (*models.Organization, error) {
 
 func DeleteOrganization(id uuid.UUID) bool {
 	organizationRepository, _ := repositories.NewOrganizationRepository()
-
 	deleted := organizationRepository.DeleteByID(id)
-	if deleted == true {
-		return true
-	}
-	return false
+	return deleted
 }

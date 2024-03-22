@@ -22,9 +22,13 @@ type User struct {
 	Token          *uuid.UUID `json:"token"`
 	TokenExpiresAt *time.Time `json:"token_expires_at"`
 
-	Contacts    []Contact    `json:"contacts" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	Permissions []Permission `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Contact     *Contact     `json:"contact" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Documents   []Document   `json:"documents" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Images      []Image      `json:"images" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Resolutions []Resolution `json:"resolutions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Votes       []Vote       `json:"votes" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 
+	//Permissions []Permission `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	BaseModel
 }
 
@@ -35,7 +39,6 @@ func (u *User) IsTokenExpired() bool {
 	return false
 }
 
-// GenerateToken generates a new token or refreshes the existing one
 func (u *User) GenerateToken() {
 	token := uuid.New()
 	u.Token = &token
@@ -49,15 +52,6 @@ func (u *User) RefreshToken() {
 func (u *User) ExtendValidity() {
 	TokenExpiresAt := time.Now().Add(TokenDurationMinutes * time.Minute)
 	u.TokenExpiresAt = &TokenExpiresAt
-}
-
-func (u *User) DefaultContact() *Contact {
-	for _, contact := range u.Contacts {
-		if *contact.IsDefault == true {
-			return &contact
-		}
-	}
-	return nil
 }
 
 func (u *User) IsLocked() bool {

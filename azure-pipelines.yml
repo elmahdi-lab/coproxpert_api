@@ -27,3 +27,10 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
+
+steps:
+  - task: QodanaScan@2023
+    inputs:
+      args: -l,jetbrains/qodana-go:latest
+    env:
+      QODANA_TOKEN: $(QODANA_TOKEN)

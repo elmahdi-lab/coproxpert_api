@@ -1,3 +1,5 @@
+// controllers/contact_controller.go
+
 package controllers
 
 import (
@@ -14,21 +16,23 @@ func CreateContactAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	createdContact, err := services.CreateContact(contact)
+	createdContact, err := services.CreateContact(contact, c)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.JSON(fiber.Map{"message": "Contact created successfully", "contact": createdContact})
-
 }
 
 func GetContactAction(c *fiber.Ctx) error {
-
 	id := c.Params("id")
-	contactUuid, err := uuid.Parse(id)
-	contact, err := services.GetContact(contactUuid)
+	contactUUID, err := uuid.Parse(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	contact, err := services.GetContact(contactUUID)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -38,7 +42,6 @@ func GetContactAction(c *fiber.Ctx) error {
 }
 
 func UpdateContactAction(c *fiber.Ctx) error {
-
 	contact := new(models.Contact)
 
 	if err := c.BodyParser(contact); err != nil {
@@ -55,12 +58,15 @@ func UpdateContactAction(c *fiber.Ctx) error {
 }
 
 func DeleteContactAction(c *fiber.Ctx) error {
-
 	id := c.Params("id")
-	contactUuid, _ := uuid.Parse(id)
-	deleted := services.DeleteContact(contactUuid)
+	contactUUID, err := uuid.Parse(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
 
-	if deleted == false {
+	deleted := services.DeleteContact(contactUUID)
+
+	if !deleted {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Contact not found"})
 	}
 
