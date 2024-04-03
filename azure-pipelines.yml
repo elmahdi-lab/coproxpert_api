@@ -21,7 +21,7 @@ stages:
             displayName: 'Compile Project'
 
           - script: |
-              tar -czf $(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).tar.gz -C $(Build.ArtifactStagingDirectory)/main
+              tar -czf $(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).tar.gz -C main
             displayName: 'Compress Artifact'
 
           - task: PublishPipelineArtifact@1
