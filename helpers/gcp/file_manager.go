@@ -1,4 +1,4 @@
-package files
+package gcp
 
 import (
 	"cloud.google.com/go/storage"
@@ -9,34 +9,36 @@ import (
 	"time"
 )
 
-type GCPFileManager struct {
+type FileManager struct {
 	client *storage.Client
 }
 
-func NewGCPFileManager() (*GCPFileManager, error) {
+func NewFileManager() (*FileManager, error) {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(os.Getenv("GCP_CREDENTIALS_PATH")))
 	if err != nil {
 		return nil, err
 	}
-	return &GCPFileManager{client: client}, nil
+	return &FileManager{client: client}, nil
 }
 
-func (f *GCPFileManager) Upload(file io.Reader, filename string) error {
+func (f *FileManager) Upload(file io.Reader, filename string) error {
 	ctx := context.Background()
 	bucketName := os.Getenv("GCP_BUCKET_NAME")
 
 	wc := f.client.Bucket(bucketName).Object(filename).NewWriter(ctx)
+
 	if _, err := io.Copy(wc, file); err != nil {
 		return err
 	}
+
 	if err := wc.Close(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (f *GCPFileManager) Link(filename string) (string, error) {
+func (f *FileManager) Link(filename string) (string, error) {
 	bucketName := os.Getenv("GCP_BUCKET_NAME")
 	expirationTime := time.Now().Add(15 * time.Minute)
 	url, err := storage.SignedURL(bucketName, filename, &storage.SignedURLOptions{
@@ -51,7 +53,7 @@ func (f *GCPFileManager) Link(filename string) (string, error) {
 	return url, nil
 }
 
-func (f *GCPFileManager) Delete(filename string) error {
+func (f *FileManager) Delete(filename string) error {
 	ctx := context.Background()
 	bucketName := os.Getenv("GCP_BUCKET_NAME")
 

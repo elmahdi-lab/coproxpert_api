@@ -11,12 +11,12 @@ type MaintenanceRepository struct {
 	db *gorm.DB
 }
 
-func NewMaintenanceRepository() (*MaintenanceRepository, error) {
-	db, err := cmd.GetDB()
-	if err != nil {
-		return nil, err
+func NewMaintenanceRepository() *MaintenanceRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &MaintenanceRepository{db: db}, nil
+	return &MaintenanceRepository{db: db}
 }
 
 func (mr *MaintenanceRepository) FindByUnitGroup(ug *models.UnitGroup) ([]models.Maintenance, error) {

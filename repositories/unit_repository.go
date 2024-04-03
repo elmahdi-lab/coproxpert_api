@@ -11,12 +11,12 @@ type UnitRepository struct {
 	db *gorm.DB
 }
 
-func NewUnitRepository() (*UnitRepository, error) {
-	db, err := cmd.GetDB()
-	if err != nil {
-		return nil, err
+func NewUnitRepository() *UnitRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &UnitRepository{db: db}, nil
+	return &UnitRepository{db: db}
 }
 
 func (ur *UnitRepository) FindByUser(user *models.User) ([]models.Unit, error) {

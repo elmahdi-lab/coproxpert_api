@@ -11,12 +11,12 @@ type UnitGroupRepository struct {
 	db *gorm.DB
 }
 
-func NewUnitGroupRepository() (*UnitGroupRepository, error) {
-	db, err := cmd.GetDB()
-	if err != nil {
-		return nil, err
+func NewUnitGroupRepository() *UnitGroupRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &UnitGroupRepository{db: db}, nil
+	return &UnitGroupRepository{db: db}
 }
 
 // TODO: Pagination

@@ -11,17 +11,17 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
-func NewUserRepository() (*UserRepository, error) {
-	db, err := cmd.GetDB()
-	if err != nil {
-		return nil, err
+func NewUserRepository() *UserRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &UserRepository{db: db}, nil
+	return &UserRepository{db: db}
 }
 
 func (ur *UserRepository) FindByID(id uuid.UUID) (*models.User, error) {
 	var user models.User
-	if err := ur.db.First(&user, id).Error; err != nil {
+	if err := ur.db.Preload("Permissions").First(&user, id).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -29,7 +29,7 @@ func (ur *UserRepository) FindByID(id uuid.UUID) (*models.User, error) {
 
 func (ur *UserRepository) FindByToken(token string) (*models.User, error) {
 	var user models.User
-	if err := ur.db.Where("token = ?", token).First(&user).Error; err != nil {
+	if err := ur.db.Preload("Permissions").Where("token = ?", token).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -37,21 +37,25 @@ func (ur *UserRepository) FindByToken(token string) (*models.User, error) {
 
 func (ur *UserRepository) FindAll() ([]models.User, error) {
 	var users []models.User
-	if err := ur.db.Find(&users).Error; err != nil {
+	if err := ur.db.Preload("Permissions").Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil
 }
 func (ur *UserRepository) FindByUsername(username string) (*models.User, error) {
 	var user models.User
-	if err := ur.db.Where("username = ?", username).First(&user).Error; err != nil {
+	if err := ur.db.Preload("Permissions").Where("username = ?", username).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
 func (ur *UserRepository) Create(user *models.User) error {
-	return ur.db.Create(user).Error
+	id := ur.db.Create(user)
+	if id.Error != nil {
+		return id.Error
+	}
+	return nil
 }
 
 func (ur *UserRepository) Update(user *models.User) error {

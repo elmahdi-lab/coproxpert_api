@@ -30,3 +30,25 @@ V3 Features:
 
 V4 Features:
 - AI
+
+## INFRA & DEVTOOLS
+Neon DB, MailTrap
+
+SW HTZ 2x Compute Instances for API & DB
+GCP Compute for a MicroService
+GCP Functions
+GCP PubSub
+GCP Cloud Logs
+GCP Secrets
+AWS SMS
+AWS SES Emails / Using EC2 small instance for sending emails
+Push Notifications TBD
+
+
+
+
+
+https://supertokens.com/docs/thirdpartyemailpassword/introduction
+https://github.com/zincsearch/zincsearch
+https://instatus.com/
+https://github.com/gofiber/recipes?tab=readme-ov-file

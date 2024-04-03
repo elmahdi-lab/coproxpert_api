@@ -6,49 +6,81 @@ import (
 	"ithumans.com/coproxpert/helpers/security"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
+	"log/slog"
 	"time"
 )
 
 func CreateUser(u *models.User) (*models.User, error) {
-	userRepository, _ := repositories.NewUserRepository()
+
+	if u.Password == nil {
+		return nil, errors.New("password is required")
+	}
+
+	if u.Username == nil {
+		return nil, errors.New("username is required")
+	}
+
+	userRepository := repositories.NewUserRepository()
 	u.ID = uuid.New()
+	hashedPassword, _ := security.HashPassword(*u.Password)
+	u.Password = &hashedPassword
 	err := userRepository.Create(u)
 	if err != nil {
+		slog.Error("error creating user", u)
 		return nil, err
 	}
 	return u, nil
 }
 
 func GetUser(id uuid.UUID) (*models.User, error) {
-	userRepository, _ := repositories.NewUserRepository()
+	userRepository := repositories.NewUserRepository()
 	user, err := userRepository.FindByID(id)
 	if err != nil {
+		slog.Error("error getting user", id)
 		return nil, err
 	}
 	return user, nil
 }
 
 func UpdateUser(u *models.User) (*models.User, error) {
-	userRepository, _ := repositories.NewUserRepository()
-
+	userRepository := repositories.NewUserRepository()
 	err := userRepository.Update(u)
 	if err != nil {
+		slog.Error("error updating user", u)
 		return nil, err
 	}
-
 	return u, nil
 }
 
+func UpdatePassword(u *models.User) error {
+	userRepository := repositories.NewUserRepository()
+	user, err := userRepository.FindByID(u.ID)
+	if err != nil {
+		return err
+	}
+
+	hashedPassword, err := security.HashPassword(*u.Password)
+	if err != nil {
+		return err
+	}
+	user.Password = &hashedPassword
+	if err := userRepository.Update(user); err != nil {
+		return err
+	}
+	return nil
+}
+
 func DeleteUser(id uuid.UUID) error {
-	userRepository, _ := repositories.NewUserRepository()
+	userRepository := repositories.NewUserRepository()
 	if deleted := userRepository.DeleteByID(id); deleted != true {
+		slog.Error("error deleting user", id)
 		return errors.New("user not found")
 	}
 	return nil
 }
 
 func PasswordForget(username string) error {
-	userRepository, _ := repositories.NewUserRepository()
+	userRepository := repositories.NewUserRepository()
 	user, err := userRepository.FindByUsername(username)
 	if err != nil {
 		return err
@@ -67,7 +99,7 @@ func PasswordForget(username string) error {
 }
 
 func PasswordReset(u *models.User) error {
-	userRepository, _ := repositories.NewUserRepository()
+	userRepository := repositories.NewUserRepository()
 	existingUser, err := userRepository.FindByUsername(*u.Username)
 	if err != nil {
 		return err
@@ -97,7 +129,7 @@ func PasswordReset(u *models.User) error {
 }
 
 func Login(u *models.User) (*models.User, error) {
-	userRepository, _ := repositories.NewUserRepository()
+	userRepository := repositories.NewUserRepository()
 	user, err := userRepository.FindByUsername(*u.Username)
 	if err != nil {
 		return nil, err
@@ -108,20 +140,20 @@ func Login(u *models.User) (*models.User, error) {
 	}
 
 	if !security.IsPasswordHashValid(*u.Password, *user.Password) {
-		user.Tries = new(int)
-		*user.Tries++
+		errMessage := "invalid credentials"
+		user.IncrementTries()
 		if *user.Tries >= 5 {
-			lockExpiresAt := time.Now().Add(models.LockDurationMinutes * time.Minute)
-			user.LockExpiresAt = &lockExpiresAt
+			user.Lock()
+			errMessage = "user locked"
 		}
 		if err := userRepository.Update(user); err != nil {
 			return nil, err
 		}
-		return nil, errors.New("invalid password")
+		return nil, errors.New(errMessage)
 	}
 
 	user.Tries = new(int)
-	*user.Tries = 0
+	user.Unlock()
 	user.RefreshToken()
 	if err := userRepository.Update(user); err != nil {
 		return nil, err
@@ -131,9 +163,12 @@ func Login(u *models.User) (*models.User, error) {
 }
 
 func Logout(u *models.User) error {
-	userRepository, _ := repositories.NewUserRepository()
+	if u == nil {
+		return errors.New("user not logged in")
+	}
 	u.Token = nil
 	u.TokenExpiresAt = nil
+	userRepository := repositories.NewUserRepository()
 	if err := userRepository.Update(u); err != nil {
 		return err
 	}

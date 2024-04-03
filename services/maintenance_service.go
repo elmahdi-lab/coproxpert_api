@@ -7,12 +7,12 @@ import (
 )
 
 func CreateMaintenance(m *models.Maintenance) (*models.Maintenance, error) {
-	maintenanceRepository, err := repositories.NewMaintenanceRepository()
-	if err != nil {
-		return nil, err
+	maintenanceRepository := repositories.NewMaintenanceRepository()
+	if maintenanceRepository == nil {
+		return nil, nil
 	}
 
-	err = maintenanceRepository.Create(m)
+	err := maintenanceRepository.Create(m)
 	if err != nil {
 		return nil, err
 	}
@@ -21,9 +21,9 @@ func CreateMaintenance(m *models.Maintenance) (*models.Maintenance, error) {
 }
 
 func GetMaintenanceByID(id uuid.UUID) (*models.Maintenance, error) {
-	maintenanceRepository, err := repositories.NewMaintenanceRepository()
-	if err != nil {
-		return nil, err
+	maintenanceRepository := repositories.NewMaintenanceRepository()
+	if maintenanceRepository == nil {
+		return nil, nil
 	}
 
 	maintenance, err := maintenanceRepository.FindByID(id)
@@ -35,12 +35,12 @@ func GetMaintenanceByID(id uuid.UUID) (*models.Maintenance, error) {
 }
 
 func UpdateMaintenance(m *models.Maintenance) (*models.Maintenance, error) {
-	maintenanceRepository, err := repositories.NewMaintenanceRepository()
-	if err != nil {
-		return nil, err
+	maintenanceRepository := repositories.NewMaintenanceRepository()
+	if maintenanceRepository == nil {
+		return nil, nil
 	}
 
-	err = maintenanceRepository.Update(m)
+	err := maintenanceRepository.Update(m)
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +49,8 @@ func UpdateMaintenance(m *models.Maintenance) (*models.Maintenance, error) {
 }
 
 func DeleteMaintenanceByID(id uuid.UUID) bool {
-	maintenanceRepository, err := repositories.NewMaintenanceRepository()
-	if err != nil {
+	maintenanceRepository := repositories.NewMaintenanceRepository()
+	if maintenanceRepository == nil {
 		return false
 	}
 

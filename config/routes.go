@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"ithumans.com/coproxpert/controllers"
 	"ithumans.com/coproxpert/middleware"
+	"log/slog"
 )
 
 func RegisterRoutes(app *fiber.App) {
@@ -18,13 +19,17 @@ func RegisterRoutes(app *fiber.App) {
 	// Group with authentication middleware for secure routes
 	secureApi := app.Group("/api", middleware.AuthMiddleware)
 
+	// ownerApi := secureApi.Group("", middleware.IsOwnerMiddleware)
+
 	secureApi.Post("/user", controllers.CreateUserAction)
-	secureApi.Get("/user/:id", controllers.GetUserAction)
+	secureApi.Get("/user/:id", middleware.IsOwnerMiddleware, controllers.GetUserAction)
 	secureApi.Put("/user", controllers.UpdateUserAction)
 	secureApi.Delete("/user/:id", controllers.DeleteUserAction)
+	secureApi.Put("/user/password/:id", controllers.UpdatePasswordAction)
 
 	secureApi.Post("/contact", controllers.CreateContactAction)
 	secureApi.Get("/contact/:id", controllers.GetContactAction)
+	secureApi.Get("/contacts", controllers.GetAllContactsAction)
 	secureApi.Put("/contact", controllers.UpdateContactAction)
 	secureApi.Delete("/contact/:id", controllers.DeleteContactAction)
 
@@ -58,4 +63,15 @@ func RegisterRoutes(app *fiber.App) {
 	secureApi.Put("/vote", controllers.UpdateVoteAction)
 	secureApi.Delete("/vote/:id", controllers.DeleteVoteAction)
 
+	secureApi.Post("/complaint", controllers.CreateComplaintAction)
+	secureApi.Get("/complaint/:id", controllers.GetComplaintAction)
+	secureApi.Put("/complaint", controllers.UpdateComplaintAction)
+	secureApi.Delete("/complaint/:id", controllers.DeleteComplaintAction)
+
+	secureApi.Post("/file", controllers.UploadFileAction)
+	secureApi.Get("/file/:id", controllers.GetFileAction)
+	secureApi.Put("/file", controllers.UpdateFileAction)
+	secureApi.Delete("/file/:id", controllers.DeleteFileAction)
+
+	slog.Info("Routes registered")
 }

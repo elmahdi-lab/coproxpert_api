@@ -11,12 +11,12 @@ type OrganizationRepository struct {
 	db *gorm.DB
 }
 
-func NewOrganizationRepository() (*OrganizationRepository, error) {
-	db, err := cmd.GetDB()
-	if err != nil {
-		return nil, err
+func NewOrganizationRepository() *OrganizationRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &OrganizationRepository{db: db}, nil
+	return &OrganizationRepository{db: db}
 }
 
 func (or *OrganizationRepository) FindByUser(user *models.User) ([]models.Organization, error) {

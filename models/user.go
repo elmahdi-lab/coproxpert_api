@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/helpers"
 	"time"
 )
 
@@ -22,13 +23,13 @@ type User struct {
 	Token          *uuid.UUID `json:"token"`
 	TokenExpiresAt *time.Time `json:"token_expires_at"`
 
-	Contact     *Contact     `json:"contact" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	Documents   []Document   `json:"documents" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	Images      []Image      `json:"images" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	Resolutions []Resolution `json:"resolutions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	Votes       []Vote       `json:"votes" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	//Contact     *Contact      `json:"contact" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	//Files       *[]File       `json:"files" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	//Resolutions *[]Resolution `json:"resolutions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	//Votes       *[]Vote       `json:"votes" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	//Complaints  *[]Complaint  `json:"complaints" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 
-	//Permissions []Permission `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Permissions []Permission `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
 	BaseModel
 }
 
@@ -55,7 +56,8 @@ func (u *User) ExtendValidity() {
 }
 
 func (u *User) IsLocked() bool {
-	if u.Tries != nil && *u.Tries >= 5 {
+	IsLockTimeExpired := u.LockExpiresAt != nil && time.Now().After(*u.LockExpiresAt)
+	if u.Tries != nil && *u.Tries >= 5 && !IsLockTimeExpired {
 		return true
 	}
 	return false
@@ -81,4 +83,8 @@ func (u *User) IncrementTries() {
 	} else {
 		*u.Tries++
 	}
+}
+
+func (u *User) Anonymize() {
+	u.Password = helpers.StringPointer("***hidden***")
 }

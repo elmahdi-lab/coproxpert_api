@@ -7,7 +7,7 @@ import (
 )
 
 func CreateUnitGroup(b *models.UnitGroup) (*models.UnitGroup, error) {
-	unitGroupRepository, _ := repositories.NewUnitGroupRepository()
+	unitGroupRepository := repositories.NewUnitGroupRepository()
 	err := unitGroupRepository.Create(b)
 	if err != nil {
 		return nil, err
@@ -17,7 +17,7 @@ func CreateUnitGroup(b *models.UnitGroup) (*models.UnitGroup, error) {
 }
 
 func GetUnitGroup(id uuid.UUID) (*models.UnitGroup, error) {
-	unitGroupRepository, _ := repositories.NewUnitGroupRepository()
+	unitGroupRepository := repositories.NewUnitGroupRepository()
 
 	unitGroup, err := unitGroupRepository.FindByID(id)
 	if err != nil {
@@ -27,7 +27,7 @@ func GetUnitGroup(id uuid.UUID) (*models.UnitGroup, error) {
 }
 
 func UpdateUnitGroup(b *models.UnitGroup) (*models.UnitGroup, error) {
-	unitGroupRepository, _ := repositories.NewUnitGroupRepository()
+	unitGroupRepository := repositories.NewUnitGroupRepository()
 
 	err := unitGroupRepository.Update(b)
 	if err != nil {
@@ -38,7 +38,7 @@ func UpdateUnitGroup(b *models.UnitGroup) (*models.UnitGroup, error) {
 }
 
 func DeleteUnitGroup(id uuid.UUID) bool {
-	unitGroupRepository, _ := repositories.NewUnitGroupRepository()
+	unitGroupRepository := repositories.NewUnitGroupRepository()
 
 	deleted := unitGroupRepository.DeleteByID(id)
 	if deleted == true {

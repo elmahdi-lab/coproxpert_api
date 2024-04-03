@@ -11,12 +11,12 @@ type ResolutionRepository struct {
 	db *gorm.DB
 }
 
-func NewResolutionRepository() (*ResolutionRepository, error) {
-	db, err := cmd.GetDB()
-	if err != nil {
-		return nil, err
+func NewResolutionRepository() *ResolutionRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &ResolutionRepository{db: db}, nil
+	return &ResolutionRepository{db: db}
 }
 
 func (rr *ResolutionRepository) FindByID(id uuid.UUID) (*models.Resolution, error) {

@@ -17,11 +17,8 @@ type Unit struct {
 	Name string       `json:"name" gorm:"unique"`
 	Type PropertyType `json:"type"`
 
-	BuildingID uuid.UUID  `json:"building_id" gorm:"type:uuid"`
-	Building   *UnitGroup `json:"building" gorm:"foreignKey:BuildingID;references:ID;constraint:OnDelete:CASCADE"`
-
-	UserID uuid.UUID `json:"user_id" gorm:"type:uuid"`
-	User   *User     `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	BuildingID uuid.UUID `json:"building_id" gorm:"type:uuid"`
+	UserID     uuid.UUID `json:"user_id" gorm:"type:uuid"`
 
 	IsEnabled *bool `json:"is_enabled"`
 

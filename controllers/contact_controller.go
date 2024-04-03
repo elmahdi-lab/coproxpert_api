@@ -13,16 +13,27 @@ func CreateContactAction(c *fiber.Ctx) error {
 	contact := new(models.Contact)
 
 	if err := c.BodyParser(contact); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
 	}
 
 	createdContact, err := services.CreateContact(contact, c)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
 	}
 
 	return c.JSON(fiber.Map{"message": "Contact created successfully", "contact": createdContact})
+}
+
+func GetAllContactsAction(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
+	contacts, err := services.GetAllContactsByUser(user.ID)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
+	}
+
+	return c.JSON(fiber.Map{"contacts": contacts})
 }
 
 func GetContactAction(c *fiber.Ctx) error {

@@ -11,7 +11,7 @@ func CreateContact(contact *models.Contact, ctx *fiber.Ctx) (*models.Contact, er
 	user := ctx.Locals("user").(*models.User)
 	contact.UserID = user.ID
 
-	contactRepository, _ := repositories.NewContactRepository()
+	contactRepository := repositories.NewContactRepository()
 	err := contactRepository.Create(contact)
 	if err != nil {
 		return nil, err
@@ -20,7 +20,7 @@ func CreateContact(contact *models.Contact, ctx *fiber.Ctx) (*models.Contact, er
 }
 
 func UpdateContact(contact *models.Contact) (*models.Contact, error) {
-	contactRepository, _ := repositories.NewContactRepository()
+	contactRepository := repositories.NewContactRepository()
 
 	err := contactRepository.Update(contact)
 	if err != nil {
@@ -31,7 +31,7 @@ func UpdateContact(contact *models.Contact) (*models.Contact, error) {
 }
 
 func GetContact(id uuid.UUID) (*models.Contact, error) {
-	contactRepository, _ := repositories.NewContactRepository()
+	contactRepository := repositories.NewContactRepository()
 
 	contact, err := contactRepository.FindByID(id)
 	if err != nil {
@@ -40,8 +40,17 @@ func GetContact(id uuid.UUID) (*models.Contact, error) {
 	return contact, nil
 }
 
+func GetAllContactsByUser(id uuid.UUID) ([]models.Contact, error) {
+	contactRepository := repositories.NewContactRepository()
+	contacts, err := contactRepository.FindByUserID(id)
+	if err != nil {
+		return nil, err
+	}
+	return contacts, nil
+}
+
 func DeleteContact(id uuid.UUID) bool {
-	contactRepository, _ := repositories.NewContactRepository()
+	contactRepository := repositories.NewContactRepository()
 
 	deleted := contactRepository.DeleteByID(id)
 	return deleted

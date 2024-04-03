@@ -12,14 +12,10 @@ const (
 )
 
 type Resolution struct {
-	ID             uuid.UUID     `json:"id" gorm:"type:uuid; primaryKey"`
-	UserID         uuid.UUID     `json:"user_id" gorm:"type:uuid"`
-	User           *User         `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	Organization   *Organization `json:"organization" gorm:"foreignKey:OrganizationID;references:ID;constraint:OnDelete:CASCADE"`
-	OrganizationID uuid.UUID     `json:"organization_id" gorm:"type:uuid"`
-
-	UnitGroup   *UnitGroup `json:"unit_group" gorm:"foreignKey:UnitGroupID;references:ID;constraint:OnDelete:CASCADE"`
-	UnitGroupID *uuid.UUID `json:"unit_group_id" gorm:"type:uuid"`
+	ID             uuid.UUID  `json:"id" gorm:"type:uuid; primaryKey"`
+	UserID         uuid.UUID  `json:"user_id" gorm:"type:uuid"`
+	OrganizationID uuid.UUID  `json:"organization_id" gorm:"type:uuid"`
+	UnitGroupID    *uuid.UUID `json:"unit_group_id" gorm:"type:uuid"`
 
 	Status Status `json:"status" gorm:"default:0"`
 

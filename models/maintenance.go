@@ -21,10 +21,8 @@ const (
 type Maintenance struct {
 	ID          uuid.UUID       `json:"id" gorm:"type:uuid; primaryKey"`
 	UnitGroupId uuid.UUID       `json:"unit_group_id" gorm:"type:uuid; not null"`
-	UnitGroup   *UnitGroup      `json:"unit_group" gorm:"foreignKey:UnitGroupId; references:ID; constraint:OnDelete:CASCADE"`
 	UnitId      uuid.UUID       `json:"unit_id" gorm:"type:uuid; not null"`
-	Unit        *Unit           `json:"unit" gorm:"foreignKey:UnitId; references:ID; constraint:OnDelete:CASCADE"`
-	Type        MaintenanceType `json:"type" gorm:"type:ENUM('Plumbing', 'Electrical', 'General', 'Gardening', 'Pool', 'Painting', 'Exterminator'); not null"`
+	Type        MaintenanceType `json:"type" gorm:"not null;"`
 	Comment     string          `json:"comment" gorm:"type:varchar(255)"`
 	StartDate   time.Time       `json:"start_date" gorm:"not null"`
 	EndDate     time.Time       `json:"end_date" gorm:"not null; check:end_date > start_date"`

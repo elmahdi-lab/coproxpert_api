@@ -11,12 +11,12 @@ type VoteRepository struct {
 	db *gorm.DB
 }
 
-func NewVoteRepository() (*VoteRepository, error) {
-	db, evr := cmd.GetDB()
-	if evr != nil {
-		return nil, evr
+func NewVoteRepository() *VoteRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &VoteRepository{db: db}, nil
+	return &VoteRepository{db: db}
 }
 
 func (vr *VoteRepository) FindByID(id uuid.UUID) (*models.Vote, error) {

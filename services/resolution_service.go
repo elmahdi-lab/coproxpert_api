@@ -7,12 +7,12 @@ import (
 )
 
 func CreateResolution(r *models.Resolution) (*models.Resolution, error) {
-	resolutionRepository, err := repositories.NewResolutionRepository()
-	if err != nil {
-		return nil, err
+	resolutionRepository := repositories.NewResolutionRepository()
+	if resolutionRepository == nil {
+		return nil, nil
 	}
 
-	err = resolutionRepository.Create(r)
+	err := resolutionRepository.Create(r)
 	if err != nil {
 		return nil, err
 	}
@@ -21,11 +21,10 @@ func CreateResolution(r *models.Resolution) (*models.Resolution, error) {
 }
 
 func GetResolutionByID(id uuid.UUID) (*models.Resolution, error) {
-	resolutionRepository, err := repositories.NewResolutionRepository()
-	if err != nil {
-		return nil, err
+	resolutionRepository := repositories.NewResolutionRepository()
+	if resolutionRepository == nil {
+		return nil, nil
 	}
-
 	resolution, err := resolutionRepository.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -35,12 +34,12 @@ func GetResolutionByID(id uuid.UUID) (*models.Resolution, error) {
 }
 
 func UpdateResolution(r *models.Resolution) (*models.Resolution, error) {
-	resolutionRepository, err := repositories.NewResolutionRepository()
-	if err != nil {
-		return nil, err
+	resolutionRepository := repositories.NewResolutionRepository()
+	if resolutionRepository == nil {
+		return nil, nil
 	}
 
-	err = resolutionRepository.Update(r)
+	err := resolutionRepository.Update(r)
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +48,8 @@ func UpdateResolution(r *models.Resolution) (*models.Resolution, error) {
 }
 
 func DeleteResolutionByID(id uuid.UUID) bool {
-	resolutionRepository, err := repositories.NewResolutionRepository()
-	if err != nil {
+	resolutionRepository := repositories.NewResolutionRepository()
+	if resolutionRepository == nil {
 		return false
 	}
 

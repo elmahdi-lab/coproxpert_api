@@ -1,18 +1,19 @@
 package services
 
 import (
+	"errors"
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
 )
 
 func CreateVote(r *models.Vote) (*models.Vote, error) {
-	voteRepository, err := repositories.NewVoteRepository()
-	if err != nil {
-		return nil, err
+	voteRepository := repositories.NewVoteRepository()
+	if voteRepository == nil {
+		return nil, errors.New("error creating vote repository")
 	}
 
-	err = voteRepository.Create(r)
+	err := voteRepository.Create(r)
 	if err != nil {
 		return nil, err
 	}
@@ -21,9 +22,9 @@ func CreateVote(r *models.Vote) (*models.Vote, error) {
 }
 
 func GetVoteByID(id uuid.UUID) (*models.Vote, error) {
-	voteRepository, err := repositories.NewVoteRepository()
-	if err != nil {
-		return nil, err
+	voteRepository := repositories.NewVoteRepository()
+	if voteRepository == nil {
+		return nil, errors.New("error creating vote repository")
 	}
 
 	vote, err := voteRepository.FindByID(id)
@@ -35,12 +36,12 @@ func GetVoteByID(id uuid.UUID) (*models.Vote, error) {
 }
 
 func UpdateVote(r *models.Vote) (*models.Vote, error) {
-	voteRepository, err := repositories.NewVoteRepository()
-	if err != nil {
-		return nil, err
+	voteRepository := repositories.NewVoteRepository()
+	if voteRepository == nil {
+		return nil, errors.New("error creating vote repository")
 	}
 
-	err = voteRepository.Update(r)
+	err := voteRepository.Update(r)
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +50,8 @@ func UpdateVote(r *models.Vote) (*models.Vote, error) {
 }
 
 func DeleteVoteByID(id uuid.UUID) bool {
-	voteRepository, err := repositories.NewVoteRepository()
-	if err != nil {
+	voteRepository := repositories.NewVoteRepository()
+	if voteRepository == nil {
 		return false
 	}
 

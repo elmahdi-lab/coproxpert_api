@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/helpers/security"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/services"
 )
@@ -28,11 +29,13 @@ func CreateUserAction(c *fiber.Ctx) error {
 func GetUserAction(c *fiber.Ctx) error {
 	id := c.Params("id")
 	userUuid, err := uuid.Parse(id)
+
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
 
 	user, err := services.GetUser(userUuid)
+	user.Anonymize()
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
@@ -42,11 +45,13 @@ func GetUserAction(c *fiber.Ctx) error {
 
 func UpdateUserAction(c *fiber.Ctx) error {
 	user := new(models.User)
+
 	if err := c.BodyParser(user); err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
 
 	updatedUser, err := services.UpdateUser(user)
+	updatedUser.Anonymize()
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
@@ -56,6 +61,14 @@ func UpdateUserAction(c *fiber.Ctx) error {
 func DeleteUserAction(c *fiber.Ctx) error {
 	id := c.Params("id")
 	userUuid, err := uuid.Parse(id)
+
+	isAdmin := security.Guard(c, models.AdminRole)
+	isOwner := security.IsOwner(c.Locals("user").(*models.User).ID, userUuid)
+	if !isOwner && !isAdmin {
+		return handleError(c, nil, fiber.StatusUnauthorized)
+
+	}
+
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
@@ -64,6 +77,19 @@ func DeleteUserAction(c *fiber.Ctx) error {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
 	return c.JSON(fiber.Map{"message": "User deleted successfully"})
+}
+
+func UpdatePasswordAction(c *fiber.Ctx) error {
+	user := new(models.User)
+	if err := c.BodyParser(user); err != nil {
+		return handleError(c, err, fiber.StatusBadRequest)
+	}
+
+	if err := services.UpdatePassword(user); err != nil {
+		return handleError(c, err, fiber.StatusBadRequest)
+	}
+	return c.JSON(fiber.Map{"message": "Password updated successfully"})
+
 }
 
 func PasswordForgetAction(c *fiber.Ctx) error {
@@ -100,6 +126,7 @@ func LoginAction(c *fiber.Ctx) error {
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
+	loggedUser.Anonymize()
 	return c.JSON(fiber.Map{"user": loggedUser})
 }
 

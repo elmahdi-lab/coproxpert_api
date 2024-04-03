@@ -49,11 +49,10 @@ type Feature struct {
 }
 
 type Subscription struct {
-	ID               uuid.UUID         `json:"id" gorm:"type:uuid;primaryKey"`
-	OrganizationID   uuid.UUID         `json:"organizationID" gorm:"type:uuid"`
-	Organization     *Organization     `json:"organization" gorm:"foreignKey:OrganizationID;references:ID;constraint:OnDelete:CASCADE"`
-	SubscriptionType *SubscriptionType `json:"subscriptionType" gorm:"not null, default:'Free'"`
-	ExpiresAt        *time.Time        `json:"expiresAt"`
-	Features         []Feature         `json:"features" gorm:"many2many:subscription_features;"`
+	ID               uuid.UUID        `json:"id" gorm:"type:uuid;primaryKey"`
+	OrganizationID   uuid.UUID        `json:"organizationID" gorm:"type:uuid"`
+	SubscriptionType SubscriptionType `json:"subscriptionType" gorm:"not null, default:'Free'"`
+	ExpiresAt        time.Time        `json:"expiresAt"`
+	Features         []Feature        `json:"features" gorm:"many2many:subscription_features;"`
 	BaseModel
 }

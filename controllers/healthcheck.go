@@ -6,18 +6,15 @@ import (
 )
 
 func HealthCheck(ctx *fiber.Ctx) error {
+	db := cmd.GetDB() // Get the database instance
 
-	db, err := cmd.GetDB() // Get the database instance
-
-	if err == nil {
+	if db != nil {
 		var result int
 		db.Raw("SELECT 1").Scan(&result)
-
 		if result == 1 {
-			ctx.Status(fiber.StatusOK)
-			return ctx.JSON(fiber.Map{"healthcheck": "OK"})
+			return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"healthcheck": "OK"})
 		}
 	}
-	ctx.Status(fiber.StatusInternalServerError)
-	return ctx.JSON(fiber.Map{"healthcheck": "FAILED"})
+
+	return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"healthcheck": "FAILED"})
 }

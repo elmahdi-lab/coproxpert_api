@@ -7,12 +7,12 @@ import (
 )
 
 func CreateUnit(u *models.Unit) (*models.Unit, error) {
-	unitRepository, err := repositories.NewUnitRepository()
-	if err != nil {
-		return nil, err
+	unitRepository := repositories.NewUnitRepository()
+	if unitRepository == nil {
+		return nil, nil
 	}
 
-	err = unitRepository.Create(u)
+	err := unitRepository.Create(u)
 	if err != nil {
 		return nil, err
 	}
@@ -21,11 +21,10 @@ func CreateUnit(u *models.Unit) (*models.Unit, error) {
 }
 
 func GetUnitByID(id uuid.UUID) (*models.Unit, error) {
-	unitRepository, err := repositories.NewUnitRepository()
-	if err != nil {
-		return nil, err
+	unitRepository := repositories.NewUnitRepository()
+	if unitRepository == nil {
+		return nil, nil
 	}
-
 	unit, err := unitRepository.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -35,12 +34,11 @@ func GetUnitByID(id uuid.UUID) (*models.Unit, error) {
 }
 
 func UpdateUnit(u *models.Unit) (*models.Unit, error) {
-	unitRepository, err := repositories.NewUnitRepository()
-	if err != nil {
-		return nil, err
+	unitRepository := repositories.NewUnitRepository()
+	if unitRepository == nil {
+		return nil, nil
 	}
-
-	err = unitRepository.Update(u)
+	err := unitRepository.Update(u)
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +47,8 @@ func UpdateUnit(u *models.Unit) (*models.Unit, error) {
 }
 
 func DeleteUnitByID(id uuid.UUID) bool {
-	unitRepository, err := repositories.NewUnitRepository()
-	if err != nil {
+	unitRepository := repositories.NewUnitRepository()
+	if unitRepository == nil {
 		return false
 	}
 

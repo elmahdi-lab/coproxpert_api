@@ -2,20 +2,23 @@ package main
 
 import (
 	_ "ariga.io/atlas-provider-gorm/gormschema"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	recover2 "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	"ithumans.com/coproxpert/cmd"
 	"ithumans.com/coproxpert/config"
+	"log/slog"
 	"os"
 	"time"
 )
 
 func main() {
-	err := godotenv.Load()
+
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
+	err := godotenv.Load(".env")
 	if err != nil {
-		fmt.Printf("Failed to load .env file: %s\n", err)
 	}
 
 	timezone := os.Getenv("TIMEZONE")
@@ -28,17 +31,13 @@ func main() {
 	app.Use(recover2.New())
 	config.RegisterRoutes(app)
 
-	_, err = cmd.GetDB()
-
-	if err != nil {
-		return
-	}
+	_ = cmd.GetDB()
 
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 
 	address := host + ":" + port
-	fmt.Printf("Server is starting on %s\n", address)
+	logger.Info("Server is starting", "address", address)
 
 	if os.Getenv("ENV") == config.Development {
 		//fixtures.CreateUser()
@@ -46,7 +45,7 @@ func main() {
 
 	err = app.Listen(address)
 	if err != nil {
-		fmt.Printf("Failed to start the server: %s\n", err)
+		logger.Error("Failed to start the server", "error", err)
 		return
 	}
 }
