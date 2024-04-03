@@ -21,7 +21,8 @@ stages:
             displayName: 'Compile Project'
 
           - script: |
-              zip -r $(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).zip $(Build.ArtifactStagingDirectory)/main
+              cd $(Build.ArtifactStagingDirectory)
+              zip $(artifactName)-$(Build.BuildNumber).zip main
             displayName: 'Compress Artifact'
 
           - task: PublishPipelineArtifact@1
