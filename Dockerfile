@@ -4,10 +4,10 @@ FROM golang:1.21-alpine as builder
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Copy go.mod and go.sum files
+# Copy go.mod and go.sum gcp
 COPY go.mod go.sum ./
 
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum gcp are not changed
 RUN go mod download
 
 # Copy the source from the current directory to the Working Directory inside the container
@@ -31,8 +31,10 @@ COPY --from=builder /app/.env .
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:8080/public/healthcheck || exit 1
+  CMD wget --quiet --tries=1 --spider http://localhost:8080/healthcheck || exit 1
 
+# TODO: Run gorm migrations
+# RUN bash ./migrate.sh
 
 # Command to run the executable
 CMD ["./main"]

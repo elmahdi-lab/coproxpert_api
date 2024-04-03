@@ -6,9 +6,7 @@ import (
 
 type Contact struct {
 	ID          uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	UserID      uuid.UUID `json:"user_id" gorm:"type:uuid"`
-	User        *User     `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	IsDefault   *bool     `json:"is_default"`
+	UserID      uuid.UUID `json:"userID" gorm:"type:uuid"`
 	PhoneNumber *string   `json:"phone_number"`
 	Address     *string   `json:"address"`
 	City        *string   `json:"city"`

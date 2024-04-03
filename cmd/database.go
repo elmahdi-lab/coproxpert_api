@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log/slog"
 	"os"
 	"sync"
 )
@@ -25,18 +26,18 @@ func (c *dbClient) getDB() (*gorm.DB, error) {
 		password := os.Getenv("DB_PASSWORD")
 		dbname := os.Getenv("DB_NAME")
 		timezone := os.Getenv("DB_TIMEZONE")
+		sslMode := os.Getenv("DB_SSL_MODE")
 
-		dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s TimeZone=%s sslmode=disable", host, port, user, password, dbname, timezone)
+		dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s TimeZone=%s sslmode=%s", host, port, user, password, dbname, timezone, sslMode)
 
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {
-			fmt.Printf("Failed to connect to database: %s\n", err)
+			slog.Error("Failed to connect to database", "error", err)
 			return
 		}
 
 		c.db = db
-		fmt.Printf("Connected to database %s\n", dbname)
-
+		slog.Info("Connected to database", "dbname", dbname)
 		if err != nil {
 			c.err = err
 			return
@@ -46,10 +47,11 @@ func (c *dbClient) getDB() (*gorm.DB, error) {
 	return c.db, c.err
 }
 
-func GetDB() (*gorm.DB, error) {
+func GetDB() *gorm.DB {
 	db, err := dbInstance.getDB()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get database instance: %w", err)
+		slog.Error("Failed to connect to database: %s", err)
+		return nil
 	}
-	return db, nil
+	return db
 }

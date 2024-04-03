@@ -11,12 +11,12 @@ type ContactRepository struct {
 	db *gorm.DB
 }
 
-func NewContactRepository() (*ContactRepository, error) {
-	db, err := cmd.GetDB()
-	if err != nil {
-		return nil, err
+func NewContactRepository() *ContactRepository {
+	db := cmd.GetDB()
+	if db == nil {
+		return nil
 	}
-	return &ContactRepository{db: db}, nil
+	return &ContactRepository{db: db}
 }
 
 func (ur *ContactRepository) FindByUser(user *models.User) ([]models.Contact, error) {
@@ -38,6 +38,14 @@ func (ur *ContactRepository) FindByUserID(id uuid.UUID) ([]models.Contact, error
 func (ur *ContactRepository) FindByID(id uuid.UUID) (*models.Contact, error) {
 	var Contact models.Contact
 	if err := ur.db.First(&Contact, id).Error; err != nil {
+		return nil, err
+	}
+	return &Contact, nil
+}
+
+func (ur *ContactRepository) FindDefaultByUser(user *models.User) (*models.Contact, error) {
+	var Contact models.Contact
+	if err := ur.db.Where("user_id = ? AND is_default = ?", user.ID, true).First(&Contact).Error; err != nil {
 		return nil, err
 	}
 	return &Contact, nil

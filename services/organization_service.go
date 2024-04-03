@@ -1,3 +1,5 @@
+// services/organization_service.go
+
 package services
 
 import (
@@ -7,7 +9,7 @@ import (
 )
 
 func CreateOrganization(o *models.Organization) (*models.Organization, error) {
-	organizationRepository, _ := repositories.NewOrganizationRepository()
+	organizationRepository := repositories.NewOrganizationRepository()
 	err := organizationRepository.Create(o)
 	if err != nil {
 		return nil, err
@@ -16,7 +18,7 @@ func CreateOrganization(o *models.Organization) (*models.Organization, error) {
 }
 
 func GetOrganization(id uuid.UUID) (*models.Organization, error) {
-	organizationRepository, _ := repositories.NewOrganizationRepository()
+	organizationRepository := repositories.NewOrganizationRepository()
 
 	organization, err := organizationRepository.FindByID(id)
 	if err != nil {
@@ -26,7 +28,7 @@ func GetOrganization(id uuid.UUID) (*models.Organization, error) {
 }
 
 func UpdateOrganization(o *models.Organization) (*models.Organization, error) {
-	organizationRepository, _ := repositories.NewOrganizationRepository()
+	organizationRepository := repositories.NewOrganizationRepository()
 
 	err := organizationRepository.Update(o)
 	if err != nil {
@@ -37,11 +39,7 @@ func UpdateOrganization(o *models.Organization) (*models.Organization, error) {
 }
 
 func DeleteOrganization(id uuid.UUID) bool {
-	organizationRepository, _ := repositories.NewOrganizationRepository()
-
+	organizationRepository := repositories.NewOrganizationRepository()
 	deleted := organizationRepository.DeleteByID(id)
-	if deleted == true {
-		return true
-	}
-	return false
+	return deleted
 }

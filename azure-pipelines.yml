@@ -1,29 +1,29 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
-- main
+  - main
 
 resources:
-- repo: self
+  - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
+  artifactName: 'coproxpert-api'
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+  - stage: Build
+    displayName: Build and Publish Artifact
+    jobs:
+      - job: Build
+        displayName: Build and Publish
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          # Add your build steps here to compile your project
+          # For example, if you're building a Go project:
+          - script: |
+              go build -o $(Build.ArtifactStagingDirectory)/main $(Build.SourcesDirectory)/main.go
+            displayName: 'Compile Project'
+
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publish Artifact'
+            inputs:
+              targetPath: '$(Build.ArtifactStagingDirectory)'
+              artifact: '$(artifactName)-$(Build.BuildNumber)'  # Include $(Build.BuildNumber) in artifact name

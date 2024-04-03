@@ -1,25 +1,26 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"ithumans.com/coproxpert/repositories"
 	"ithumans.com/coproxpert/services"
+	"log/slog"
 )
 
 // AuthMiddleware is a middleware function for basic authentication
 func AuthMiddleware(c *fiber.Ctx) error {
-	// Get the "Authorization" header value
 	authHeader := c.Get("Authorization")
 
-	// Check if the header is empty
 	if authHeader == "" {
 		return unauthorizedResponse(c)
 	}
 
-	// find token in db
-	user, err := services.GetUserByToken(authHeader)
+	userRepo := repositories.NewUserRepository()
 
-	if err != nil || user.IsTokenExpired() {
+	// find token in db
+	user, err := userRepo.FindByToken(authHeader)
+
+	if err != nil || user.IsTokenExpired() || user.IsLocked() {
 		return unauthorizedResponse(c)
 	}
 
@@ -27,7 +28,6 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	user, _ = services.UpdateUser(user)
 
 	c.Locals("user", user)
-
 	return c.Next()
 }
 
@@ -36,7 +36,8 @@ func unauthorizedResponse(c *fiber.Ctx) error {
 	remoteIp := c.IP()
 	requestedUrl := string(c.Request().RequestURI())
 
-	fmt.Printf("Unauthorized request, url: %v, ip: %v\n", requestedUrl, remoteIp)
+	slog.Error("Unauthorized request, ", "url: ", requestedUrl, "ip: ", remoteIp)
+
 	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 		"message": "Unauthorized",
 	})

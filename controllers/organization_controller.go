@@ -1,3 +1,5 @@
+// controllers/organization_controller.go
+
 package controllers
 
 import (
@@ -8,7 +10,6 @@ import (
 )
 
 func CreateOrganizationAction(c *fiber.Ctx) error {
-
 	organization := new(models.Organization)
 
 	if err := c.BodyParser(organization); err != nil {
@@ -22,14 +23,16 @@ func CreateOrganizationAction(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"message": "Organization created successfully", "organization": createdOrganization})
-
 }
 
 func GetOrganizationAction(c *fiber.Ctx) error {
 	id := c.Params("id")
-	orgUuid, _ := uuid.Parse(id)
+	orgUUID, err := uuid.Parse(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
 
-	organization, err := services.GetOrganization(orgUuid)
+	organization, err := services.GetOrganization(orgUUID)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -39,7 +42,6 @@ func GetOrganizationAction(c *fiber.Ctx) error {
 }
 
 func UpdateOrganizationAction(c *fiber.Ctx) error {
-
 	organization := new(models.Organization)
 
 	if err := c.BodyParser(organization); err != nil {
@@ -56,13 +58,15 @@ func UpdateOrganizationAction(c *fiber.Ctx) error {
 }
 
 func DeleteOrganizationAction(c *fiber.Ctx) error {
-
 	id := c.Params("id")
-	orgUuid, _ := uuid.Parse(id)
+	orgUUID, err := uuid.Parse(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
 
-	deleted := services.DeleteOrganization(orgUuid)
+	deleted := services.DeleteOrganization(orgUUID)
 
-	if deleted == true {
+	if deleted {
 		return c.JSON(fiber.Map{"message": "Organization deleted successfully"})
 	}
 
