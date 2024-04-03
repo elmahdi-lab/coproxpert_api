@@ -17,16 +17,17 @@ stages:
           vmImage: ubuntu-latest
         steps:
           - script: |
-              go build -o $(Build.ArtifactStagingDirectory)/main-$(Build.BuildNumber) $(Build.SourcesDirectory)/main.go
+              go build -o $(Build.ArtifactStagingDirectory)/main $(Build.SourcesDirectory)/main.go
             displayName: 'Compile Project'
 
           - task: ArchiveFiles@2
             displayName: 'Archive Files'
             inputs:
-              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/main'
               includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).zip'
+              archiveType: 'tar'
+              tarCompression: 'bz2'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
               replaceExistingArchive: true
 
           - task: PublishPipelineArtifact@1
