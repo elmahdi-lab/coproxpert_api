@@ -16,14 +16,16 @@ stages:
         pool:
           vmImage: ubuntu-latest
         steps:
-          # Add your build steps here to compile your project
-          # For example, if you're building a Go project:
           - script: |
               go build -o $(Build.ArtifactStagingDirectory)/main $(Build.SourcesDirectory)/main.go
             displayName: 'Compile Project'
+
+          - script: |
+              tar -czf $(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).tar.gz -C $(Build.ArtifactStagingDirectory) main
+            displayName: 'Compress Artifact'
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Artifact'
             inputs:
               targetPath: '$(Build.ArtifactStagingDirectory)'
-              artifact: '$(artifactName)-$(Build.BuildNumber)'  # Include $(Build.BuildNumber) in artifact name
+              artifact: '$(artifactName)-$(Build.BuildNumber).tar.gz'
