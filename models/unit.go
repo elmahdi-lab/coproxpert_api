@@ -13,7 +13,8 @@ const (
 )
 
 type Unit struct {
-	ID   uuid.UUID    `json:"id" gorm:"type:uuid;primaryKey"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+
 	Name string       `json:"name" gorm:"unique"`
 	Type PropertyType `json:"type"`
 

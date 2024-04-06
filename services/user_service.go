@@ -21,7 +21,6 @@ func CreateUser(u *models.User) (*models.User, error) {
 	}
 
 	userRepository := repositories.NewUserRepository()
-	u.ID = uuid.New()
 	hashedPassword, _ := security.HashPassword(*u.Password)
 	u.Password = &hashedPassword
 	err := userRepository.Create(u)

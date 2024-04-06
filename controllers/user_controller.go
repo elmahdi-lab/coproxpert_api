@@ -35,10 +35,10 @@ func GetUserAction(c *fiber.Ctx) error {
 	}
 
 	user, err := services.GetUser(userUuid)
-	user.Anonymize()
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
+	user.Anonymize()
 
 	return c.JSON(fiber.Map{"user": user})
 }

@@ -26,7 +26,8 @@ var AllowedFileTypes = []string{
 }
 
 type File struct {
-	ID         uuid.UUID `json:"id" gorm:"type:uuid; primaryKey"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+
 	UserID     uuid.UUID `json:"user_id" gorm:"type:uuid"`
 	User       User      `json:"user" gorm:"foreignKey:UserID;references:ID"`
 	BucketName string    `json:"bucket_name"`
@@ -34,6 +35,7 @@ type File struct {
 	FileType   string    `json:"file_type" gorm:"not null"`
 	PublicUrl  string    `json:"public_url"`
 	PrivateUrl string    `json:"private_url"`
+
 	BaseModel
 }
 

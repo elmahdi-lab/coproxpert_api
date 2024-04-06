@@ -2,11 +2,7 @@ package models
 
 import "github.com/google/uuid"
 
-type Message struct {
+// Budget is a model for budgets, they may be provisional or definitive
+type Budget struct {
 	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-
-	Content string    `json:"content"`
-	UserID  uuid.UUID `json:"user_id" gorm:"type:uuid"`
-
-	BaseModel
 }

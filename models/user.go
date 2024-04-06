@@ -11,25 +11,37 @@ const TokenDurationMinutes = 180
 const PasswordResetTokenDurationMinutes = 30
 
 type User struct {
-	ID                  uuid.UUID  `json:"id" gorm:"type:uuid; primaryKey"`
-	Username            *string    `json:"username" gorm:"unique"`
-	Password            *string    `json:"password"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+
+	Username *string `json:"username" gorm:"unique"`
+
+	FirstName *string `json:"first_name"`
+	LastName  *string `json:"last_name"`
+
+	PhoneNumber *string `json:"phone_number"`
+	Address     *string `json:"address"`
+	City        *string `json:"city"`
+	Province    *string `json:"province"`
+	ZipCode     *string `json:"zip_code"`
+	Country     *string `json:"country"`
+
 	Tries               *int       `json:"tries" gorm:"default:0"`
 	LockExpiresAt       *time.Time `json:"lock_expires_at"`
 	IsVerified          *bool      `json:"is_verified" gorm:"default:false"`
 	PasswordResetToken  *uuid.UUID `json:"password_reset_token"`
 	ResetTokenExpiresAt *time.Time `json:"reset_token_expires_at"`
 
+	Password       *string    `json:"password"`
 	Token          *uuid.UUID `json:"token"`
 	TokenExpiresAt *time.Time `json:"token_expires_at"`
 
-	//Contact     *Contact      `json:"contact" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Files       *[]File       `json:"files" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Resolutions *[]Resolution `json:"resolutions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Votes       *[]Vote       `json:"votes" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Complaints  *[]Complaint  `json:"complaints" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 
 	Permissions []Permission `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
+
 	BaseModel
 }
 
@@ -87,4 +99,13 @@ func (u *User) IncrementTries() {
 
 func (u *User) Anonymize() {
 	u.Password = helpers.StringPointer("***hidden***")
+}
+
+func (u *User) isAdmin() bool {
+	for _, permission := range u.Permissions {
+		if permission.Role == AdminRole {
+			return true
+		}
+	}
+	return false
 }

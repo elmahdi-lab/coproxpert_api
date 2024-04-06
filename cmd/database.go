@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log/slog"
@@ -20,6 +21,8 @@ var dbInstance = &dbClient{}
 
 func (c *dbClient) getDB() (*gorm.DB, error) {
 	c.once.Do(func() {
+		_ = godotenv.Load(".env")
+
 		host := os.Getenv("DB_HOST")
 		port := os.Getenv("DB_PORT")
 		user := os.Getenv("DB_USER")

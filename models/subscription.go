@@ -44,12 +44,16 @@ var (
 )
 
 type Feature struct {
-	ID   uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	Name string    `json:"name"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+
+	Name string `json:"name"`
+
+	BaseModel
 }
 
 type Subscription struct {
-	ID               uuid.UUID        `json:"id" gorm:"type:uuid;primaryKey"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+
 	OrganizationID   uuid.UUID        `json:"organizationID" gorm:"type:uuid"`
 	SubscriptionType SubscriptionType `json:"subscriptionType" gorm:"not null, default:'Free'"`
 	ExpiresAt        time.Time        `json:"expiresAt"`

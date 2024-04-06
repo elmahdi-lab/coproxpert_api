@@ -19,7 +19,7 @@ const (
 )
 
 type Maintenance struct {
-	ID          uuid.UUID       `json:"id" gorm:"type:uuid; primaryKey"`
+	ID          string          `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
 	UnitGroupId uuid.UUID       `json:"unit_group_id" gorm:"type:uuid; not null"`
 	UnitId      uuid.UUID       `json:"unit_id" gorm:"type:uuid; not null"`
 	Type        MaintenanceType `json:"type" gorm:"not null;"`

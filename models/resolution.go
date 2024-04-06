@@ -12,7 +12,7 @@ const (
 )
 
 type Resolution struct {
-	ID             uuid.UUID  `json:"id" gorm:"type:uuid; primaryKey"`
+	ID             string     `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
 	UserID         uuid.UUID  `json:"user_id" gorm:"type:uuid"`
 	OrganizationID uuid.UUID  `json:"organization_id" gorm:"type:uuid"`
 	UnitGroupID    *uuid.UUID `json:"unit_group_id" gorm:"type:uuid"`
