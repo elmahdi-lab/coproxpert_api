@@ -32,7 +32,7 @@ stages:
 
           - script: |
               rm -f $(Build.BinariesDirectory)/main
-              displayName: 'Remove Compiled Binary'
+            displayName: 'Remove Compiled Binary'
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Artifact'
