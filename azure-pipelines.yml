@@ -34,5 +34,5 @@ stages:
             displayName: 'Publish Artifact'
             inputs:
               targetPath: '$(Build.ArtifactStagingDirectory)'
-              artifact: '$(Build.BinariesDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
+              artifact: '$(artifactName)-$(Build.BuildNumber).tar.bz2'
           
