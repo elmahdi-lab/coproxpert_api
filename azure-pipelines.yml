@@ -17,21 +17,22 @@ stages:
           vmImage: ubuntu-latest
         steps:
           - script: |
-              go build -o /srv/main $(Build.SourcesDirectory)/main.go
+              go build -o $(Build.BinariesDirectory)/main $(Build.SourcesDirectory)/main.go
             displayName: 'Compile Project'
 
           - task: ArchiveFiles@2
             displayName: 'Archive Files'
             inputs:
-              rootFolderOrFile: '/srv/main'
+              rootFolderOrFile: '$(Build.BinariesDirectory)/main'
               includeRootFolder: false
               archiveType: 'tar'
               tarCompression: 'bz2'
-              archiveFile: '/srv/$(artifactName)-$(Build.BuildNumber).tar.bz2'
+              archiveFile: '$(Build.BinariesDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
               replaceExistingArchive: true
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Artifact'
             inputs:
-              targetPath: '/srv'
-              artifact: '$(artifactName)-$(Build.BuildNumber).tar.bz2'
+              targetPath: '$(Build.ArtifactStagingDirectory)'
+              artifact: '$(Build.BinariesDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
+          
