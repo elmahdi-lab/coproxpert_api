@@ -17,26 +17,11 @@ stages:
           vmImage: ubuntu-latest
         steps:
           - script: |
-              go build -o $(Build.BinariesDirectory)/main $(Build.SourcesDirectory)/main.go
+              go build -o $(Build.ArtifactStagingDirectory)/main $(Build.SourcesDirectory)/main.go
             displayName: 'Compile Project'
-
-          - task: ArchiveFiles@2
-            displayName: 'Archive Files'
-            inputs:
-              rootFolderOrFile: '$(Build.BinariesDirectory)/main'
-              includeRootFolder: false
-              archiveType: 'tar'
-              tarCompression: 'bz2'
-              archiveFile: '$(Build.BinariesDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
-              replaceExistingArchive: true
-
-          - script: |
-              rm -f $(Build.BinariesDirectory)/main
-            displayName: 'Remove Compiled Binary'
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Artifact'
             inputs:
-              targetPath: '$(Build.BinariesDirectory)'
+              targetPath: '$(Build.ArtifactStagingDirectory)'
               artifact: '$(artifactName)-$(Build.BuildNumber).tar.bz2'
-          
