@@ -22,16 +22,16 @@ stages:
           - task: ArchiveFiles@2
             inputs:
               rootFolderOrFile: '$(Build.BinariesDirectory)/main'
-              includeRootFolder: false
+              includeRootFolder: true
               archiveType: 'tar'
               tarCompression: 'bz2'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildId).tar.bz2'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
               replaceExistingArchive: true
             displayName: 'Archive Project'
           
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Artifact'
             inputs:
-              targetPath: '$(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildId).tar.bz2'
-              artifact: '$(artifactName)-$(Build.BuildId)'
+              targetPath: '$(Build.ArtifactStagingDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
+              artifact: '$(artifactName)-$(Build.BuildNumber)'
               publishLocation: 'pipeline'
