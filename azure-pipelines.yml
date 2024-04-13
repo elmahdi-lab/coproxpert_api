@@ -30,6 +30,10 @@ stages:
               archiveFile: '$(Build.BinariesDirectory)/$(artifactName)-$(Build.BuildNumber).tar.bz2'
               replaceExistingArchive: true
 
+          - script: |
+              rm -f $(Build.BinariesDirectory)/main
+              displayName: 'Remove Compiled Binary'
+
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Artifact'
             inputs:
