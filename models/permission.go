@@ -5,20 +5,26 @@ import (
 )
 
 type Role string
+type EntityType string
 
 const (
-	AdminRole   Role = "admin_role"
-	ManagerRole Role = "manager_role"
+	SuperAdminRole Role = "sa"
+	AdminRole      Role = "a"
+	ManagerRole    Role = "m"
+	UserRole       Role = "u" // TODO: this is not necessary
+)
+
+const (
+	OrganizationEntity EntityType = "organization"
+	UnitGroupEntity    EntityType = "unit_group"
+	UnitEntity         EntityType = "unit"
 )
 
 type Permission struct {
-	ID     string    `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	UserID uuid.UUID `json:"user_id" gorm:"type:uuid"`
-	Role   Role      `json:"role" gorm:"not null"`
-
+	ID         string     `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	UserID     uuid.UUID  `json:"user_id" gorm:"type:uuid"`
+	EntityType EntityType `json:"entity_type" gorm:"not null"`
+	EntityID   uuid.UUID  `json:"entity_id" gorm:"type:uuid"`
+	Role       Role       `json:"role" gorm:"not null; default:'u'"`
 	BaseModel
 }
-
-// (userID, 'manager_role', 'organization', 'organization_id')
-// (yassine, manager, via_syndic, via_syndic_id)
-// (tajeddine, manager, AUTO, AUTO_ID)

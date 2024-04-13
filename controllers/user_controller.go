@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"ithumans.com/coproxpert/helpers/security"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/services"
 )
@@ -61,13 +60,6 @@ func UpdateUserAction(c *fiber.Ctx) error {
 func DeleteUserAction(c *fiber.Ctx) error {
 	id := c.Params("id")
 	userUuid, err := uuid.Parse(id)
-
-	isAdmin := security.Guard(c, models.AdminRole)
-	isOwner := security.IsOwner(c.Locals("user").(*models.User).ID, userUuid)
-	if !isOwner && !isAdmin {
-		return handleError(c, nil, fiber.StatusUnauthorized)
-
-	}
 
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)

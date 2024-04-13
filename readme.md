@@ -53,4 +53,4 @@ https://github.com/zincsearch/zincsearch
 https://instatus.com/
 https://github.com/gofiber/recipes?tab=readme-ov-file
 
-report, invoice, payment, assembly, budget, chat, 
+report, invoice, payment, assembly, budget, chat

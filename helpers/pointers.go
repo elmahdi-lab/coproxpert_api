@@ -1,6 +1,13 @@
 package helpers
 
-import "time"
+import (
+	"github.com/google/uuid"
+	"time"
+)
+
+func UuidPointer(u uuid.UUID) *uuid.UUID {
+	return &u
+}
 
 func IntSlicePointer(s []int) *[]int {
 	return &s

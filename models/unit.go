@@ -7,9 +7,9 @@ import (
 type PropertyType string
 
 const (
-	Apartment PropertyType = "apartment"
-	House     PropertyType = "house"
-	Villa     PropertyType = "villa"
+	Apartment PropertyType = "a"
+	House     PropertyType = "h"
+	Villa     PropertyType = "v"
 )
 
 type Unit struct {
@@ -18,8 +18,7 @@ type Unit struct {
 	Name string       `json:"name" gorm:"unique"`
 	Type PropertyType `json:"type"`
 
-	BuildingID uuid.UUID `json:"building_id" gorm:"type:uuid"`
-	UserID     uuid.UUID `json:"user_id" gorm:"type:uuid"`
+	UnitGroupID uuid.UUID `json:"unit_group_id" gorm:"type:uuid"`
 
 	IsEnabled *bool `json:"is_enabled"`
 

@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/helpers"
+	"ithumans.com/coproxpert/types"
 	"time"
 )
 
@@ -25,9 +26,13 @@ type User struct {
 	ZipCode     *string `json:"zip_code"`
 	Country     *string `json:"country"`
 
-	Tries               *int       `json:"tries" gorm:"default:0"`
-	LockExpiresAt       *time.Time `json:"lock_expires_at"`
-	IsVerified          *bool      `json:"is_verified" gorm:"default:false"`
+	IsClaimed       *bool `json:"is_claimed" gorm:"default:false"` // when a new user sets a password
+	IsEmailVerified *bool `json:"is_email_verified" gorm:"default:false"`
+	IsPhoneVerified *bool `json:"is_phone_verified" gorm:"default:false"`
+
+	Tries         *int       `json:"tries" gorm:"default:0"`
+	LockExpiresAt *time.Time `json:"lock_expires_at"`
+
 	PasswordResetToken  *uuid.UUID `json:"password_reset_token"`
 	ResetTokenExpiresAt *time.Time `json:"reset_token_expires_at"`
 
@@ -35,12 +40,17 @@ type User struct {
 	Token          *uuid.UUID `json:"token"`
 	TokenExpiresAt *time.Time `json:"token_expires_at"`
 
+	SignInProvider *types.SignInProvider `json:"sign_in_provider"  gorm:"default:'email'"`
+	ProviderID     *string               `json:"provider_id"`
+
 	//Files       *[]File       `json:"files" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Resolutions *[]Resolution `json:"resolutions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Votes       *[]Vote       `json:"votes" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Complaints  *[]Complaint  `json:"complaints" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 
 	Permissions []Permission `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
+
+	LastLoginAt *time.Time `json:"last_login_at"`
 
 	BaseModel
 }
@@ -101,9 +111,9 @@ func (u *User) Anonymize() {
 	u.Password = helpers.StringPointer("***hidden***")
 }
 
-func (u *User) isAdmin() bool {
+func (u *User) IsSuperAdmin() bool {
 	for _, permission := range u.Permissions {
-		if permission.Role == AdminRole {
+		if permission.Role == SuperAdminRole {
 			return true
 		}
 	}

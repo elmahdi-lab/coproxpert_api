@@ -8,6 +8,12 @@ import (
 )
 
 func CreateUnitGroupAction(c *fiber.Ctx) error {
+
+	// TODO: Subscription is tied to the organization, so we need to set the org local
+	//if helpers.IsSubscriptionLimitExceeded() == true {
+	//	return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Subscription limit exceeded"})
+	//}
+
 	unitGroup := new(models.UnitGroup)
 
 	if err := c.BodyParser(unitGroup); err != nil {

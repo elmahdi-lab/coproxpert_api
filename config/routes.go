@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"ithumans.com/coproxpert/controllers"
 	"ithumans.com/coproxpert/middleware"
+	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
 	"log/slog"
 )
@@ -31,35 +32,37 @@ func RegisterRoutes(app *fiber.App) {
 	secureApi.Put("/organization/:id", controllers.UpdateOrganizationAction)
 	secureApi.Delete("/organization/:id", controllers.DeleteOrganizationAction)
 
-	secureApi.Post("/unit-group", controllers.CreateUnitGroupAction)
-	secureApi.Get("/unit-group/:id", controllers.GetUnitGroupAction)
-	secureApi.Put("/unit-group/:id", controllers.UpdateUnitGroupAction)
-	secureApi.Delete("/unit-group/:id", controllers.DeleteUnitGroupAction)
+	// Check subscription to limit the number of unit groups the user can create.
+	secureApi.Post("/:organizationID/unit-group", middleware.CheckSubscriptionLimit(models.UnitGroupLimit), controllers.CreateUnitGroupAction)
+	secureApi.Get("/:organizationID/unit-group/:id", controllers.GetUnitGroupAction)
+	secureApi.Put("/:organizationID/unit-group/:id", controllers.UpdateUnitGroupAction)
+	secureApi.Delete("/:organizationID/unit-group/:id", controllers.DeleteUnitGroupAction)
 
-	secureApi.Post("/unit", controllers.CreateUnitAction)
-	secureApi.Get("/unit/:id", controllers.GetUnitAction)
-	secureApi.Put("/unit/:id", controllers.UpdateUnitAction)
-	secureApi.Delete("/unit/:id", controllers.DeleteUnitAction)
+	// Check subscription to limit the number of units the user can create.
+	secureApi.Post("/:unitGroupID/unit", middleware.CheckSubscriptionLimit(models.UnitLimit), controllers.CreateUnitAction)
+	secureApi.Get("/:unitGroupID/unit/:id", controllers.GetUnitAction)
+	secureApi.Put("/:unitGroupID/unit/:id", controllers.UpdateUnitAction)
+	secureApi.Delete("/:unitGroupID/unit/:id", controllers.DeleteUnitAction)
 
-	secureApi.Post("/maintenance", controllers.CreateMaintenanceAction)
-	secureApi.Get("/maintenance/:id", controllers.GetMaintenanceAction)
-	secureApi.Put("/maintenance/:id", controllers.UpdateMaintenanceAction)
-	secureApi.Delete("/maintenance/:id", controllers.DeleteMaintenanceAction)
+	secureApi.Post("/:organizationID/maintenance", controllers.CreateMaintenanceAction)
+	secureApi.Get("/:organizationID/maintenance/:id", controllers.GetMaintenanceAction)
+	secureApi.Put("/:organizationID/maintenance/:id", controllers.UpdateMaintenanceAction)
+	secureApi.Delete("/:organizationID/maintenance/:id", controllers.DeleteMaintenanceAction)
 
-	secureApi.Post("/resolution", controllers.CreateResolutionAction)
-	secureApi.Get("/resolution/:id", controllers.GetResolutionAction)
-	secureApi.Put("/resolution/:id", controllers.UpdateResolutionAction)
+	secureApi.Post("/:organizationID/resolution", controllers.CreateResolutionAction)
+	secureApi.Get("/:organizationID/resolution/:id", controllers.GetResolutionAction)
+	secureApi.Put("/:organizationID/resolution/:id", controllers.UpdateResolutionAction)
 	secureApi.Delete("/resolution/:id", controllers.DeleteResolutionAction)
 
-	secureApi.Post("/vote", controllers.CreateVoteAction)
-	secureApi.Get("/vote/:id", controllers.GetVoteAction)
-	secureApi.Put("/vote/:id", controllers.UpdateVoteAction)
-	secureApi.Delete("/vote/:id", controllers.DeleteVoteAction)
+	secureApi.Post("/:resolutionID/vote", controllers.CreateVoteAction)
+	secureApi.Get("/:resolutionID/vote/:id", controllers.GetVoteAction)
+	secureApi.Put("/:resolutionID/vote/:id", controllers.UpdateVoteAction)
+	secureApi.Delete("/:resolutionID/vote/:id", controllers.DeleteVoteAction)
 
-	secureApi.Post("/complaint", controllers.CreateComplaintAction)
-	secureApi.Get("/complaint/:id", controllers.GetComplaintAction)
-	secureApi.Put("/complaint/:id", controllers.UpdateComplaintAction)
-	secureApi.Delete("/complaint/:id", controllers.DeleteComplaintAction)
+	secureApi.Post("/:organizationID/complaint", controllers.CreateComplaintAction)
+	secureApi.Get("/:organizationID/complaint/:id", controllers.GetComplaintAction)
+	secureApi.Put("/:organizationID/complaint/:id", controllers.UpdateComplaintAction)
+	secureApi.Delete("/:organizationID/complaint/:id", controllers.DeleteComplaintAction)
 
 	secureApi.Post("/file", controllers.UploadFileAction)
 	secureApi.Get("/file/:id", controllers.GetFileAction)

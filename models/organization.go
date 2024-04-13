@@ -7,12 +7,10 @@ import (
 )
 
 type Organization struct {
-	ID        string `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	Name      string `json:"name" gorm:"unique"`
-	IsEnabled *bool  `json:"is_enabled" gorm:"default:true"`
-
-	UserID uuid.UUID `json:"user_id" gorm:"type:uuid"`
-
+	ID           uuid.UUID     `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	Name         string        `json:"name" gorm:"unique"`
+	IsEnabled    *bool         `json:"is_enabled" gorm:"default:true"`
+	Subscription *Subscription `json:"subscription" gorm:"foreignKey:OrganizationID"`
 	BaseModel
 }
 

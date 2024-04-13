@@ -8,5 +8,9 @@ type Message struct {
 	Content string    `json:"content"`
 	UserID  uuid.UUID `json:"user_id" gorm:"type:uuid"`
 
+	IsRead bool `json:"is_read"`
+
+	// ROOM
+
 	BaseModel
 }
