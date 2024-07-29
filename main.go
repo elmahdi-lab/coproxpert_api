@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"ithumans.com/coproxpert/cmd"
 	"ithumans.com/coproxpert/config"
+	"ithumans.com/coproxpert/routes"
 	"log/slog"
 	"os"
 	"time"
@@ -29,7 +30,9 @@ func main() {
 	app := fiber.New()
 
 	app.Use(recover2.New())
-	config.RegisterRoutes(app)
+	routes.RegisterAdminRoutes(app)
+	routes.RegisterUserRoutes(app)
+	routes.RegisterPublicRoutes(app)
 
 	_ = cmd.GetDB()
 

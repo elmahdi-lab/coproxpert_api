@@ -35,22 +35,26 @@ V4 Features:
 Neon DB, MailTrap
 
 SW HTZ 2x Compute Instances for API & DB
-GCP Compute for a MicroService
-GCP Functions
-GCP PubSub
-GCP Cloud Logs
-GCP Secrets
-AWS SMS
-AWS SES Emails / Using EC2 small instance for sending emails
+GCP instance will host insta karma
+GCP Functions // TBD
+GCP PubSub // TBD
+GCP Cloud Logs // Yes
+GCP Secrets // Probably
+AWS SES Emails // Using EC2 small instance for sending emails
 Push Notifications TBD
+Hashicorp Vault
 
 
-
-
-
-https://supertokens.com/docs/thirdpartyemailpassword/introduction
 https://github.com/zincsearch/zincsearch
-https://instatus.com/
 https://github.com/gofiber/recipes?tab=readme-ov-file
 
 report, invoice, payment, assembly, budget, chat
+
+"CoProXpert, pour une gestion de qualité, en toute simplicité!"
+
+User:
+Join with invitation code.
+Login, manage own profile.
+View unit, view unit group. view resolution, vote, view documents, view budgets.
+View Inspections, view maintenance schedule, view own complaints. view reports.
+Create a complaint.

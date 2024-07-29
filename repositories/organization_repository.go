@@ -43,6 +43,22 @@ func (or *OrganizationRepository) FindAll() ([]models.Organization, error) {
 	return Organizations, nil
 }
 
+func (or *OrganizationRepository) FindByUnitID(unitID uuid.UUID) (*models.Organization, error) {
+	var organization models.Organization
+
+	query := or.db.
+		Joins("JOIN unit_groups ON unit_groups.id = units.unit_group_id").
+		Joins("JOIN organizations ON organizations.id = unit_groups.organization_id").
+		Where("units.id = ?", unitID).
+		First(&organization)
+
+	if query.Error != nil {
+		return nil, query.Error
+	}
+
+	return &organization, nil
+}
+
 func (or *OrganizationRepository) Create(Organization *models.Organization) error {
 	return or.db.Create(Organization).Error
 }
