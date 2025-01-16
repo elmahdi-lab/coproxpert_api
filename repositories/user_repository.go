@@ -27,7 +27,6 @@ func (ur *UserRepository) FindByID(id uuid.UUID) (*models.User, error) {
 	return &user, nil
 }
 
-// FindByIDAndUserID is a method to find a resource by ID and User ID
 func (ur *UserRepository) FindByIDAndUserID(resourceID uuid.UUID, userID uuid.UUID) (interface{}, error) {
 	var user models.User
 	if err := ur.db.Preload("Permissions").Where("id = ? AND user_id = ?", resourceID, userID).First(&user).Error; err != nil {
@@ -53,7 +52,10 @@ func (ur *UserRepository) FindAll() ([]models.User, error) {
 }
 func (ur *UserRepository) FindByUsername(username string) (*models.User, error) {
 	var user models.User
-	if err := ur.db.Preload("Permissions").Where("username = ?", username).First(&user).Error; err != nil {
+	if err := ur.db.
+		Preload("Permissions").
+		Where("username = ?", username).
+		First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

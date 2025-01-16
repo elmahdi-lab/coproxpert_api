@@ -1,10 +1,11 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/helpers"
 	"ithumans.com/coproxpert/types"
-	"time"
 )
 
 const LockDurationMinutes = 5
@@ -48,10 +49,8 @@ type User struct {
 	//Votes       *[]Vote       `json:"votes" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Complaints  *[]Complaint  `json:"complaints" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 
-	Permissions []Permission `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
-
-	LastLoginAt *time.Time `json:"last_login_at"`
-
+	Permissions   []Permission   `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
+	Subscriptions []Subscription `json:"subscriptions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	BaseModel
 }
 
@@ -94,14 +93,13 @@ func (u *User) Lock() {
 }
 
 func (u *User) Unlock() {
-	u.Tries = nil
+	u.Tries = helpers.IntPointer(0)
 	u.LockExpiresAt = nil
 }
 
 func (u *User) IncrementTries() {
 	if u.Tries == nil {
-		tries := 1
-		u.Tries = &tries
+		u.Tries = helpers.IntPointer(1)
 	} else {
 		*u.Tries++
 	}

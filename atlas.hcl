@@ -12,7 +12,7 @@ data "external_schema" "gorm" {
 
 env "gorm" {
   src = data.external_schema.gorm.url
-  dev = "docker://postgres"
+  dev = "postgres://postgres:postgres@localhost:5432/coproxpert_db?sslmode=disable&search_path=public"
   migration {
     dir = "file://migrations"
   }

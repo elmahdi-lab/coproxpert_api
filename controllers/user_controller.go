@@ -39,7 +39,7 @@ func GetUserAction(c *fiber.Ctx) error {
 	}
 	user.Anonymize()
 
-	return c.JSON(fiber.Map{"user": user})
+	return c.JSON(user)
 }
 
 func UpdateUserAction(c *fiber.Ctx) error {
@@ -119,7 +119,7 @@ func LoginAction(c *fiber.Ctx) error {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
 	loggedUser.Anonymize()
-	return c.JSON(fiber.Map{"user": loggedUser})
+	return c.JSON(loggedUser)
 }
 
 func LogoutAction(c *fiber.Ctx) error {

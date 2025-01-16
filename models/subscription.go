@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // SubscriptionType defines the type of subscription.
@@ -17,6 +18,7 @@ const (
 )
 
 const (
+	Free       SubscriptionType = "Free"
 	Tier1      SubscriptionType = "Tier1"
 	Tier2      SubscriptionType = "Tier2"
 	Tier3      SubscriptionType = "Tier3"
@@ -30,21 +32,26 @@ type SubscriptionTier struct {
 }
 
 var SubscriptionTiers = map[SubscriptionType]SubscriptionTier{
-	Tier1: {
+	Free: {
 		UnitGroupsLimit: 1,
-		UnitsLimit:      15,
+		UnitsLimit:      12,
+	},
+
+	Tier1: {
+		UnitGroupsLimit: 2,
+		UnitsLimit:      20,
 	},
 	Tier2: {
 		UnitGroupsLimit: 5,
-		UnitsLimit:      75,
+		UnitsLimit:      50,
 	},
 	Tier3: {
 		UnitGroupsLimit: 15,
 		UnitsLimit:      250,
 	},
 	Enterprise: {
-		UnitGroupsLimit: -1, // -1 for unlimited
-		UnitsLimit:      -1, // -1 for unlimited
+		UnitGroupsLimit: 100,
+		UnitsLimit:      10000,
 	},
 }
 
@@ -56,9 +63,10 @@ type Feature struct {
 
 type Subscription struct {
 	ID               uuid.UUID        `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	OrganizationID   uuid.UUID        `json:"organizationID" gorm:"type:uuid"`
+	OrganizationID   *uuid.UUID       `json:"organizationID" gorm:"type:uuid;constraint:OnDelete:CASCADE;"`
+	UserID           *uuid.UUID       `json:"userID" gorm:"type:uuid;constraint:OnDelete:CASCADE;"`
 	SubscriptionType SubscriptionType `json:"subscriptionType" gorm:"not null, default:'Tier1'"`
-	ExpiresAt        time.Time        `json:"expiresAt"`
+	ExpiresAt        *time.Time       `json:"expiresAt"`
 	Features         []Feature        `json:"features" gorm:"many2many:subscription_features;"`
 	BaseModel
 }

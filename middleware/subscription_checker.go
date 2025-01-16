@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"log/slog"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
-	"log/slog"
 )
 
 // TODO: in case we limit the unit groups and units, consider counting

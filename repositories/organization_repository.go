@@ -78,3 +78,18 @@ func (or *OrganizationRepository) DeleteByID(id uuid.UUID) bool {
 	}
 	return false
 }
+
+func (or *OrganizationRepository) FindByUnitGroupID(id uuid.UUID) (*models.Organization, error) {
+	var organization models.Organization
+
+	query := or.db.
+		Joins("JOIN organizations ON organizations.id = unit_groups.organization_id").
+		Where("unit_groups.id = ?", id).
+		First(&organization)
+
+	if query.Error != nil {
+		return nil, query.Error
+	}
+
+	return &organization, nil
+}

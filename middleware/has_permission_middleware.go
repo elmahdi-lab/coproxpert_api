@@ -17,20 +17,23 @@ import (
 	TODO: as a manager or admin get access to the unit or resources that belongs to the organization with the correct Role Level.
 */
 
-func HasPermission(et models.EntityType, r models.Role) func(*fiber.Ctx) error {
+func HasPermission(entityType models.EntityType, role models.Role) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		user := c.Locals("user").(*models.User)
-
 		uuID := uuid.Nil
-		switch et {
-		case models.OrganizationEntity:
-			uuID, _ = uuid.Parse(c.Params("organizationID"))
+		orgUuid, _ := uuid.Parse(c.Params("organizationID"))
 
+		switch entityType {
+		case models.OrganizationEntity:
+			uuID = orgUuid
 		case models.UnitEntity:
 			uuID, _ = uuid.Parse(c.Params("unitID"))
+
+		case models.UnitGroupEntity:
+			uuID, _ = uuid.Parse(c.Params("unitGroupID"))
 		}
 
-		if !services.HasPermission(user, et, uuID, r) {
+		if !services.HasPermission(user, entityType, uuID, role, orgUuid) {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"message": "Unauthorized",
 			})

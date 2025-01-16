@@ -2,12 +2,14 @@ package services
 
 import (
 	"errors"
+	"log/slog"
+	"time"
+
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/helpers"
 	"ithumans.com/coproxpert/helpers/security"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
-	"log/slog"
-	"time"
 )
 
 func CreateUser(u *models.User) (*models.User, error) {
@@ -23,11 +25,14 @@ func CreateUser(u *models.User) (*models.User, error) {
 	userRepository := repositories.NewUserRepository()
 	hashedPassword, _ := security.HashPassword(*u.Password)
 	u.Password = &hashedPassword
+	u.Tries = helpers.IntPointer(0)
+
 	err := userRepository.Create(u)
 	if err != nil {
 		slog.Error("error creating user", u)
 		return nil, err
 	}
+
 	return u, nil
 }
 
@@ -151,7 +156,6 @@ func Login(u *models.User) (*models.User, error) {
 		return nil, errors.New(errMessage)
 	}
 
-	user.Tries = new(int)
 	user.Unlock()
 	user.RefreshToken()
 	if err := userRepository.Update(user); err != nil {

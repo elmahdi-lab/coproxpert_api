@@ -16,6 +16,7 @@ const (
 
 const (
 	OrganizationEntity EntityType = "organization"
+	UnitGroupEntity    EntityType = "unit_group"
 	UnitEntity         EntityType = "unit"
 )
 
@@ -26,4 +27,8 @@ type Permission struct {
 	EntityType EntityType `json:"entity_type" gorm:"type:uuid"`
 	Role       Role       `json:"role" gorm:"not null; default:'u'"`
 	BaseModel
+}
+
+func (p *Permission) IsAdmin() bool {
+	return p.Role == AdminRole
 }

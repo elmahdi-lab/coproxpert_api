@@ -1,6 +1,10 @@
 package main
 
 import (
+	"log/slog"
+	"os"
+	"time"
+
 	_ "ariga.io/atlas-provider-gorm/gormschema"
 	"github.com/gofiber/fiber/v2"
 	recover2 "github.com/gofiber/fiber/v2/middleware/recover"
@@ -8,9 +12,6 @@ import (
 	"ithumans.com/coproxpert/cmd"
 	"ithumans.com/coproxpert/config"
 	"ithumans.com/coproxpert/routes"
-	"log/slog"
-	"os"
-	"time"
 )
 
 func main() {
@@ -30,8 +31,8 @@ func main() {
 	app := fiber.New()
 
 	app.Use(recover2.New())
-	routes.RegisterAdminRoutes(app)
 	routes.RegisterUserRoutes(app)
+	routes.RegisterAdminRoutes(app)
 	routes.RegisterPublicRoutes(app)
 
 	_ = cmd.GetDB()

@@ -1,6 +1,22 @@
+Snippets:
+```bash
+go get -u ./... 
+go mod tidy
+
+atlas migrate diff --env gorm 
+atlas migrate apply --env gorm --url "postgres://postgres:postgres@localhost:5432/coproxpert_db?sslmode=disable&search_path=public" --revisions-schema true
+atlas migrate validate --env gorm 
+```
+
 authentication is already set by checking each request by the auth.go middleware.
 Levels of Permission: Admin, Manager, User.
 Separate admin/managers from users
+
+units : only users but any admin or manager in the org can manage.
+unit group : only org manager or admin can manage.
+org : only org admin (create unit groups...)
+
+super admin anything.
 
 V1 Core Features:
 - X User Authentication
@@ -34,7 +50,7 @@ V4 Features:
 ## INFRA & DEVTOOLS
 Neon DB, MailTrap
 
-SW HTZ 2x Compute Instances for API & DB
+HTZ 2x Compute Instances for API & DB
 GCP instance will host insta karma
 GCP Functions // TBD
 GCP PubSub // TBD
@@ -58,3 +74,8 @@ Login, manage own profile.
 View unit, view unit group. view resolution, vote, view documents, view budgets.
 View Inspections, view maintenance schedule, view own complaints. view reports.
 Create a complaint.
+
+
+# User Actions
+id, user_id, action, is_viewed, created_at, updated_at
+action types: login, sign up, create something, receive something
