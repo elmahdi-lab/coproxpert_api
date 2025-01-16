@@ -19,7 +19,7 @@ func UploadFileAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(err)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"file": fileRecord})
+	return c.Status(fiber.StatusCreated).JSON(fileRecord)
 }
 
 func GetFileAction(ctx *fiber.Ctx) error {
@@ -32,7 +32,7 @@ func GetFileAction(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(err)
 	}
 
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"file": fileRecord})
+	return ctx.Status(fiber.StatusOK).JSON(fileRecord)
 }
 
 func UpdateFileAction(ctx *fiber.Ctx) error {

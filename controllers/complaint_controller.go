@@ -22,7 +22,7 @@ func CreateComplaintAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Complaint created successfully", "complaint": createdComplaint})
+	return c.JSON(createdComplaint)
 }
 
 func GetComplaintAction(c *fiber.Ctx) error {
@@ -38,7 +38,7 @@ func GetComplaintAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"complaint": complaint})
+	return c.JSON(complaint)
 }
 
 func UpdateComplaintAction(c *fiber.Ctx) error {
@@ -54,7 +54,7 @@ func UpdateComplaintAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Complaint updated successfully", "complaint": updatedComplaint})
+	return c.JSON(updatedComplaint)
 }
 
 func DeleteComplaintAction(c *fiber.Ctx) error {
@@ -67,7 +67,7 @@ func DeleteComplaintAction(c *fiber.Ctx) error {
 	deleted := services.DeleteComplaintByID(complaintUUID)
 
 	if deleted != true {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "complaint not deleted"})
 	}
 
 	return c.JSON(fiber.Map{"message": "Complaint deleted successfully"})

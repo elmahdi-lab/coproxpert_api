@@ -19,3 +19,19 @@ func Subscribe(c *fiber.Ctx) error {
 
 	return c.JSON(subscription)
 }
+
+func Unsubscribe(c *fiber.Ctx) error {
+	//user := c.Locals("user").(*models.User)
+	//subscriptionType := c.Params("type")
+	//
+	//err := services.(user, models.SubscriptionType(subscriptionType))
+	//if err != nil {
+	//	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	//		"message": err.Error(),
+	//	})
+	//}
+
+	return c.JSON(fiber.Map{
+		"message": "Subscription deleted successfully",
+	})
+}

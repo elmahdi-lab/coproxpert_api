@@ -22,7 +22,7 @@ func CreateUnitAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Unit created successfully", "unit": createdUnit})
+	return c.JSON(createdUnit)
 }
 
 func GetUnitAction(c *fiber.Ctx) error {
@@ -38,7 +38,7 @@ func GetUnitAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"unit": unit})
+	return c.JSON(unit)
 }
 
 func UpdateUnitAction(c *fiber.Ctx) error {
@@ -54,7 +54,7 @@ func UpdateUnitAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Unit updated successfully", "unit": updatedUnit})
+	return c.JSON(updatedUnit)
 }
 
 func DeleteUnitAction(c *fiber.Ctx) error {
@@ -67,7 +67,7 @@ func DeleteUnitAction(c *fiber.Ctx) error {
 	deleted := services.DeleteUnitByID(unitUUID)
 
 	if deleted != true {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Unit not deleted"})
 	}
 
 	return c.JSON(fiber.Map{"message": "Unit deleted successfully"})

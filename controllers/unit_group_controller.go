@@ -29,7 +29,7 @@ func CreateUnitGroupAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "UnitGroup created successfully", "unitGroup": createdUnitGroup})
+	return c.JSON(createdUnitGroup)
 
 }
 
@@ -43,7 +43,7 @@ func GetUnitGroupAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"unitGroup": unitGroup})
+	return c.JSON(unitGroup)
 }
 
 func UpdateUnitGroupAction(c *fiber.Ctx) error {
@@ -60,7 +60,7 @@ func UpdateUnitGroupAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "UnitGroup updated successfully", "unitGroup": updatedUnitGroup})
+	return c.JSON(updatedUnitGroup)
 }
 
 func DeleteUnitGroupAction(c *fiber.Ctx) error {

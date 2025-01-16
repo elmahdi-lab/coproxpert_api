@@ -22,7 +22,7 @@ func CreateResolutionAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Resolution created successfully", "resolution": createdResolution})
+	return c.JSON(createdResolution)
 }
 
 func GetResolutionAction(c *fiber.Ctx) error {
@@ -38,7 +38,7 @@ func GetResolutionAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"resolution": resolution})
+	return c.JSON(resolution)
 }
 
 func UpdateResolutionAction(c *fiber.Ctx) error {
@@ -54,7 +54,7 @@ func UpdateResolutionAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Resolution updated successfully", "resolution": updatedResolution})
+	return c.JSON(updatedResolution)
 }
 
 func DeleteResolutionAction(c *fiber.Ctx) error {
@@ -67,7 +67,7 @@ func DeleteResolutionAction(c *fiber.Ctx) error {
 	deleted := services.DeleteResolutionByID(resolutionUUID)
 
 	if deleted != true {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "resolution not deleted"})
 	}
 
 	return c.JSON(fiber.Map{"message": "Resolution deleted successfully"})

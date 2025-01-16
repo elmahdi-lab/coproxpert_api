@@ -22,7 +22,7 @@ func CreateVoteAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Vote created successfully", "vote": createdVote})
+	return c.JSON(createdVote)
 }
 
 func GetVoteAction(c *fiber.Ctx) error {
@@ -38,7 +38,7 @@ func GetVoteAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"vote": vote})
+	return c.JSON(vote)
 }
 
 func UpdateVoteAction(c *fiber.Ctx) error {
@@ -54,7 +54,7 @@ func UpdateVoteAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Vote updated successfully", "vote": updatedVote})
+	return c.JSON(updatedVote)
 }
 
 func DeleteVoteAction(c *fiber.Ctx) error {
@@ -67,7 +67,7 @@ func DeleteVoteAction(c *fiber.Ctx) error {
 	deleted := services.DeleteVoteByID(voteUUID)
 
 	if deleted != true {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "vote not deleted"})
 	}
 
 	return c.JSON(fiber.Map{"message": "Vote deleted successfully"})

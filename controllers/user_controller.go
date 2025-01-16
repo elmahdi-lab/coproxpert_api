@@ -22,7 +22,9 @@ func CreateUserAction(c *fiber.Ctx) error {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"user": fiber.Map{"id": createdUser.ID, "username": *createdUser.Username}})
+	createdUser.Anonymize()
+
+	return c.Status(fiber.StatusCreated).JSON(createdUser)
 }
 
 func GetUserAction(c *fiber.Ctx) error {
@@ -54,7 +56,7 @@ func UpdateUserAction(c *fiber.Ctx) error {
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
-	return c.JSON(fiber.Map{"message": "User updated successfully", "user": updatedUser})
+	return c.JSON(updatedUser)
 }
 
 func DeleteUserAction(c *fiber.Ctx) error {

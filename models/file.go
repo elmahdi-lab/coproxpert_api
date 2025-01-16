@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/google/uuid"
 	"regexp"
+
+	"github.com/google/uuid"
 )
 
 type Provider string

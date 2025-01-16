@@ -22,7 +22,7 @@ func CreateMaintenanceAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Maintenance created successfully", "maintenance": createdMaintenance})
+	return c.JSON(createdMaintenance)
 }
 
 func GetMaintenanceAction(c *fiber.Ctx) error {
@@ -38,7 +38,7 @@ func GetMaintenanceAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"maintenance": maintenance})
+	return c.JSON(maintenance)
 }
 
 func UpdateMaintenanceAction(c *fiber.Ctx) error {
@@ -54,7 +54,7 @@ func UpdateMaintenanceAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "Maintenance updated successfully", "maintenance": updatedMaintenance})
+	return c.JSON(updatedMaintenance)
 }
 
 func DeleteMaintenanceAction(c *fiber.Ctx) error {
@@ -67,7 +67,7 @@ func DeleteMaintenanceAction(c *fiber.Ctx) error {
 	deleted := services.DeleteMaintenanceByID(maintenanceUUID)
 
 	if deleted != true {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "maintenance not deleted"})
 	}
 
 	return c.JSON(fiber.Map{"message": "Maintenance deleted successfully"})
