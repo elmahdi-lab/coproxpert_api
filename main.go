@@ -31,9 +31,9 @@ func main() {
 	app := fiber.New()
 
 	app.Use(recover2.New())
+	routes.RegisterPublicRoutes(app)
 	routes.RegisterUserRoutes(app)
 	routes.RegisterAdminRoutes(app)
-	routes.RegisterPublicRoutes(app)
 
 	_ = cmd.GetDB()
 

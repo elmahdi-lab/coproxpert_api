@@ -1,9 +1,10 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"time"
 )
 
 type MaintenanceType string
@@ -19,15 +20,14 @@ const (
 )
 
 type Maintenance struct {
-	ID             string          `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	OrganizationID *uuid.UUID      `json:"organization_id" gorm:"type:uuid"`
-	UnitGroupId    *uuid.UUID      `json:"unit_group_id" gorm:"type:uuid"`
-	UnitId         *uuid.UUID      `json:"unit_id" gorm:"type:uuid"`
-	Type           MaintenanceType `json:"type" gorm:"not null;"`
-	Comment        string          `json:"comment" gorm:"type:varchar(255)"`
-	StartDate      time.Time       `json:"start_date" gorm:"not null"`
-	EndDate        time.Time       `json:"end_date" gorm:"not null; check:end_date > start_date"`
-	IsDone         bool            `json:"is_done" gorm:"default:false; not null"`
+	ID          string          `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	UnitGroupId *uuid.UUID      `json:"unit_group_id" gorm:"type:uuid"`
+	UnitId      *uuid.UUID      `json:"unit_id" gorm:"type:uuid"`
+	Type        MaintenanceType `json:"type" gorm:"not null;"`
+	Comment     string          `json:"comment" gorm:"type:varchar(255)"`
+	StartDate   time.Time       `json:"start_date" gorm:"not null"`
+	EndDate     time.Time       `json:"end_date" gorm:"not null; check:end_date > start_date"`
+	IsDone      bool            `json:"is_done" gorm:"default:false; not null"`
 	BaseModel
 }
 

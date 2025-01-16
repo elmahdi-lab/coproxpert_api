@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/helpers"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/services"
 )
@@ -14,7 +15,9 @@ func CreateUnitGroupAction(c *fiber.Ctx) error {
 	//	return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Subscription limit exceeded"})
 	//}
 
+	user := c.Locals("user").(*models.User)
 	unitGroup := new(models.UnitGroup)
+	unitGroup.UserID = helpers.UuidPointer(user.ID)
 
 	if err := c.BodyParser(unitGroup); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/helpers"
 )
 
 // SubscriptionType defines the type of subscription.
@@ -12,31 +13,23 @@ type SubscriptionType string
 type SubscriptionLimitType string
 
 const (
-	OrganizationLimit SubscriptionLimitType = "organization"
-	UnitLimit         SubscriptionLimitType = "unit"
-	UnitGroupLimit    SubscriptionLimitType = "unit_group"
+	UnitLimit      SubscriptionLimitType = "unit"
+	UnitGroupLimit SubscriptionLimitType = "unit_group"
 )
 
 const (
-	Free       SubscriptionType = "Free"
-	Tier1      SubscriptionType = "Tier1"
-	Tier2      SubscriptionType = "Tier2"
-	Tier3      SubscriptionType = "Tier3"
-	Enterprise SubscriptionType = "Enterprise"
+	Tier1      SubscriptionType = "t1"
+	Tier2      SubscriptionType = "t2"
+	Tier3      SubscriptionType = "t3"
+	Enterprise SubscriptionType = "e"
 )
 
-// SubscriptionTier defines the limits for each subscription type.
 type SubscriptionTier struct {
 	UnitGroupsLimit int64
 	UnitsLimit      int64
 }
 
 var SubscriptionTiers = map[SubscriptionType]SubscriptionTier{
-	Free: {
-		UnitGroupsLimit: 1,
-		UnitsLimit:      12,
-	},
-
 	Tier1: {
 		UnitGroupsLimit: 2,
 		UnitsLimit:      20,
@@ -63,10 +56,15 @@ type Feature struct {
 
 type Subscription struct {
 	ID               uuid.UUID        `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	OrganizationID   *uuid.UUID       `json:"organizationID" gorm:"type:uuid;constraint:OnDelete:CASCADE;"`
 	UserID           *uuid.UUID       `json:"userID" gorm:"type:uuid;constraint:OnDelete:CASCADE;"`
 	SubscriptionType SubscriptionType `json:"subscriptionType" gorm:"not null, default:'Tier1'"`
 	ExpiresAt        *time.Time       `json:"expiresAt"`
 	Features         []Feature        `json:"features" gorm:"many2many:subscription_features;"`
 	BaseModel
+}
+
+func (s *Subscription) CreateTrialSubscription(user *User, subscriptionType SubscriptionType) {
+	s.UserID = helpers.UuidPointer(user.ID)
+	s.SubscriptionType = subscriptionType
+	s.ExpiresAt = helpers.TimePointer(time.Now().AddDate(0, 0, 30))
 }

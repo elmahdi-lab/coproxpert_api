@@ -46,3 +46,10 @@ func DeleteUnitGroup(id uuid.UUID) bool {
 	}
 	return false
 }
+
+func CountUnitGroupsByUser(user *models.User) int64 {
+	unitGroupRepository := repositories.NewUnitGroupRepository()
+
+	count := unitGroupRepository.CountUnitGroupsByUserID(user.ID)
+	return count
+}

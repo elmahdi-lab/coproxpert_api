@@ -54,3 +54,12 @@ func DeleteUnitByID(id uuid.UUID) bool {
 
 	return unitRepository.DeleteByID(id)
 }
+
+func CountUnitsByUser(user *models.User) int64 {
+	unitRepository := repositories.NewUnitRepository()
+	if unitRepository == nil {
+		return 0
+	}
+
+	return unitRepository.CountUnitsByUserID(user.ID)
+}

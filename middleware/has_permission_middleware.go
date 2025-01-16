@@ -24,8 +24,6 @@ func HasPermission(entityType models.EntityType, role models.Role) func(*fiber.C
 		orgUuid, _ := uuid.Parse(c.Params("organizationID"))
 
 		switch entityType {
-		case models.OrganizationEntity:
-			uuID = orgUuid
 		case models.UnitEntity:
 			uuID, _ = uuid.Parse(c.Params("unitID"))
 

@@ -64,3 +64,9 @@ func (ur *UnitGroupRepository) CountByOrganizationID(organizationID uuid.UUID) (
 	}
 	return count, nil
 }
+
+func (ur *UnitGroupRepository) CountUnitGroupsByUserID(id uuid.UUID) int64 {
+	var count int64
+	ur.db.Model(&models.UnitGroup{}).Where("user_id = ?", id).Count(&count)
+	return count
+}

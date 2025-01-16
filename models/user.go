@@ -49,8 +49,10 @@ type User struct {
 	//Votes       *[]Vote       `json:"votes" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	//Complaints  *[]Complaint  `json:"complaints" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 
-	Permissions   []Permission   `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
-	Subscriptions []Subscription `json:"subscriptions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Permissions  []Permission  `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
+	Subscription *Subscription `json:"subscription" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Units        *[]Unit       `json:"units" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	UnitGroups   *[]UnitGroup  `json:"unit_groups" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	BaseModel
 }
 

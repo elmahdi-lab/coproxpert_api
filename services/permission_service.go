@@ -3,7 +3,6 @@ package services
 import (
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/models"
-	"ithumans.com/coproxpert/repositories"
 )
 
 func HasPermission(user *models.User, entityType models.EntityType, entityID uuid.UUID, role models.Role, orgUuid uuid.UUID) bool {
@@ -19,29 +18,6 @@ func HasPermission(user *models.User, entityType models.EntityType, entityID uui
 	}
 
 	// Initialize the repository
-	organizationRepository := repositories.NewOrganizationRepository()
-	organization, err := organizationRepository.FindByUnitID(orgUuid)
 
-	var expectedRole models.Role
-
-	switch entityType {
-	case models.UnitEntity:
-		if role == models.ManagerRole || role == models.AdminRole {
-			expectedRole = role
-		} else {
-			expectedRole = models.ManagerRole
-		}
-	case models.UnitGroupEntity:
-		expectedRole = models.AdminRole
-	case models.OrganizationEntity:
-		expectedRole = models.AdminRole
-	}
-
-	// Check if the organization was found
-	if err != nil || organization == nil {
-		return false
-	}
-
-	// Recursively check permissions at the organization level
-	return HasPermission(user, models.OrganizationEntity, organization.ID, expectedRole, orgUuid)
+	return true
 }

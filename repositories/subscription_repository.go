@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"ithumans.com/coproxpert/cmd"
@@ -39,26 +41,33 @@ func (sr *SubscriptionRepository) DeleteByID(id uuid.UUID) bool {
 	return false
 }
 
-func (sr *SubscriptionRepository) FindByUser(user *models.User) ([]models.Subscription, error) {
-	var subscription []models.Subscription
-	if err := sr.db.Where("user_id = ?", user.ID).Find(&subscription).Error; err != nil {
+func (sr *SubscriptionRepository) FindByUserID(userID uuid.UUID) (*models.Subscription, error) {
+	var subscription *models.Subscription
+	if err := sr.db.Where("user_id = ?", userID).First(&subscription).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return subscription, nil
 }
 
+func (sr *SubscriptionRepository) FindByUser(user *models.User) (*models.Subscription, error) {
+	return sr.FindByUserID(user.ID)
+}
+
 func (sr *SubscriptionRepository) FindByID(id uuid.UUID) (*models.Subscription, error) {
-	var Subscription models.Subscription
-	if err := sr.db.First(&Subscription, id).Error; err != nil {
+	var subscription *models.Subscription
+	if err := sr.db.First(&subscription, id).Error; err != nil {
 		return nil, err
 	}
-	return &Subscription, nil
+	return subscription, nil
 }
 
 func (sr *SubscriptionRepository) FindAll() ([]models.Subscription, error) {
-	var Subscriptions []models.Subscription
-	if err := sr.db.Find(&Subscriptions).Error; err != nil {
+	var subscriptions []models.Subscription
+	if err := sr.db.Find(&subscriptions).Error; err != nil {
 		return nil, err
 	}
-	return Subscriptions, nil
+	return subscriptions, nil
 }

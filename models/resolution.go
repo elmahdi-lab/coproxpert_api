@@ -4,7 +4,6 @@ import "github.com/google/uuid"
 
 type Resolution struct {
 	ID                 string    `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	OrganizationID     uuid.UUID `json:"organization_id" gorm:"type:uuid"`
 	UnitGroupID        uuid.UUID `json:"unit_group_id" gorm:"type:uuid"`
 	Status             Status    `json:"status" gorm:"default:0"`
 	PercentageRequired int       `json:"percentage_required" gorm:"default:51"`

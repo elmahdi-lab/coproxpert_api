@@ -15,9 +15,8 @@ const (
 )
 
 const (
-	OrganizationEntity EntityType = "organization"
-	UnitGroupEntity    EntityType = "unit_group"
-	UnitEntity         EntityType = "unit"
+	UnitGroupEntity EntityType = "unit_group"
+	UnitEntity      EntityType = "unit"
 )
 
 type Permission struct {
