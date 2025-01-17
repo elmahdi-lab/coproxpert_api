@@ -12,20 +12,10 @@ func RegisterAdminRoutes(app *fiber.App) {
 	// Group with authentication middleware for secure routes
 	api := app.Group("/api", middleware.AuthMiddleware)
 
-	const userPath = "/user/:id"
-	const organizationPath = "/:organizationID/organization"
-	const unitGroupPath = "/:organizationID/unit-group/:id"
-	const unitPath = "/:organizationID/:unitGroupID/unit/:id"
-	const maintenancePath = "/:organizationID/maintenance/:id"
-	const resolutionPath = "/:organizationID/resolution/:id"
-	const votePath = "/:organizationID/:resolutionID/vote/:id"
-	const complaintPath = "/:organizationID/complaint/:id"
-	const filePath = "/:organizationID/file/:id"
-
 	api.Post("/user", controllers.CreateUserAction)
-	api.Get(userPath, controllers.GetUserAction)
-	api.Put(userPath, controllers.UpdateUserAction)
-	api.Delete(userPath, controllers.DeleteUserAction)
+	api.Get("/user/:id", controllers.GetUserAction)
+	api.Put("/user/:id", controllers.UpdateUserAction)
+	api.Delete("/user/:id", controllers.DeleteUserAction)
 	api.Put("/user/password/:id", controllers.UpdatePasswordAction)
 	api.Post("/user/logout", controllers.LogoutAction)
 
@@ -40,40 +30,38 @@ func RegisterAdminRoutes(app *fiber.App) {
 
 	// Check subscription to limit the number of unit groups the user can create.
 	api.Post("/unit-group", middleware.CheckSubscriptionLimit(models.UnitGroupLimit), controllers.CreateUnitGroupAction)
-	api.Get(unitGroupPath, controllers.GetUnitGroupAction)
-	api.Put(unitGroupPath, controllers.UpdateUnitGroupAction)
-	api.Delete(unitGroupPath, controllers.DeleteUnitGroupAction)
+	api.Get("/unit-group/:id", controllers.GetUnitGroupAction)
+	api.Put("/unit-group/:id", controllers.UpdateUnitGroupAction)
+	api.Delete("/unit-group/:id", controllers.DeleteUnitGroupAction)
 
 	// Check subscription to limit the number of units the user can create.
-	api.Post("/:unitGroupID/unit", middleware.CheckSubscriptionLimit(models.UnitLimit), controllers.CreateUnitAction)
-	api.Get(unitPath, controllers.GetUnitAction)
-	api.Put(unitPath, controllers.UpdateUnitAction)
-	api.Delete(unitPath, controllers.DeleteUnitAction)
+	api.Post("/unit", middleware.CheckSubscriptionLimit(models.UnitLimit), controllers.CreateUnitAction)
+	api.Get("/unit/:id", controllers.GetUnitAction)
+	api.Put("/unit/:id", controllers.UpdateUnitAction)
+	api.Delete("/unit/:id", controllers.DeleteUnitAction)
 
 	api.Post("/maintenance", controllers.CreateMaintenanceAction)
-	api.Get(maintenancePath, controllers.GetMaintenanceAction)
-	api.Put(maintenancePath, controllers.UpdateMaintenanceAction)
-	api.Delete(maintenancePath, controllers.DeleteMaintenanceAction)
+	api.Get("/maintenance/:id", controllers.GetMaintenanceAction)
+	api.Put("/maintenance/:id", controllers.UpdateMaintenanceAction)
+	api.Delete("/maintenance/:id", controllers.DeleteMaintenanceAction)
 
 	api.Post("/resolution", controllers.CreateResolutionAction)
-	api.Get(resolutionPath, controllers.GetResolutionAction)
-	api.Put(resolutionPath, controllers.UpdateResolutionAction)
-	api.Delete(resolutionPath, controllers.DeleteResolutionAction)
+	api.Get("/resolution/:id", controllers.GetResolutionAction)
+	api.Put("/resolution/:id", controllers.UpdateResolutionAction)
+	api.Delete("/resolution/:id", controllers.DeleteResolutionAction)
 
-	// TODO: allow only unit users to vote.
-	api.Post("/:resolutionID/vote", controllers.CreateVoteAction)
-	api.Get(votePath, controllers.GetVoteAction)
-	api.Put(votePath, controllers.UpdateVoteAction)
-	api.Delete(votePath, controllers.DeleteVoteAction)
+	api.Post("/vote", controllers.CreateVoteAction)
+	api.Get("/vote/:id", controllers.GetVoteAction)
+	api.Put("/vote/:id", controllers.UpdateVoteAction)
+	api.Delete("/vote/:id", controllers.DeleteVoteAction)
 
-	// TODO: allow only unit users to create complaints.
 	api.Post("/complaint", controllers.CreateComplaintAction)
-	api.Get(complaintPath, controllers.GetComplaintAction)       // user or manager can view complaints.
-	api.Put(complaintPath, controllers.UpdateComplaintAction)    // user or manager can update complaints.
-	api.Delete(complaintPath, controllers.DeleteComplaintAction) // manager can delete
+	api.Get("/complaint/:id", controllers.GetComplaintAction)       // user or manager can view complaints.
+	api.Put("/complaint/:id", controllers.UpdateComplaintAction)    // user or manager can update complaints.
+	api.Delete("/complaint/:id", controllers.DeleteComplaintAction) // manager can delete
 
 	api.Post("/file", controllers.UploadFileAction)
-	api.Get(filePath, controllers.GetFileAction)
-	api.Put(filePath, controllers.UpdateFileAction)
-	api.Delete(filePath, controllers.DeleteFileAction)
+	api.Get("/file/:id", controllers.GetFileAction)
+	api.Put("/file/:id", controllers.UpdateFileAction)
+	api.Delete("/file/:id", controllers.DeleteFileAction)
 }

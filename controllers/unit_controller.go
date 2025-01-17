@@ -42,19 +42,24 @@ func GetUnitAction(c *fiber.Ctx) error {
 }
 
 func UpdateUnitAction(c *fiber.Ctx) error {
+	id := c.Params("id")
+	parsedId, _ := uuid.Parse(id)
+	if parsedId == uuid.Nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "id is required"})
+	}
+
 	unit := new(models.Unit)
-
+	unit.ID = parsedId
 	if err := c.BodyParser(unit); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "error parsing body"})
 	}
 
-	updatedUnit, err := services.UpdateUnit(unit)
-
+	updateUnit, err := services.UpdateUnit(unit)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return err
 	}
 
-	return c.JSON(updatedUnit)
+	return c.JSON(updateUnit)
 }
 
 func DeleteUnitAction(c *fiber.Ctx) error {
