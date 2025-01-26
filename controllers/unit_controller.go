@@ -5,11 +5,14 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"ithumans.com/coproxpert/events"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/services"
 )
 
 func CreateUnitAction(c *fiber.Ctx) error {
+
+	user := c.Locals("user").(*models.User)
 	unit := new(models.Unit)
 
 	if err := c.BodyParser(unit); err != nil {
@@ -20,6 +23,11 @@ func CreateUnitAction(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	err = events.PublishMessage(user.ID, createdUnit.ID, models.UnitEntity, events.Created)
+	if err != nil {
+		return err
 	}
 
 	return c.JSON(createdUnit)
@@ -42,6 +50,7 @@ func GetUnitAction(c *fiber.Ctx) error {
 }
 
 func UpdateUnitAction(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
 	id := c.Params("id")
 	parsedId, _ := uuid.Parse(id)
 	if parsedId == uuid.Nil {
@@ -59,10 +68,16 @@ func UpdateUnitAction(c *fiber.Ctx) error {
 		return err
 	}
 
+	err = events.PublishMessage(user.ID, updateUnit.ID, models.UnitEntity, events.Updated)
+	if err != nil {
+		return err
+	}
+
 	return c.JSON(updateUnit)
 }
 
 func DeleteUnitAction(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
 	id := c.Params("id")
 	unitUUID, err := uuid.Parse(id)
 	if err != nil {
@@ -73,6 +88,11 @@ func DeleteUnitAction(c *fiber.Ctx) error {
 
 	if deleted != true {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Unit not deleted"})
+	}
+
+	err = events.PublishMessage(user.ID, unitUUID, models.UnitEntity, events.Deleted)
+	if err != nil {
+		return err
 	}
 
 	return c.JSON(fiber.Map{"message": "Unit deleted successfully"})

@@ -68,3 +68,12 @@ func (s *Subscription) CreateTrialSubscription(user *User, subscriptionType Subs
 	s.SubscriptionType = subscriptionType
 	s.ExpiresAt = helpers.TimePointer(time.Now().AddDate(0, 0, 30))
 }
+
+func (s *Subscription) IsExpired() bool {
+
+	if s.ExpiresAt == nil {
+		return false
+	}
+
+	return s.ExpiresAt.Before(time.Now())
+}

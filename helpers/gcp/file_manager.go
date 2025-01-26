@@ -1,12 +1,13 @@
 package gcp
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
-	"google.golang.org/api/option"
 	"io"
 	"os"
 	"time"
+
+	"cloud.google.com/go/storage"
+	"google.golang.org/api/option"
 )
 
 type FileManager struct {

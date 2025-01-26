@@ -6,13 +6,13 @@ import (
 	"ithumans.com/coproxpert/repositories"
 )
 
-func CreateUnitGroup(b *models.UnitGroup) (*models.UnitGroup, error) {
+func CreateUnitGroup(unitGroup *models.UnitGroup) (*models.UnitGroup, error) {
 	unitGroupRepository := repositories.NewUnitGroupRepository()
-	err := unitGroupRepository.Create(b)
+	err := unitGroupRepository.Create(unitGroup)
 	if err != nil {
 		return nil, err
 	}
-	return b, nil
+	return unitGroup, nil
 
 }
 
@@ -26,15 +26,15 @@ func GetUnitGroup(id uuid.UUID) (*models.UnitGroup, error) {
 	return unitGroup, nil
 }
 
-func UpdateUnitGroup(b *models.UnitGroup) (*models.UnitGroup, error) {
+func UpdateUnitGroup(unitGroup *models.UnitGroup) (*models.UnitGroup, error) {
 	unitGroupRepository := repositories.NewUnitGroupRepository()
 
-	err := unitGroupRepository.Update(b)
+	err := unitGroupRepository.Update(unitGroup)
 	if err != nil {
 		return nil, err
 	}
 
-	return b, nil
+	return unitGroup, nil
 }
 
 func DeleteUnitGroup(id uuid.UUID) bool {
@@ -45,11 +45,4 @@ func DeleteUnitGroup(id uuid.UUID) bool {
 		return true
 	}
 	return false
-}
-
-func CountUnitGroupsByUser(user *models.User) int64 {
-	unitGroupRepository := repositories.NewUnitGroupRepository()
-
-	count := unitGroupRepository.CountUnitGroupsByUserID(user.ID)
-	return count
 }

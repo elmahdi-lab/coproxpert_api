@@ -13,52 +13,68 @@ type PermissionRepository struct {
 
 func NewPermissionRepository() *PermissionRepository {
 	db := cmd.GetDB()
-	if db != nil {
+	if db == nil {
 		return nil
 	}
 	return &PermissionRepository{db: db}
 }
 
-func (ur *PermissionRepository) FindByID(id uuid.UUID) (*models.Permission, error) {
+func (pr *PermissionRepository) FindByID(id uuid.UUID) (*models.Permission, error) {
 	var Permission models.Permission
-	if err := ur.db.First(&Permission, id).Error; err != nil {
+	if err := pr.db.First(&Permission, id).Error; err != nil {
 		return nil, err
 	}
 	return &Permission, nil
 }
 
-func (ur *PermissionRepository) FindByUserID(userID uuid.UUID) ([]models.Permission, error) {
+func (pr *PermissionRepository) FindByUserID(userID uuid.UUID) ([]models.Permission, error) {
 	var permissions []models.Permission
-	if err := ur.db.Where("user_id = ?", userID).Find(&permissions).Error; err != nil {
+	if err := pr.db.Where("user_id = ?", userID).Find(&permissions).Error; err != nil {
 		return nil, err
 	}
 	return permissions, nil
 }
 
-func (ur *PermissionRepository) Create(Permission *models.Permission) error {
-	return ur.db.Create(Permission).Error
+func (pr *PermissionRepository) Create(Permission *models.Permission) error {
+	return pr.db.Create(Permission).Error
 }
 
-func (ur *PermissionRepository) Update(Permission *models.Permission) error {
-	return ur.db.Save(Permission).Error
+func (pr *PermissionRepository) Update(Permission *models.Permission) error {
+	return pr.db.Save(Permission).Error
 }
 
-func (ur *PermissionRepository) Delete(Permission *models.Permission) error {
-	return ur.db.Delete(Permission).Error
+func (pr *PermissionRepository) Delete(Permission *models.Permission) error {
+	return pr.db.Delete(Permission).Error
 }
 
-func (ur *PermissionRepository) FindAll() ([]models.Permission, error) {
+func (pr *PermissionRepository) FindAll() ([]models.Permission, error) {
 	var Permissions []models.Permission
-	if err := ur.db.Find(&Permissions).Error; err != nil {
+	if err := pr.db.Find(&Permissions).Error; err != nil {
 		return nil, err
 	}
 	return Permissions, nil
 }
 
-func (ur *PermissionRepository) FindByUserIDAndEntity(id uuid.UUID, entityType models.EntityType, entityID uuid.UUID) (*models.Permission, error) {
+func (pr *PermissionRepository) FindByUserIDAndEntity(id uuid.UUID, entityID uuid.UUID) (*models.Permission, error) {
 	var permission models.Permission
-	if err := ur.db.Where("user_id = ? AND entity_type = ? AND entity_id = ?", id, entityType, entityID).Find(&permission).Error; err != nil {
+	if err := pr.db.Where("user_id = ? AND entity_id = ?", id, entityID).Find(&permission).Error; err != nil {
 		return nil, err
 	}
 	return &permission, nil
+}
+
+func (pr *PermissionRepository) DeleteByUserIDAndEntityID(userID uuid.UUID, entityID uuid.UUID) error {
+	return pr.db.Where("user_id = ? AND entity_id = ?", userID, entityID).Delete(&models.Permission{}).Error
+}
+
+func (pr *PermissionRepository) CountUnitsByUserIDAndEntity(userID uuid.UUID) int64 {
+	var count int64
+	pr.db.Model(&models.Permission{}).Where("user_id = ? AND role >= ? AND entity_name = ?", userID, models.AdminRole, models.UnitEntity).Count(&count)
+	return count
+}
+
+func (pr *PermissionRepository) CountUnitGroupsByUserIDAndEntity(userID uuid.UUID) int64 {
+	var count int64
+	pr.db.Model(&models.Permission{}).Where("user_id = ? AND role >= ? AND entity_name = ?", userID, models.AdminRole, models.UnitGroupEntity).Count(&count)
+	return count
 }
