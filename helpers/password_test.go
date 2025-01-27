@@ -1,7 +1,6 @@
-package security_test
+package helpers_test
 
 import (
-	"ithumans.com/coproxpert/helpers/security"
 	"os"
 	"testing"
 
@@ -10,7 +9,7 @@ import (
 
 func TestHashPassword(t *testing.T) {
 	password := "password123"
-	hashedPassword, err := security.HashPassword(password)
+	hashedPassword, err := HashPassword(password)
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hashedPassword)
@@ -23,7 +22,7 @@ func TestHashPasswordWithInvalidCost(t *testing.T) {
 		return
 	}
 	password := "password123"
-	hashedPassword, err := security.HashPassword(password)
+	hashedPassword, err := HashPassword(password)
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hashedPassword)
@@ -32,16 +31,16 @@ func TestHashPasswordWithInvalidCost(t *testing.T) {
 
 func TestIsPasswordHashValid(t *testing.T) {
 	password := "password123"
-	hashedPassword, _ := security.HashPassword(password)
-	isValid := security.IsPasswordHashValid(password, hashedPassword)
+	hashedPassword, _ := HashPassword(password)
+	isValid := IsPasswordHashValid(password, hashedPassword)
 
 	assert.True(t, isValid)
 }
 
 func TestIsPasswordHashInvalid(t *testing.T) {
 	password := "password123"
-	hashedPassword, _ := security.HashPassword(password)
-	isValid := security.IsPasswordHashValid("wrongpassword", hashedPassword)
+	hashedPassword, _ := HashPassword(password)
+	isValid := IsPasswordHashValid("wrongpassword", hashedPassword)
 
 	assert.False(t, isValid)
 }

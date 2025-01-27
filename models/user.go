@@ -37,9 +37,8 @@ type User struct {
 	PasswordResetToken  *uuid.UUID `json:"password_reset_token"`
 	ResetTokenExpiresAt *time.Time `json:"reset_token_expires_at"`
 
-	Password       *string    `json:"password"`
-	Token          *uuid.UUID `json:"token"`
-	TokenExpiresAt *time.Time `json:"token_expires_at"`
+	Password *string `json:"password"`
+	Token    *string `json:"token" gorm:"-"`
 
 	SignInProvider *types.SignInProvider `json:"sign_in_provider"  gorm:"default:'email'"`
 	ProviderID     *string               `json:"provider_id"`
@@ -52,28 +51,6 @@ type User struct {
 	Permissions  []Permission  `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
 	Subscription *Subscription `json:"subscription" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	BaseModel
-}
-
-func (u *User) IsTokenExpired() bool {
-	if u.TokenExpiresAt != nil && time.Now().After(*u.TokenExpiresAt) {
-		return true
-	}
-	return false
-}
-
-func (u *User) GenerateToken() {
-	token := uuid.New()
-	u.Token = &token
-	u.ExtendValidity()
-}
-
-func (u *User) RefreshToken() {
-	u.GenerateToken()
-}
-
-func (u *User) ExtendValidity() {
-	TokenExpiresAt := time.Now().Add(TokenDurationMinutes * time.Minute)
-	u.TokenExpiresAt = &TokenExpiresAt
 }
 
 func (u *User) IsLocked() bool {
@@ -116,4 +93,8 @@ func (u *User) IsSuperAdmin() bool {
 		}
 	}
 	return false
+}
+
+func (u *User) IsPasswordTokenExpired() bool {
+	return u.ResetTokenExpiresAt != nil && time.Now().After(*u.ResetTokenExpiresAt)
 }

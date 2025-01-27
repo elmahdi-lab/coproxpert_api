@@ -1,10 +1,13 @@
 package middleware
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"ithumans.com/coproxpert/repositories"
-	"ithumans.com/coproxpert/services"
 	"log/slog"
+	"strings"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
+	"ithumans.com/coproxpert/helpers/auth"
+	"ithumans.com/coproxpert/repositories"
 )
 
 // AuthMiddleware is a middleware function for basic authentication
@@ -15,17 +18,24 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		return unauthorizedResponse(c)
 	}
 
-	userRepo := repositories.NewUserRepository()
+	token := strings.TrimPrefix(authHeader, "Bearer ")
 
-	// find token in db
-	user, err := userRepo.FindByToken(authHeader)
-
-	if err != nil || user.IsTokenExpired() || user.IsLocked() {
+	claims, err := auth.ValidateJWT(token)
+	if err != nil {
 		return unauthorizedResponse(c)
 	}
 
-	user.ExtendValidity()
-	user, _ = services.UpdateUser(user)
+	userID, _ := uuid.Parse(claims["sub"].(string))
+
+	userRepo := repositories.NewUserRepository()
+	user, err := userRepo.FindByID(userID)
+	if err != nil || user == nil {
+		return unauthorizedResponse(c)
+	}
+
+	if user.IsLocked() {
+		return unauthorizedResponse(c)
+	}
 
 	c.Locals("user", user)
 	return c.Next()

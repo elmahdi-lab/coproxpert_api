@@ -5,7 +5,7 @@ package fixtures
 //	"github.com/google/uuid"
 //	"ithumans.com/coproxpert/cmd"
 //	"ithumans.com/coproxpert/helpers"
-//	"ithumans.com/coproxpert/helpers/security"
+//	"ithumans.com/coproxpert/helpers/auth"
 //	"ithumans.com/coproxpert/models"
 //	"ithumans.com/coproxpert/repositories"
 //)
@@ -66,7 +66,7 @@ package fixtures
 //		return
 //	}
 //
-//	hashedPassword, _ := security.HashPassword("password")
+//	hashedPassword, _ := auth.HashPassword("password")
 //
 //	credential := &models.Credential{
 //		ID:       uuid.New(),

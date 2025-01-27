@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/helpers"
-	"ithumans.com/coproxpert/helpers/security"
+	"ithumans.com/coproxpert/helpers/auth"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/repositories"
 )
@@ -23,7 +23,7 @@ func CreateUser(u *models.User) (*models.User, error) {
 	}
 
 	userRepository := repositories.NewUserRepository()
-	hashedPassword, _ := security.HashPassword(*u.Password)
+	hashedPassword, _ := helpers.HashPassword(*u.Password)
 	u.Password = &hashedPassword
 	u.Tries = helpers.IntPointer(0)
 
@@ -63,7 +63,7 @@ func UpdatePassword(u *models.User) error {
 		return err
 	}
 
-	hashedPassword, err := security.HashPassword(*u.Password)
+	hashedPassword, err := helpers.HashPassword(*u.Password)
 	if err != nil {
 		return err
 	}
@@ -110,14 +110,14 @@ func PasswordReset(u *models.User) error {
 	}
 
 	if existingUser.PasswordResetToken == nil || *existingUser.PasswordResetToken != *u.PasswordResetToken {
-		return errors.New("invalid token")
+		return errors.New("invalid password token")
 	}
 
-	if existingUser.IsTokenExpired() {
-		return errors.New("token expired")
+	if existingUser.IsPasswordTokenExpired() {
+		return errors.New("password token expired")
 	}
 
-	hashedPassword, err := security.HashPassword(*u.Password)
+	hashedPassword, err := helpers.HashPassword(*u.Password)
 	if err != nil {
 		return err
 	}
@@ -143,7 +143,7 @@ func Login(u *models.User) (*models.User, error) {
 		return nil, errors.New("user locked")
 	}
 
-	if !security.IsPasswordHashValid(*u.Password, *user.Password) {
+	if !helpers.IsPasswordHashValid(*u.Password, *user.Password) {
 		errMessage := "invalid credentials"
 		user.IncrementTries()
 		if *user.Tries >= 5 {
@@ -157,7 +157,8 @@ func Login(u *models.User) (*models.User, error) {
 	}
 
 	user.Unlock()
-	user.RefreshToken()
+	token, _ := auth.GenerateJWT(user.ID, user.CreatedAt)
+	user.Token = &token
 	if err := userRepository.Update(user); err != nil {
 		return nil, err
 	}
@@ -170,7 +171,6 @@ func Logout(u *models.User) error {
 		return errors.New("user not logged in")
 	}
 	u.Token = nil
-	u.TokenExpiresAt = nil
 	userRepository := repositories.NewUserRepository()
 	if err := userRepository.Update(u); err != nil {
 		return err

@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// ExtractAndValidateID deprecated
 func ExtractAndValidateID(c *fiber.Ctx) error {
 	path := c.Route().Path
 	if strings.Contains(path, ":id") != true {
