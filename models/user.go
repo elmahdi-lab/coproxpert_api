@@ -9,7 +9,10 @@ import (
 )
 
 const LockDurationMinutes = 5
-const TokenDurationMinutes = 180
+
+// TODO: use these values for jwt token duration
+const TokenDurationMinutes = 60
+const RefreshTokenDurationMinutes = 60 * 24 * 7
 const PasswordResetTokenDurationMinutes = 30
 
 type User struct {
@@ -37,8 +40,10 @@ type User struct {
 	PasswordResetToken  *uuid.UUID `json:"password_reset_token"`
 	ResetTokenExpiresAt *time.Time `json:"reset_token_expires_at"`
 
-	Password *string `json:"password"`
-	Token    *string `json:"token" gorm:"-"`
+	Password              *string    `json:"password"`
+	RefreshToken          uuid.UUID  `json:"refresh_token" gorm:"type:uuid;default:uuid_generate_v4()"`
+	RefreshTokenExpiresAt *time.Time `json:"refresh_token_expires_at"` // TODO the refresh token must have an expiration date, when user created.
+	Token                 *string    `json:"token" gorm:"-"`
 
 	SignInProvider *types.SignInProvider `json:"sign_in_provider"  gorm:"default:'email'"`
 	ProviderID     *string               `json:"provider_id"`
@@ -51,6 +56,10 @@ type User struct {
 	Permissions  []Permission  `json:"permissions" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;preload:true"`
 	Subscription *Subscription `json:"subscription" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	BaseModel
+}
+
+func (u *User) IsRefreshTokenExpired() bool {
+	return u.RefreshTokenExpiresAt != nil && time.Now().After(*u.RefreshTokenExpiresAt)
 }
 
 func (u *User) IsLocked() bool {
@@ -84,6 +93,7 @@ func (u *User) IncrementTries() {
 
 func (u *User) Anonymize() {
 	u.Password = helpers.StringPointer("***hidden***")
+	u.RefreshToken = uuid.Nil
 }
 
 func (u *User) IsSuperAdmin() bool {

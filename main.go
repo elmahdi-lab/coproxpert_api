@@ -10,7 +10,7 @@ import (
 	recover2 "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	"ithumans.com/coproxpert/cmd"
-	"ithumans.com/coproxpert/config"
+	"ithumans.com/coproxpert/pkg/config"
 	"ithumans.com/coproxpert/routes"
 )
 

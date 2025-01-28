@@ -5,11 +5,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"ithumans.com/coproxpert/helpers"
 )
 
 func TestHashPassword(t *testing.T) {
 	password := "password123"
-	hashedPassword, err := HashPassword(password)
+	hashedPassword, err := helpers.HashPassword(password)
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hashedPassword)
@@ -22,7 +23,7 @@ func TestHashPasswordWithInvalidCost(t *testing.T) {
 		return
 	}
 	password := "password123"
-	hashedPassword, err := HashPassword(password)
+	hashedPassword, err := helpers.HashPassword(password)
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hashedPassword)
@@ -31,16 +32,16 @@ func TestHashPasswordWithInvalidCost(t *testing.T) {
 
 func TestIsPasswordHashValid(t *testing.T) {
 	password := "password123"
-	hashedPassword, _ := HashPassword(password)
-	isValid := IsPasswordHashValid(password, hashedPassword)
+	hashedPassword, _ := helpers.HashPassword(password)
+	isValid := helpers.IsPasswordHashValid(password, hashedPassword)
 
 	assert.True(t, isValid)
 }
 
 func TestIsPasswordHashInvalid(t *testing.T) {
 	password := "password123"
-	hashedPassword, _ := HashPassword(password)
-	isValid := IsPasswordHashValid("wrongpassword", hashedPassword)
+	hashedPassword, _ := helpers.HashPassword(password)
+	isValid := helpers.IsPasswordHashValid("wrongpassword", hashedPassword)
 
 	assert.False(t, isValid)
 }

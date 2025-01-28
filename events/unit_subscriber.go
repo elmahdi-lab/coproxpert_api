@@ -26,5 +26,6 @@ func (ugs *UnitSubscriber) HandleMessage(message PubSubMessage) {
 		if err != nil {
 			slog.Error("Error deleting permission", err)
 		}
+		slog.Info("Permission deleted", "user_id", message.UserID, "entity_id", message.EntityID)
 	}
 }

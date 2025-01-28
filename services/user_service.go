@@ -27,6 +27,10 @@ func CreateUser(u *models.User) (*models.User, error) {
 	u.Password = &hashedPassword
 	u.Tries = helpers.IntPointer(0)
 
+	// Set refresh token expiration to 30 days from now
+	expiresAt := time.Now().Add(30 * 24 * time.Hour)
+	u.RefreshTokenExpiresAt = &expiresAt
+
 	err := userRepository.Create(u)
 	if err != nil {
 		slog.Error("error creating user", u)
@@ -158,12 +162,51 @@ func Login(u *models.User) (*models.User, error) {
 
 	user.Unlock()
 	token, _ := auth.GenerateJWT(user.ID, user.CreatedAt)
+	user.RefreshToken = auth.GenerateRefreshToken()
 	user.Token = &token
 	if err := userRepository.Update(user); err != nil {
 		return nil, err
 	}
 
 	return user, nil
+}
+
+func RefreshToken(refreshToken uuid.UUID) (*auth.RefreshTokenPayload, error) {
+	var payload auth.RefreshTokenPayload
+	userRepository := repositories.NewUserRepository()
+	user, err := userRepository.FindByRefreshToken(refreshToken)
+	if err != nil {
+		return nil, errors.New("user not found for the refresh token")
+	}
+
+	if user.IsLocked() {
+		return nil, errors.New("user is locked")
+	}
+
+	if user.IsRefreshTokenExpired() {
+		return nil, errors.New("refresh token has expired")
+	}
+
+	token, err := auth.GenerateJWT(user.ID, user.CreatedAt)
+	if err != nil {
+		return nil, errors.New("failed to generate access token")
+	}
+
+	newRefreshToken := auth.GenerateRefreshToken()
+
+	// Set new refresh token expiration to 30 days from now
+	expiresAt := time.Now().Add(30 * 24 * time.Hour)
+	user.RefreshTokenExpiresAt = &expiresAt
+
+	user.RefreshToken = newRefreshToken
+	user.Token = &token
+	if err := userRepository.Update(user); err != nil {
+		return nil, err
+	}
+	payload.RefreshToken = newRefreshToken.String()
+	payload.Token = &token
+
+	return &payload, nil
 }
 
 func Logout(u *models.User) error {

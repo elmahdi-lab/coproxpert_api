@@ -84,3 +84,11 @@ func (ur *UserRepository) DeleteByID(id uuid.UUID) bool {
 	}
 	return true
 }
+
+func (ur *UserRepository) FindByRefreshToken(token uuid.UUID) (*models.User, error) {
+	var user models.User
+	if err := ur.db.Where("refresh_token = ?", token).First(&user).Error; err != nil {
+		return &user, err
+	}
+	return &user, nil
+}

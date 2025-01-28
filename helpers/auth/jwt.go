@@ -8,8 +8,12 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"ithumans.com/coproxpert/models"
 )
+
+type RefreshTokenPayload struct {
+	RefreshToken string  `json:"refresh_token"`
+	Token        *string `json:"token"`
+}
 
 var (
 	alg                    = jwt.SigningMethodHS512
@@ -76,24 +80,10 @@ func ValidateJWT(tokenString string) (jwt.MapClaims, error) {
 	return nil, errors.New("invalid token")
 }
 
-func GenerateRefreshToken(user *models.User) (string, error) {
-	issuedAt := time.Now()
-	refreshExpirationTime := issuedAt.Add(time.Duration(refreshTokenHours) * time.Hour)
-
-	claims := jwt.MapClaims{
-		"sub": user.ID,                                   // Subject
-		"iss": "coproxpert",                              // Issuer
-		"nbf": jwt.NewNumericDate(user.CreatedAt),        // Not Before
-		"iat": jwt.NewNumericDate(issuedAt),              // Issued At
-		"exp": jwt.NewNumericDate(refreshExpirationTime), // Expiration Time
-		"typ": "refresh",                                 // Token type
-	}
-
-	token := jwt.NewWithClaims(alg, claims)
-
-	// Sign the token using the secret key
-	return token.SignedString([]byte(secret))
+func GenerateRefreshToken() uuid.UUID {
+	return uuid.New()
 }
+
 func RefreshTokens(refreshToken string) (string, error) {
 	claims, err := ValidateJWT(refreshToken)
 	if err != nil {

@@ -124,6 +124,21 @@ func LoginAction(c *fiber.Ctx) error {
 	return c.JSON(loggedUser)
 }
 
+func RefreshJWTTokenAction(c *fiber.Ctx) error {
+	id := c.Params("id")
+	refreshUuid, err := uuid.Parse(id)
+	if err != nil {
+		return handleError(c, err, fiber.StatusBadRequest)
+	}
+
+	jwt, err := services.RefreshToken(refreshUuid)
+	if err != nil {
+		return handleError(c, err, fiber.StatusBadRequest)
+	}
+
+	return c.JSON(jwt)
+}
+
 func LogoutAction(c *fiber.Ctx) error {
 	loggedUser := c.Locals("user").(*models.User)
 	if err := services.Logout(loggedUser); err != nil {
