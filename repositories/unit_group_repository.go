@@ -57,16 +57,8 @@ func (ur *UnitGroupRepository) DeleteByID(id uuid.UUID) bool {
 	return false
 }
 
-func (ur *UnitGroupRepository) CountByOrganizationID(organizationID uuid.UUID) (int64, error) {
+func (ur *UnitGroupRepository) CountByUserID(id uuid.UUID) int64 {
 	var count int64
-	if err := ur.db.Model(&models.UnitGroup{}).Where("organization_id = ?", organizationID).Count(&count).Error; err != nil {
-		return 0, err
-	}
-	return count, nil
-}
-
-func (ur *UnitGroupRepository) CountUnitGroupsByUserID(id uuid.UUID) int64 {
-	var count int64
-	ur.db.Model(&models.UnitGroup{}).Where("user_id = ?", id).Count(&count)
+	ur.db.Model(&models.UnitGroup{}).Where("owner_id = ?", id).Count(&count)
 	return count
 }

@@ -10,7 +10,7 @@ import (
 func RegisterAdminRoutes(app *fiber.App) {
 
 	// Group with authentication middleware for secure routes
-	api := app.Group("/api", middleware.AuthMiddleware)
+	api := app.Group("/api", middleware.JWTProtected)
 
 	api.Post("/user", controllers.CreateUserAction)
 	api.Get("/user/:id", controllers.GetUserAction)
@@ -21,24 +21,23 @@ func RegisterAdminRoutes(app *fiber.App) {
 
 	api.Post("/user/subscribe/:type", controllers.Subscribe)
 
-	//organizationEndpoints := api.Group("/organization")
-
-	//organizationEndpoints.Post("", middleware.CheckSubscriptionLimit(models.OrganizationLimit), controllers.CreateOrganizationAction) // TODO: add a subscription limit check for organizations.
-	//organizationEndpoints.Get(organizationPath, middleware.HasPermission(models.OrganizationEntity, models.ManagerRole), controllers.GetOrganizationAction)
-	//organizationEndpoints.Put(organizationPath, middleware.HasPermission(models.OrganizationEntity, models.AdminRole), controllers.UpdateOrganizationAction)
-	//organizationEndpoints.Delete(organizationPath, middleware.HasPermission(models.OrganizationEntity, models.ManagerRole), controllers.DeleteOrganizationAction)
-
 	// Check subscription to limit the number of unit groups the user can create.
 	api.Post("/unit-group", middleware.CheckSubscriptionLimit(models.UnitGroupLimit), controllers.CreateUnitGroupAction)
-	api.Get("/unit-group/:id", controllers.GetUnitGroupAction)
-	api.Put("/unit-group/:id", controllers.UpdateUnitGroupAction)
-	api.Delete("/unit-group/:id", controllers.DeleteUnitGroupAction)
+	api.Get("/unit-group/:id", middleware.ResourceAccess(
+		models.ManagerRole, models.UnitGroupEntity), controllers.GetUnitGroupAction)
+	api.Put("/unit-group/:id", middleware.ResourceAccess(
+		models.ManagerRole, models.UnitGroupEntity), controllers.UpdateUnitGroupAction)
+	api.Delete("/unit-group/:id", middleware.ResourceAccess(
+		models.ManagerRole, models.UnitGroupEntity), controllers.DeleteUnitGroupAction)
 
 	// Check subscription to limit the number of units the user can create.
 	api.Post("/unit", middleware.CheckSubscriptionLimit(models.UnitLimit), controllers.CreateUnitAction)
-	api.Get("/unit/:id", controllers.GetUnitAction)
-	api.Put("/unit/:id", controllers.UpdateUnitAction)
-	api.Delete("/unit/:id", controllers.DeleteUnitAction)
+	api.Get("/unit/:id", middleware.ResourceAccess(
+		models.UserRole, models.UnitEntity), controllers.GetUnitAction)
+	api.Put("/unit/:id", middleware.ResourceAccess(
+		models.ManagerRole, models.UnitEntity), controllers.UpdateUnitAction)
+	api.Delete("/unit/:id", middleware.ResourceAccess(
+		models.ManagerRole, models.UnitEntity), controllers.DeleteUnitAction)
 
 	api.Post("/maintenance", controllers.CreateMaintenanceAction)
 	api.Get("/maintenance/:id", controllers.GetMaintenanceAction)

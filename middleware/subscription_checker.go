@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"log/slog"
-
 	"github.com/gofiber/fiber/v2"
 	"ithumans.com/coproxpert/models"
 	"ithumans.com/coproxpert/services"
@@ -11,11 +9,6 @@ import (
 func CheckSubscriptionLimit(limitType models.SubscriptionLimitType) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		user := c.Locals("user").(*models.User)
-
-		if user.IsSuperAdmin() {
-			slog.Info("Super admin bypassed the subscription limit", "userID:", user.ID, "limitType:", limitType)
-			return c.Next()
-		}
 
 		subscription := services.FindSubscriptionByUser(user)
 

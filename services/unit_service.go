@@ -80,3 +80,8 @@ func DeleteUnitByID(id uuid.UUID) bool {
 
 	return unitRepository.DeleteByID(id)
 }
+
+func CountUnitsByUser(userID uuid.UUID) int64 {
+	unitRepository := repositories.NewUnitRepository()
+	return unitRepository.CountByUserID(userID)
+}

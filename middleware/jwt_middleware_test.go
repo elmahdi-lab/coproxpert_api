@@ -37,7 +37,7 @@ package middleware_test
 //	userRepoMock.On("FindByToken", validToken).Return(&user, nil)
 //
 //	app := fiber.New()
-//	app.Use(middleware.AuthMiddleware())
+//	app.Use(middleware.JWTProtected())
 //	req, _ := http.NewRequest("GET", "/", nil)
 //	req.Header.Set("Authorization", validToken.String())
 //	resp, _ := app.Test(req)
@@ -51,7 +51,7 @@ package middleware_test
 //	userRepoMock.On("FindByToken", "invalidToken").Return(models.User{}, errors.New("invalid token"))
 //
 //	app := fiber.New()
-//	app.Use(middleware.AuthMiddleware())
+//	app.Use(middleware.JWTProtected())
 //	req, _ := http.NewRequest("GET", "/", nil)
 //	req.Header.Set("Authorization", "invalidToken")
 //	resp, _ := app.Test(req)
@@ -69,7 +69,7 @@ package middleware_test
 //	userRepoMock.On("FindByToken", "expiredToken").Return(user, nil)
 //
 //	app := fiber.New()
-//	app.Use(middleware.AuthMiddleware())
+//	app.Use(middleware.JWTProtected())
 //	req, _ := http.NewRequest("GET", "/", nil)
 //	req.Header.Set("Authorization", "expiredToken")
 //	resp, _ := app.Test(req)
@@ -82,7 +82,7 @@ package middleware_test
 //	userRepoMock := new(UserRepositoryMock)
 //
 //	app := fiber.New()
-//	app.Use(middleware.AuthMiddleware())
+//	app.Use(middleware.JWTProtected())
 //	req, _ := http.NewRequest("GET", "/", nil)
 //	resp, _ := app.Test(req)
 //

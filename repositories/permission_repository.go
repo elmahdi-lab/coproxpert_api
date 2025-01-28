@@ -66,15 +66,3 @@ func (pr *PermissionRepository) FindByUserIDAndEntity(id uuid.UUID, entityID uui
 func (pr *PermissionRepository) DeleteByUserIDAndEntityID(userID uuid.UUID, entityID uuid.UUID) error {
 	return pr.db.Where("user_id = ? AND entity_id = ?", userID, entityID).Delete(&models.Permission{}).Error
 }
-
-func (pr *PermissionRepository) CountUnitsByUserIDAndEntity(userID uuid.UUID) int64 {
-	var count int64
-	pr.db.Model(&models.Permission{}).Where("user_id = ? AND role >= ? AND entity_name = ?", userID, models.AdminRole, models.UnitEntity).Count(&count)
-	return count
-}
-
-func (pr *PermissionRepository) CountUnitGroupsByUserIDAndEntity(userID uuid.UUID) int64 {
-	var count int64
-	pr.db.Model(&models.Permission{}).Where("user_id = ? AND role >= ? AND entity_name = ?", userID, models.AdminRole, models.UnitGroupEntity).Count(&count)
-	return count
-}

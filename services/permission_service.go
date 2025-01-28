@@ -6,22 +6,38 @@ import (
 	"ithumans.com/coproxpert/repositories"
 )
 
-func CountUnitsByUser(userID uuid.UUID) int64 {
-	permissionRepository := repositories.NewPermissionRepository()
-	if permissionRepository == nil {
-		return 0
+func IsOwner(user *models.User, resourceType models.EntityName, resourceID uuid.UUID) bool {
+
+	switch resourceType {
+	case models.UnitGroupEntity:
+		unitGroupRepository := repositories.NewUnitGroupRepository()
+		unitGroup, _ := unitGroupRepository.FindByID(resourceID)
+		if unitGroup == nil {
+			return false
+		}
+		return unitGroup.OwnerID == user.ID
+	case models.UnitEntity:
+		unitRepository := repositories.NewUnitRepository()
+		unit, _ := unitRepository.FindByID(resourceID)
+		if unit == nil {
+			return false
+		}
+		return unit.OwnerID == user.ID
 	}
 
-	return permissionRepository.CountUnitsByUserIDAndEntity(userID)
+	return false
 }
 
-func CountUnitGroupsByUser(userID uuid.UUID) int64 {
-	permissionRepository := repositories.NewPermissionRepository()
-	if permissionRepository == nil {
-		return 0
+func HasPermission(user *models.User, entity models.EntityName, resourceID uuid.UUID, requiredRole models.Role) bool {
+	for _, permission := range user.Permissions {
+		if permission.EntityName == entity && permission.EntityID == resourceID {
+			if permission.Role >= requiredRole {
+				return true
+			}
+		}
 	}
 
-	return permissionRepository.CountUnitGroupsByUserIDAndEntity(userID)
+	return false
 }
 
 func CreatePermission(userID uuid.UUID, entityID uuid.UUID, role models.Role, entityName models.EntityName) *models.Permission {
@@ -42,16 +58,4 @@ func CreatePermission(userID uuid.UUID, entityID uuid.UUID, role models.Role, en
 func DeletePermission(userID uuid.UUID, entityID uuid.UUID) error {
 	permissionRepository := repositories.NewPermissionRepository()
 	return permissionRepository.DeleteByUserIDAndEntityID(userID, entityID)
-}
-
-func HasPermission(user *models.User, entityID uuid.UUID, role models.Role) bool {
-	if user.IsSuperAdmin() {
-		return true
-	}
-	for _, permission := range user.Permissions {
-		if permission.EntityID == entityID && permission.Role >= role {
-			return true
-		}
-	}
-	return false
 }

@@ -21,5 +21,8 @@ type Unit struct {
 	UnitGroup   *UnitGroup `json:"unit_group" gorm:"foreignKey:UnitGroupID;references:ID;constraint:OnDelete:CASCADE"`
 	IsEnabled   *bool      `json:"is_enabled" gorm:"default:true"`
 
+	OwnerID uuid.UUID `json:"owner_id" gorm:"type:uuid"`
+	Owner   *User     `json:"owner" gorm:"foreignKey:OwnerID;references:ID;constraint:OnDelete:CASCADE"`
+
 	BaseModel
 }

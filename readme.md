@@ -8,19 +8,17 @@ atlas migrate apply --env gorm --url "postgres://postgres:postgres@localhost:543
 atlas migrate validate --env gorm 
 ```
 
-authentication is already set by checking each request by the auth.go middleware.
 Levels of Permission: Admin, Manager, User.
 Separate admin/managers from users
 
 units : only users but any admin or manager in the org can manage.
 unit group : only org manager or admin can manage.
-org : only org admin (create unit groups...)
 
 super admin anything.
 
 V1 Core Features:
 - X User Authentication
-- X Organization, Building and properties (or units)
+- X , Building and properties (or units)
 -  Common Spaces (pool, gym, garden ...)
 -  Complaints
 -  Document sharing
@@ -52,13 +50,16 @@ Neon DB, MailTrap
 
 HTZ 2x Compute Instances for API & DB
 GCP instance will host insta karma
-GCP Functions // TBD
-GCP PubSub // TBD
+GCP Functions // YES
+GCP PubSub // YES
 GCP Cloud Logs // Yes
-GCP Secrets // Probably
-AWS SES Emails // Using EC2 small instance for sending emails
-Push Notifications TBD
-Hashicorp Vault
+
+GCP Secrets // YES
+AWS DynamoDB // YES
+AWS SES Emails // with AWS LAMBDA
+
+Push Notifications TBD Probably AWS SNS
+Hashicorp Vault / GCP Secret Manager
 
 
 https://github.com/zincsearch/zincsearch

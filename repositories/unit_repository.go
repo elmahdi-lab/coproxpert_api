@@ -62,3 +62,9 @@ func (ur *UnitRepository) DeleteByID(id uuid.UUID) bool {
 	}
 	return false
 }
+
+func (ur *UnitRepository) CountByUserID(id uuid.UUID) int64 {
+	var count int64
+	ur.db.Model(&models.Unit{}).Where("owner_id = ?", id).Count(&count)
+	return count
+}

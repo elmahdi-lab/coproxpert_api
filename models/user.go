@@ -96,15 +96,6 @@ func (u *User) Anonymize() {
 	u.RefreshToken = uuid.Nil
 }
 
-func (u *User) IsSuperAdmin() bool {
-	for _, permission := range u.Permissions {
-		if permission.Role == SuperAdminRole {
-			return true
-		}
-	}
-	return false
-}
-
 func (u *User) IsPasswordTokenExpired() bool {
 	return u.ResetTokenExpiresAt != nil && time.Now().After(*u.ResetTokenExpiresAt)
 }

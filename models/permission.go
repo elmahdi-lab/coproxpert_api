@@ -13,10 +13,9 @@ const (
 )
 
 const (
-	SuperAdminRole Role = 127
-	AdminRole      Role = 100
-	ManagerRole    Role = 50
-	UserRole       Role = 10
+	AdminRole   Role = 3
+	ManagerRole Role = 2
+	UserRole    Role = 1
 )
 
 type Permission struct {
@@ -24,7 +23,7 @@ type Permission struct {
 	UserID     uuid.UUID  `json:"user_id" gorm:"type:uuid"`
 	EntityID   uuid.UUID  `json:"entity_id" gorm:"type:uuid"`
 	EntityName EntityName `json:"entity_name" gorm:"not null"`
-	Role       Role       `json:"role" gorm:"not null; default:10"`
+	Role       Role       `json:"role" gorm:"not null; default:1"`
 	BaseModel
 }
 

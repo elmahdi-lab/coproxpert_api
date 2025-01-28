@@ -15,7 +15,7 @@ func CreateUnitGroupAction(c *fiber.Ctx) error {
 	if err := c.BodyParser(unitGroup); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-
+	unitGroup.OwnerID = user.ID
 	createdUnitGroup, err := services.CreateUnitGroup(unitGroup)
 
 	if err != nil {

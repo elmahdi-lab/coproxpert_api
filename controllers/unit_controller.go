@@ -18,6 +18,7 @@ func CreateUnitAction(c *fiber.Ctx) error {
 	if err := c.BodyParser(unit); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
+	unit.OwnerID = user.ID
 
 	createdUnit, err := services.CreateUnit(unit)
 
