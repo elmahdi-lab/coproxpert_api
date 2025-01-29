@@ -68,15 +68,3 @@ https://github.com/gofiber/recipes?tab=readme-ov-file
 report, invoice, payment, assembly, budget, chat
 
 "CoProXpert, pour une gestion de qualité, en toute simplicité!"
-
-User:
-Join with invitation code.
-Login, manage own profile.
-View unit, view unit group. view resolution, vote, view documents, view budgets.
-View Inspections, view maintenance schedule, view own complaints. view reports.
-Create a complaint.
-
-
-# User Actions
-id, user_id, action, is_viewed, created_at, updated_at
-action types: login, sign up, create something, receive something

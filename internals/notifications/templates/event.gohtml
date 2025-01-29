@@ -1,0 +1,32 @@
+{{ define "content" }}
+    <table style="width: 100%;">
+        <tr>
+            <td>
+                <h2 style="color: #2c3e50;">You're Invited: [EVENT NAME]</h2>
+                <img alt="Event Visual" src="[EVENT_IMAGE]" style="width: 100%; max-width: 550px; margin: 15px 0;">
+                <p><strong>When:</strong> [DATE] at [TIME]<br>
+                    <strong>Where:</strong> [LOCATION]</p>
+                <div style="background-color: #fff4e6; padding: 15px; margin: 20px 0;">
+                    <p>Please RSVP by [DEADLINE]:</p>
+                    <a href="[YES_LINK]" style="
+          display: inline-block;
+          padding: 8px 16px;
+          background-color: #27ae60;
+          color: #ffffff;
+          text-decoration: none;
+          border-radius: 4px;
+          margin-right: 10px;
+        ">Attending</a>
+                    <a href="[NO_LINK]" style="
+          display: inline-block;
+          padding: 8px 16px;
+          background-color: #e74c3c;
+          color: #ffffff;
+          text-decoration: none;
+          border-radius: 4px;
+        ">Can't Attend</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+{{ end }}

@@ -10,8 +10,8 @@ import (
 	recover2 "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	"ithumans.com/coproxpert/cmd"
+	routes2 "ithumans.com/coproxpert/internals/routes"
 	"ithumans.com/coproxpert/pkg/config"
-	"ithumans.com/coproxpert/routes"
 )
 
 func main() {
@@ -31,9 +31,9 @@ func main() {
 	app := fiber.New()
 
 	app.Use(recover2.New())
-	routes.RegisterPublicRoutes(app)
-	routes.RegisterUserRoutes(app)
-	routes.RegisterAdminRoutes(app)
+	routes2.RegisterPublicRoutes(app)
+	routes2.RegisterUserRoutes(app)
+	routes2.RegisterAdminRoutes(app)
 
 	_ = cmd.GetDB()
 

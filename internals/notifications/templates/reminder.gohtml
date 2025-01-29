@@ -1,0 +1,24 @@
+{{ define "content" }}
+<table style="width: 100%">
+    <tr>
+        <td>
+            <h2 style="color: #2c3e50;">Friendly Reminder: Payment Due</h2>
+            <p>Hello [Name],</p>
+            <p>Your HOA payment of <strong>$[AMOUNT]</strong> is due by <strong>[DUE_DATE]</strong>.</p>
+            <div style="background-color: #f9f9f9; padding: 15px; margin: 20px 0;">
+                <p>Quick Actions:</p>
+                <a href="[PAYMENT_LINK]" style="
+          display: inline-block;
+          padding: 8px 16px;
+          background-color: #27ae60;
+          color: #ffffff;
+          text-decoration: none;
+          border-radius: 4px;
+          margin-right: 10px;
+        ">Pay Now</a>
+                <a href="[PAYMENT_HISTORY]" style="color: #3498db;">View Payment History</a>
+            </div>
+        </td>
+    </tr>
+</table>
+{{ end }}

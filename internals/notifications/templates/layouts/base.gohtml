@@ -1,0 +1,59 @@
+{{ define "layout" }}
+<!DOCTYPE html>
+<html lang="{{ .Lang}}">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>{{ .Title}}</title>
+    <style>
+        /* Reset styles for email clients */
+        body {
+            margin: 0;
+            padding: 0;
+            min-width: 100%;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f6f6f6;
+            color: #333333;
+        }
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* Inline CSS will be added for email client compatibility */
+    </style>
+</head>
+<body>
+<!-- Main Email Container -->
+<table class="email-wrapper" style="border-collapse: collapse; width: 100%;">
+    <!-- Header -->
+    <tr>
+        <td style="padding: 20px 0; text-align: center; background-color: #2c3e50;">
+            <img alt="Community Logo" src="[HOA_LOGO_URL]" style="max-width: 150px;" width="150">
+            <h1 style="color: #ffffff; margin: 10px 0;">{{ .UnitGroupName }}</h1>
+        </td>
+    </tr>
+
+    <!-- Email Content Block -->
+    <tr>
+        <td style="padding: 30px 25px; background-color: #ffffff;">
+            {{ template "content" . }}
+        </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+        <td style="padding: 25px; text-align: center; background-color: #ecf0f1; font-size: 12px;">
+            <p style="margin: 0; color: #7f8c8d;">
+                &copy; 2024 CoProXpert.<br>
+                123 Community Lane, Hometown, ST 12345<br>
+                <a href="{{ .UnsubscribeLink }}" style="color: #3498db; text-decoration: none;">Unsubscribe</a> |
+                <a href="[PRIVACY_POLICY]" style="color: #3498db; text-decoration: none;">Privacy Policy</a>
+            </p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+{{ end }}

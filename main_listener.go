@@ -7,7 +7,7 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
-	"ithumans.com/coproxpert/events"
+	"ithumans.com/coproxpert/internals/events"
 )
 
 func main() {
