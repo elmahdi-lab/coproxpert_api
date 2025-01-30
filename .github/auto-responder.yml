@@ -1,0 +1,8 @@
+# .github/auto-responder.yml
+response:
+  - label: "bug"
+    message: "Thanks for reporting this issue! Our team will review it within 24 hours."
+  - label: "help wanted"
+    message: "We appreciate your interest in contributing! Please check our CONTRIBUTING.md first."
+  - keyword: "urgent"
+    message: "Urgent requests are handled during business hours (9AM-5PM PST)."

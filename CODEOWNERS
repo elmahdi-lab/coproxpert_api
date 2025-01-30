@@ -1,0 +1,3 @@
+# CODEOWNERS
+*               @elmahdi-lab/core-maintainers
+.github/        @elmahdi-lab/devops
