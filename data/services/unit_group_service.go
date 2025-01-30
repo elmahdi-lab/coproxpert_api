@@ -51,3 +51,17 @@ func CountUnitGroupsByUser(id uuid.UUID) int64 {
 	unitGroupRepository := repositories.NewUnitGroupRepository()
 	return unitGroupRepository.CountByUserID(id)
 }
+
+func GetUnitGroupsByUser(userID uuid.UUID) ([]*models.UnitGroup, error) {
+	unitGroupRepository := repositories.NewUnitGroupRepository()
+	unitGroupIDs, err := FindPermissionsByEntityType(userID, models.UnitGroupEntity) // coming from permission_service.go
+
+	if err != nil {
+		return nil, err
+	}
+	unitGroups, err := unitGroupRepository.FindByUserAndPermissions(userID, unitGroupIDs)
+	if err != nil {
+		return nil, err
+	}
+	return unitGroups, nil
+}

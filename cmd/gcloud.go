@@ -49,7 +49,6 @@ func TestStorageConnection(ctx context.Context) bool {
 		log.Printf("Failed to connect to Google Cloud Storage: %v", err)
 		return false
 	}
-	log.Println("Successfully connected to Google Cloud Storage")
 	return true
 }
 
@@ -62,6 +61,5 @@ func TestPubSubConnection(ctx context.Context) bool {
 		log.Printf("Failed to connect to Google Cloud Pub/Sub: %v", err)
 		return false
 	}
-	log.Println("Successfully connected to Google Cloud Pub/Sub")
 	return true
 }

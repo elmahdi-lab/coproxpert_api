@@ -62,3 +62,11 @@ func (ur *UnitGroupRepository) CountByUserID(id uuid.UUID) int64 {
 	ur.db.Model(&models.UnitGroup{}).Where("owner_id = ?", id).Count(&count)
 	return count
 }
+
+func (ur *UnitGroupRepository) FindByUserAndPermissions(userID uuid.UUID, unitGroupIDs []uuid.UUID) ([]*models.UnitGroup, error) {
+	var unitGroups []*models.UnitGroup
+	if err := ur.db.Where("owner_id = ? OR id IN ?", userID, unitGroupIDs).Find(&unitGroups).Error; err != nil {
+		return nil, err
+	}
+	return unitGroups, nil
+}

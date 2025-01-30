@@ -66,3 +66,14 @@ func (pr *PermissionRepository) FindByUserIDAndEntity(id uuid.UUID, entityID uui
 func (pr *PermissionRepository) DeleteByUserIDAndEntityID(userID uuid.UUID, entityID uuid.UUID) error {
 	return pr.db.Where("user_id = ? AND entity_id = ?", userID, entityID).Delete(&models.Permission{}).Error
 }
+
+func (pr *PermissionRepository) FindByUserIDAndEntityName(id uuid.UUID, entityType models.EntityName) ([]uuid.UUID, error) {
+	var entityIDs []uuid.UUID
+	if err := pr.db.Model(&models.Permission{}).
+		Where("user_id = ? AND entity_name = ?", id, entityType).
+		Pluck("entity_id", &entityIDs).Error; err != nil {
+		return nil, err
+	}
+
+	return entityIDs, nil
+}

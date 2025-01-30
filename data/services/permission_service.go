@@ -2,22 +2,22 @@ package services
 
 import (
 	"github.com/google/uuid"
-	models2 "ithumans.com/coproxpert/data/models"
-	repositories2 "ithumans.com/coproxpert/data/repositories"
+	"ithumans.com/coproxpert/data/models"
+	"ithumans.com/coproxpert/data/repositories"
 )
 
-func IsOwner(user *models2.User, resourceType models2.EntityName, resourceID uuid.UUID) bool {
+func IsOwner(user *models.User, resourceType models.EntityName, resourceID uuid.UUID) bool {
 
 	switch resourceType {
-	case models2.UnitGroupEntity:
-		unitGroupRepository := repositories2.NewUnitGroupRepository()
+	case models.UnitGroupEntity:
+		unitGroupRepository := repositories.NewUnitGroupRepository()
 		unitGroup, _ := unitGroupRepository.FindByID(resourceID)
 		if unitGroup == nil {
 			return false
 		}
 		return unitGroup.OwnerID == user.ID
-	case models2.UnitEntity:
-		unitRepository := repositories2.NewUnitRepository()
+	case models.UnitEntity:
+		unitRepository := repositories.NewUnitRepository()
 		unit, _ := unitRepository.FindByID(resourceID)
 		if unit == nil {
 			return false
@@ -28,7 +28,16 @@ func IsOwner(user *models2.User, resourceType models2.EntityName, resourceID uui
 	return false
 }
 
-func HasPermission(user *models2.User, entity models2.EntityName, resourceID uuid.UUID, requiredRole models2.Role) bool {
+func FindPermissionsByEntityType(userID uuid.UUID, entityType models.EntityName) ([]uuid.UUID, error) {
+	permissionRepository := repositories.NewPermissionRepository()
+	permissions, err := permissionRepository.FindByUserIDAndEntityName(userID, entityType)
+	if err != nil {
+		return nil, err
+	}
+	return permissions, nil
+}
+
+func HasPermission(user *models.User, entity models.EntityName, resourceID uuid.UUID, requiredRole models.Role) bool {
 	for _, permission := range user.Permissions {
 		if permission.EntityName == entity && permission.EntityID == resourceID {
 			if permission.Role >= requiredRole {
@@ -40,9 +49,9 @@ func HasPermission(user *models2.User, entity models2.EntityName, resourceID uui
 	return false
 }
 
-func CreatePermission(userID uuid.UUID, entityID uuid.UUID, role models2.Role, entityName models2.EntityName) *models2.Permission {
-	permissionRepository := repositories2.NewPermissionRepository()
-	permission := &models2.Permission{
+func CreatePermission(userID uuid.UUID, entityID uuid.UUID, role models.Role, entityName models.EntityName) *models.Permission {
+	permissionRepository := repositories.NewPermissionRepository()
+	permission := &models.Permission{
 		UserID:     userID,
 		EntityID:   entityID,
 		EntityName: entityName,
@@ -56,6 +65,6 @@ func CreatePermission(userID uuid.UUID, entityID uuid.UUID, role models2.Role, e
 }
 
 func DeletePermission(userID uuid.UUID, entityID uuid.UUID) error {
-	permissionRepository := repositories2.NewPermissionRepository()
+	permissionRepository := repositories.NewPermissionRepository()
 	return permissionRepository.DeleteByUserIDAndEntityID(userID, entityID)
 }

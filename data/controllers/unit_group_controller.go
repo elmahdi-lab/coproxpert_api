@@ -3,14 +3,14 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	models2 "ithumans.com/coproxpert/data/models"
+	"ithumans.com/coproxpert/data/models"
 	"ithumans.com/coproxpert/data/services"
 	"ithumans.com/coproxpert/internals/events"
 )
 
 func CreateUnitGroupAction(c *fiber.Ctx) error {
-	user := c.Locals("user").(*models2.User)
-	unitGroup := new(models2.UnitGroup)
+	user := c.Locals("user").(*models.User)
+	unitGroup := new(models.UnitGroup)
 
 	if err := c.BodyParser(unitGroup); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -22,7 +22,7 @@ func CreateUnitGroupAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	err = events.PublishMessage(user.ID, createdUnitGroup.ID, models2.UnitGroupEntity, events.Created)
+	err = events.PublishMessage(user.ID, createdUnitGroup.ID, models.UnitGroupEntity, events.Created)
 	if err != nil {
 		return err
 	}
@@ -31,8 +31,16 @@ func CreateUnitGroupAction(c *fiber.Ctx) error {
 
 }
 
-func GetUnitGroupAction(c *fiber.Ctx) error {
+func GetUnitGroups(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
+	unitGroups, err := services.GetUnitGroupsByUser(user.ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(unitGroups)
+}
 
+func GetUnitGroupAction(c *fiber.Ctx) error {
 	id := c.Params("id")
 	unitGroupUuid, err := uuid.Parse(id)
 	unitGroup, err := services.GetUnitGroup(unitGroupUuid)
@@ -45,9 +53,9 @@ func GetUnitGroupAction(c *fiber.Ctx) error {
 }
 
 func UpdateUnitGroupAction(c *fiber.Ctx) error {
-	user := c.Locals("user").(*models2.User)
+	user := c.Locals("user").(*models.User)
 
-	unitGroup := new(models2.UnitGroup)
+	unitGroup := new(models.UnitGroup)
 
 	if err := c.BodyParser(unitGroup); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -58,7 +66,7 @@ func UpdateUnitGroupAction(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-	err = events.PublishMessage(updatedUnitGroup.ID, user.ID, models2.UnitGroupEntity, events.Updated)
+	err = events.PublishMessage(updatedUnitGroup.ID, user.ID, models.UnitGroupEntity, events.Updated)
 	if err != nil {
 		return err
 	}
@@ -66,7 +74,7 @@ func UpdateUnitGroupAction(c *fiber.Ctx) error {
 }
 
 func DeleteUnitGroupAction(c *fiber.Ctx) error {
-	user := c.Locals("user").(*models2.User)
+	user := c.Locals("user").(*models.User)
 
 	id := c.Params("id")
 	unitGroupUuid, _ := uuid.Parse(id)
@@ -76,7 +84,7 @@ func DeleteUnitGroupAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "UnitGroup not found"})
 	}
 
-	err := events.PublishMessage(unitGroupUuid, user.ID, models2.UnitGroupEntity, events.Deleted)
+	err := events.PublishMessage(unitGroupUuid, user.ID, models.UnitGroupEntity, events.Deleted)
 	if err != nil {
 		return err
 	}
