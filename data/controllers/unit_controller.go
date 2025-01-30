@@ -5,15 +5,15 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	models2 "ithumans.com/coproxpert/data/models"
+	"ithumans.com/coproxpert/data/models"
 	"ithumans.com/coproxpert/data/services"
 	"ithumans.com/coproxpert/internals/events"
 )
 
 func CreateUnitAction(c *fiber.Ctx) error {
 
-	user := c.Locals("user").(*models2.User)
-	unit := new(models2.Unit)
+	user := c.Locals("user").(*models.User)
+	unit := new(models.Unit)
 
 	if err := c.BodyParser(unit); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -26,7 +26,7 @@ func CreateUnitAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	err = events.PublishMessage(user.ID, createdUnit.ID, models2.UnitEntity, events.Created)
+	err = events.PublishMessage(user.ID, createdUnit.ID, models.UnitEntity, events.Created)
 	if err != nil {
 		return err
 	}
@@ -51,14 +51,14 @@ func GetUnitAction(c *fiber.Ctx) error {
 }
 
 func UpdateUnitAction(c *fiber.Ctx) error {
-	user := c.Locals("user").(*models2.User)
+	user := c.Locals("user").(*models.User)
 	id := c.Params("id")
 	parsedId, _ := uuid.Parse(id)
 	if parsedId == uuid.Nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "id is required"})
 	}
 
-	unit := new(models2.Unit)
+	unit := new(models.Unit)
 	unit.ID = parsedId
 	if err := c.BodyParser(unit); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "error parsing body"})
@@ -69,7 +69,7 @@ func UpdateUnitAction(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = events.PublishMessage(user.ID, updateUnit.ID, models2.UnitEntity, events.Updated)
+	err = events.PublishMessage(user.ID, updateUnit.ID, models.UnitEntity, events.Updated)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func UpdateUnitAction(c *fiber.Ctx) error {
 }
 
 func DeleteUnitAction(c *fiber.Ctx) error {
-	user := c.Locals("user").(*models2.User)
+	user := c.Locals("user").(*models.User)
 	id := c.Params("id")
 	unitUUID, err := uuid.Parse(id)
 	if err != nil {
@@ -91,7 +91,7 @@ func DeleteUnitAction(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Unit not deleted"})
 	}
 
-	err = events.PublishMessage(user.ID, unitUUID, models2.UnitEntity, events.Deleted)
+	err = events.PublishMessage(user.ID, unitUUID, models.UnitEntity, events.Deleted)
 	if err != nil {
 		return err
 	}
@@ -99,9 +99,8 @@ func DeleteUnitAction(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Unit deleted successfully"})
 }
 
-// GetUnitsAction returns all units the user has access to
 func GetUnitsAction(c *fiber.Ctx) error {
-	user := c.Locals("user").(*models2.User)
+	user := c.Locals("user").(*models.User)
 	units, err := services.GetUnitsByUser(user.ID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})

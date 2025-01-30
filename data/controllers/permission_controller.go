@@ -3,15 +3,15 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	models2 "ithumans.com/coproxpert/data/models"
+	"ithumans.com/coproxpert/data/models"
 	"ithumans.com/coproxpert/data/services"
 )
 
 type PermissionRequest struct {
-	UserID     uuid.UUID          `json:"user_id"`
-	EntityID   uuid.UUID          `json:"entity_id"`
-	EntityName models2.EntityName `json:"entity_name,omitempty"`
-	Role       models2.Role       `json:"role,omitempty"`
+	UserID     uuid.UUID         `json:"user_id"`
+	EntityID   uuid.UUID         `json:"entity_id"`
+	EntityName models.EntityName `json:"entity_name,omitempty"`
+	Role       models.Role       `json:"role,omitempty"`
 }
 
 func CreatePermissionAction(c *fiber.Ctx) error {
@@ -24,14 +24,14 @@ func CreatePermissionAction(c *fiber.Ctx) error {
 
 	// Can Only assign User and Manager roles.
 
-	if req.Role != models2.UserRole && req.Role != models2.ManagerRole {
+	if req.Role != models.UserRole && req.Role != models.ManagerRole {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid role",
 		})
 	}
 
 	// Get the authenticated user from context
-	user := c.Locals("user").(*models2.User)
+	user := c.Locals("user").(*models.User)
 
 	// Check if the authenticated user is the owner of the entity
 	if !services.IsOwner(user, req.EntityName, req.EntityID) {
@@ -60,7 +60,7 @@ func DeletePermissionAction(c *fiber.Ctx) error {
 	}
 
 	// Get the authenticated user from context
-	user := c.Locals("user").(*models2.User)
+	user := c.Locals("user").(*models.User)
 
 	// Check if the authenticated user is the owner of the entity
 	if !services.IsOwner(user, req.EntityName, req.EntityID) {

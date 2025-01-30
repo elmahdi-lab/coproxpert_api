@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"ithumans.com/coproxpert/data/models"
 	"ithumans.com/coproxpert/data/repositories"
-	helpers2 "ithumans.com/coproxpert/internals/helpers"
+	"ithumans.com/coproxpert/internals/helpers"
 	"ithumans.com/coproxpert/internals/helpers/auth"
 )
 
@@ -23,9 +23,9 @@ func CreateUser(u *models.User) (*models.User, error) {
 	}
 
 	userRepository := repositories.NewUserRepository()
-	hashedPassword, _ := helpers2.HashPassword(*u.Password)
+	hashedPassword, _ := helpers.HashPassword(*u.Password)
 	u.Password = &hashedPassword
-	u.Tries = helpers2.IntPointer(0)
+	u.Tries = helpers.IntPointer(0)
 
 	// Set refresh token expiration to 30 days from now
 	expiresAt := time.Now().Add(30 * 24 * time.Hour)
@@ -67,7 +67,7 @@ func UpdatePassword(u *models.User) error {
 		return err
 	}
 
-	hashedPassword, err := helpers2.HashPassword(*u.Password)
+	hashedPassword, err := helpers.HashPassword(*u.Password)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func PasswordReset(u *models.User) error {
 		return errors.New("password token expired")
 	}
 
-	hashedPassword, err := helpers2.HashPassword(*u.Password)
+	hashedPassword, err := helpers.HashPassword(*u.Password)
 	if err != nil {
 		return err
 	}
@@ -147,7 +147,7 @@ func Login(u *models.User) (*models.User, error) {
 		return nil, errors.New("user locked")
 	}
 
-	if !helpers2.IsPasswordHashValid(*u.Password, *user.Password) {
+	if !helpers.IsPasswordHashValid(*u.Password, *user.Password) {
 		errMessage := "invalid credentials"
 		user.IncrementTries()
 		if *user.Tries >= 5 {
