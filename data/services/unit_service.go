@@ -85,3 +85,16 @@ func CountUnitsByUser(userID uuid.UUID) int64 {
 	unitRepository := repositories.NewUnitRepository()
 	return unitRepository.CountByUserID(userID)
 }
+
+func GetUnitsByUser(userID uuid.UUID) (*[]models.Unit, error) {
+	unitRepository := repositories.NewUnitRepository()
+	unitIDs, err := FindPermissionsByEntityType(userID, models.UnitEntity) // coming from permission_service.go
+	if err != nil {
+		return nil, err
+	}
+	units, err := unitRepository.FindByUserAndPermissions(userID, unitIDs)
+	if err != nil {
+		return nil, err
+	}
+	return units, nil
+}

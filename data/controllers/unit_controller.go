@@ -98,3 +98,13 @@ func DeleteUnitAction(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{"message": "Unit deleted successfully"})
 }
+
+// GetUnitsAction returns all units the user has access to
+func GetUnitsAction(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models2.User)
+	units, err := services.GetUnitsByUser(user.ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(units)
+}

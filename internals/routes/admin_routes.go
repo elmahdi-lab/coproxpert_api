@@ -23,7 +23,7 @@ func RegisterAdminRoutes(app *fiber.App) {
 
 	// Check subscription to limit the number of unit groups the user can create.
 	api.Post("/unit-group", middleware.CheckSubscriptionLimit(models.UnitGroupLimit), controllers.CreateUnitGroupAction)
-	api.Get("/unit-group", controllers.GetUnitGroups)
+	api.Get("/unit-group", controllers.GetUnitGroupsAction)
 	api.Get("/unit-group/:id", middleware.ResourceAccess(
 		models.ManagerRole, models.UnitGroupEntity), controllers.GetUnitGroupAction)
 	api.Put("/unit-group/:id", middleware.ResourceAccess(
@@ -33,6 +33,7 @@ func RegisterAdminRoutes(app *fiber.App) {
 
 	// Check subscription to limit the number of units the user can create.
 	api.Post("/unit", middleware.CheckSubscriptionLimit(models.UnitLimit), controllers.CreateUnitAction)
+	api.Get("/unit", controllers.GetUnitsAction)
 	api.Get("/unit/:id", middleware.ResourceAccess(
 		models.UserRole, models.UnitEntity), controllers.GetUnitAction)
 	api.Put("/unit/:id", middleware.ResourceAccess(

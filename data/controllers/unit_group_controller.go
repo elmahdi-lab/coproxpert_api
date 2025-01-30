@@ -31,7 +31,7 @@ func CreateUnitGroupAction(c *fiber.Ctx) error {
 
 }
 
-func GetUnitGroups(c *fiber.Ctx) error {
+func GetUnitGroupsAction(c *fiber.Ctx) error {
 	user := c.Locals("user").(*models.User)
 	unitGroups, err := services.GetUnitGroupsByUser(user.ID)
 	if err != nil {
