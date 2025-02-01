@@ -52,10 +52,12 @@ func UpdateUserAction(c *fiber.Ctx) error {
 	}
 
 	updatedUser, err := services.UpdateUser(user)
-	updatedUser.Anonymize()
+
 	if err != nil {
 		return handleError(c, err, fiber.StatusBadRequest)
 	}
+
+	updatedUser.Anonymize()
 	return c.JSON(updatedUser)
 }
 

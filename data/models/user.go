@@ -93,7 +93,6 @@ func (u *User) IncrementTries() {
 
 func (u *User) Anonymize() {
 	u.Password = helpers.StringPointer("***hidden***")
-	u.RefreshToken = uuid.Nil
 }
 
 func (u *User) IsPasswordTokenExpired() bool {
