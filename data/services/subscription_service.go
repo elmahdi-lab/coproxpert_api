@@ -7,7 +7,7 @@ import (
 	"ithumans.com/coproxpert/data/repositories"
 )
 
-func CreateSubscription(user *models.User, subscriptionType models.SubscriptionType) (*models.Subscription, error) {
+func CreateSubscription(user *models.User, subscriptionType models.SubscriptionTier) (*models.Subscription, error) {
 	subscriptionRepository := repositories.NewSubscriptionRepository()
 	subscription, err := subscriptionRepository.FindByUser(user)
 
@@ -20,7 +20,7 @@ func CreateSubscription(user *models.User, subscriptionType models.SubscriptionT
 	}
 
 	subscription = &models.Subscription{}
-	subscription.CreateTrialSubscription(user, subscriptionType)
+	subscription.InitializeTrialSubscription(user, subscriptionType)
 
 	err = subscriptionRepository.Create(subscription)
 	if err != nil {

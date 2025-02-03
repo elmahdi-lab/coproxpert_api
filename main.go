@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log/slog"
 	"os"
 	"time"
@@ -30,6 +31,27 @@ func main() {
 	}
 	app := fiber.New()
 
+	origins := os.Getenv("ORIGINS")
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: origins,
+	}))
+
+	//app.Use(limiter.New(limiter.Config{
+	//	Next: func(c *fiber.Ctx) bool {
+	//		return c.IP() == "127.0.0.1"
+	//	},
+	//	Max:        20,
+	//	Expiration: 30 * time.Second,
+	//	KeyGenerator: func(c *fiber.Ctx) string {
+	//		return c.Get("x-forwarded-for")
+	//	},
+	//	LimitReached: func(c *fiber.Ctx) error {
+	//		return c.JSON(fiber.Map{"error": "Too many requests"})
+	//	},
+	//	// Storage: myCustomStorage{},
+	//}))
+
 	app.Use(recover.New())
 	routes.RegisterPublicRoutes(app)
 	routes.RegisterUserRoutes(app)
@@ -44,6 +66,7 @@ func main() {
 	logger.Info("Server is starting", "address", address)
 
 	if os.Getenv("ENV") == config.Development {
+
 		//fixtures.CreateUser()
 	}
 

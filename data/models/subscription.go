@@ -7,9 +7,10 @@ import (
 	"ithumans.com/coproxpert/internals/helpers"
 )
 
-// SubscriptionType defines the type of subscription.
-type SubscriptionType string
+// SubscriptionTier defines the type of subscription.
+type SubscriptionTier string
 
+// SubscriptionLimitType defines the type of subscription limit.
 type SubscriptionLimitType string
 
 const (
@@ -18,18 +19,20 @@ const (
 )
 
 const (
-	Tier1      SubscriptionType = "t1"
-	Tier2      SubscriptionType = "t2"
-	Tier3      SubscriptionType = "t3"
-	Enterprise SubscriptionType = "e"
+	Tier1      SubscriptionTier = "t1"
+	Tier2      SubscriptionTier = "t2"
+	Tier3      SubscriptionTier = "t3"
+	Enterprise SubscriptionTier = "e"
 )
 
-type SubscriptionTier struct {
+// SubscriptionTierLimits defines the limits for each subscription tier.
+type SubscriptionTierLimits struct {
 	UnitGroupsLimit int64
 	UnitsLimit      int64
 }
 
-var SubscriptionTiers = map[SubscriptionType]SubscriptionTier{
+// SubscriptionTierConfigs maps each subscription tier to its limits.
+var SubscriptionTierConfigs = map[SubscriptionTier]SubscriptionTierLimits{
 	Tier1: {
 		UnitGroupsLimit: 2,
 		UnitsLimit:      20,
@@ -48,32 +51,34 @@ var SubscriptionTiers = map[SubscriptionType]SubscriptionTier{
 	},
 }
 
+// Feature represents a feature available in a subscription.
 type Feature struct {
 	ID   uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
 	Name string    `json:"name"`
 	BaseModel
 }
 
+// Subscription represents a user's subscription.
 type Subscription struct {
-	ID               uuid.UUID        `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	UserID           *uuid.UUID       `json:"userID" gorm:"type:uuid;constraint:OnDelete:CASCADE;"`
-	SubscriptionType SubscriptionType `json:"subscriptionType" gorm:"not null, default:'Tier1'"`
-	ExpiresAt        *time.Time       `json:"expiresAt"`
-	Features         []Feature        `json:"features" gorm:"many2many:subscription_features;"`
+	ID        uuid.UUID        `json:"id" gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	UserID    *uuid.UUID       `json:"userID" gorm:"type:uuid;constraint:OnDelete:CASCADE;"`
+	Tier      SubscriptionTier `json:"tier" gorm:"not null;default:'t1'"`
+	ExpiresAt *time.Time       `json:"expiresAt"`
+	Features  []Feature        `json:"features" gorm:"many2many:subscription_features;"`
 	BaseModel
 }
 
-func (s *Subscription) CreateTrialSubscription(user *User, subscriptionType SubscriptionType) {
+// InitializeTrialSubscription sets up a trial subscription for a user.
+func (s *Subscription) InitializeTrialSubscription(user *User, tier SubscriptionTier) {
 	s.UserID = helpers.UuidPointer(user.ID)
-	s.SubscriptionType = subscriptionType
-	s.ExpiresAt = helpers.TimePointer(time.Now().AddDate(0, 0, 30))
+	s.Tier = tier
+	s.ExpiresAt = helpers.TimePointer(time.Now().AddDate(0, 0, 30)) // Trial expires in 30 days
 }
 
+// IsExpired checks if the subscription has expired.
 func (s *Subscription) IsExpired() bool {
-
 	if s.ExpiresAt == nil {
 		return false
 	}
-
 	return s.ExpiresAt.Before(time.Now())
 }

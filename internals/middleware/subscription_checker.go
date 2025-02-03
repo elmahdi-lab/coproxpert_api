@@ -22,14 +22,14 @@ func CheckSubscriptionLimit(limitType models.SubscriptionLimitType) func(*fiber.
 
 		if limitType == models.UnitLimit {
 			unitCount := services.CountUnitsByUser(user.ID)
-			if unitCount >= models.SubscriptionTiers[subscription.SubscriptionType].UnitsLimit {
+			if unitCount >= models.SubscriptionTierConfigs[subscription.Tier].UnitsLimit {
 				return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Unit limit reached"})
 			}
 		}
 
 		if limitType == models.UnitGroupLimit {
 			unitGroupCount := services.CountUnitGroupsByUser(user.ID)
-			if unitGroupCount >= models.SubscriptionTiers[subscription.SubscriptionType].UnitGroupsLimit {
+			if unitGroupCount >= models.SubscriptionTierConfigs[subscription.Tier].UnitGroupsLimit {
 				return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Unit group limit reached"})
 			}
 		}

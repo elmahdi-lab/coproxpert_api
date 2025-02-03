@@ -10,7 +10,7 @@ func Subscribe(c *fiber.Ctx) error {
 	user := c.Locals("user").(*models.User)
 	subscriptionType := c.Params("type")
 
-	subscription, err := services.CreateSubscription(user, models.SubscriptionType(subscriptionType))
+	subscription, err := services.CreateSubscription(user, models.SubscriptionTier(subscriptionType))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -24,7 +24,7 @@ func Unsubscribe(c *fiber.Ctx) error {
 	//user := c.Locals("user").(*models.User)
 	//subscriptionType := c.Params("type")
 	//
-	//err := services.(user, models.SubscriptionType(subscriptionType))
+	//err := services.(user, models.Tier(subscriptionType))
 	//if err != nil {
 	//	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 	//		"message": err.Error(),
